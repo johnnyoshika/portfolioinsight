@@ -27,6 +27,11 @@ namespace PortfolioInsight
 
                 entity.Property(c => c.Code)
                     .HasMaxLength(3);
+
+                entity.HasData(
+                    new CurrencyEntity { Code = "CAD" },
+                    new CurrencyEntity { Code = "USA" }
+                );
             });
 
             modelBuilder.Entity<BrokerageEntity>(entity =>
@@ -38,6 +43,8 @@ namespace PortfolioInsight
 
                 entity.Property(b => b.Name)
                     .IsRequired();
+
+                entity.HasData(new BrokerageEntity { Id = 1, Name = "Questrade" });
             });
 
             modelBuilder.Entity<UserEntity>(entity =>
