@@ -7,13 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{343D91DB-D27
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3DE49B8C-DFEA-48AC-BC2C-48FFBCE67572}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioInsight.Domain", "src\PortfolioInsight.Domain\PortfolioInsight.Domain.csproj", "{74AAEDDB-86AC-4180-9961-9CED064BBE03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioInsight.Domain", "src\PortfolioInsight.Domain\PortfolioInsight.Domain.csproj", "{74AAEDDB-86AC-4180-9961-9CED064BBE03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioInsight.Web", "src\PortfolioInsight.Web\PortfolioInsight.Web.csproj", "{38C41E88-29BE-492C-BA8B-FF5E088FAB37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioInsight.Web", "src\PortfolioInsight.Web\PortfolioInsight.Web.csproj", "{38C41E88-29BE-492C-BA8B-FF5E088FAB37}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioInsight.Sql", "src\PortfolioInsight.Sql\PortfolioInsight.Sql.csproj", "{7BAB2042-6C06-4F80-B96D-60CF00AC8F7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioInsight.Autofac", "src\PortfolioInsight.Autofac\PortfolioInsight.Autofac.csproj", "{54F07DA5-8BE8-45C4-9506-0B7061F537C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioInsight.Autofac", "src\PortfolioInsight.Autofac\PortfolioInsight.Autofac.csproj", "{54F07DA5-8BE8-45C4-9506-0B7061F537C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioInsight.Domain.Tests", "test\PortfolioInsight.Domain.Tests\PortfolioInsight.Domain.Tests.csproj", "{47F5ED4F-CE35-4F79-81F4-9050CE16AFE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{54F07DA5-8BE8-45C4-9506-0B7061F537C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54F07DA5-8BE8-45C4-9506-0B7061F537C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54F07DA5-8BE8-45C4-9506-0B7061F537C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47F5ED4F-CE35-4F79-81F4-9050CE16AFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47F5ED4F-CE35-4F79-81F4-9050CE16AFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47F5ED4F-CE35-4F79-81F4-9050CE16AFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47F5ED4F-CE35-4F79-81F4-9050CE16AFE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{38C41E88-29BE-492C-BA8B-FF5E088FAB37} = {343D91DB-D27B-41C5-A524-2A6E3D659ADA}
 		{7BAB2042-6C06-4F80-B96D-60CF00AC8F7D} = {343D91DB-D27B-41C5-A524-2A6E3D659ADA}
 		{54F07DA5-8BE8-45C4-9506-0B7061F537C5} = {343D91DB-D27B-41C5-A524-2A6E3D659ADA}
+		{47F5ED4F-CE35-4F79-81F4-9050CE16AFE0} = {3DE49B8C-DFEA-48AC-BC2C-48FFBCE67572}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD763D72-63DA-429C-94F0-FA3C4E9F14F8}
