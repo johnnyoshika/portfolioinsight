@@ -129,6 +129,9 @@ namespace PortfolioInsight.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            // Customize migration to change currency code collation to case-sensitive
+            migrationBuilder.SetCurrencyCodeCollationToCaseSensitive();
+
             migrationBuilder.InsertData(
                 table: "Brokerages",
                 columns: new[] { "Id", "Name" },
