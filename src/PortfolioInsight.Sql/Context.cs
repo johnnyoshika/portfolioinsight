@@ -59,6 +59,9 @@ namespace PortfolioInsight
 
                 entity.Property(u => u.Email)
                     .IsRequired();
+
+                entity.Property(u => u.PasswordHash)
+                    .HasMaxLength(48);
             });
 
             modelBuilder.Entity<AuthorizationEntity>(entity =>
@@ -149,6 +152,7 @@ namespace PortfolioInsight
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string PasswordHash { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? LastActivityAt { get; set; }
         public int ActivityCount { get; set; }
