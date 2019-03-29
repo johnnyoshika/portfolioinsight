@@ -8,12 +8,20 @@ using Autofac.Features.Variance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace PortfolioInsight.Web
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        IConfiguration Configuration { get; }
+        string ConnectionString => Configuration["ConnectionStrings:DefaultConnection"];
         IContainer ApplicationContainer { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -22,7 +30,7 @@ namespace PortfolioInsight.Web
         {
             var builder = new ContainerBuilder();
             builder.RegisterSource(new ContravariantRegistrationSource());
-            builder.RegisterModule(new CommonModule());
+            builder.RegisterModule(new CommonModule(ConnectionString));
             builder.RegisterModule(new WebModule());
             builder.Populate(services);
             ApplicationContainer = builder.Build();
