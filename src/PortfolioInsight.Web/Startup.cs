@@ -23,6 +23,7 @@ namespace PortfolioInsight.Web
             var builder = new ContainerBuilder();
             builder.RegisterSource(new ContravariantRegistrationSource());
             builder.RegisterModule(new CommonModule());
+            builder.RegisterModule(new WebModule());
             builder.Populate(services);
             ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(ApplicationContainer);
