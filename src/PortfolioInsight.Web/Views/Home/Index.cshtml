@@ -1,0 +1,13 @@
+﻿@model PortfolioInsight.Users.User
+
+<div class="my-5 mx-auto" style="max-width:400px;">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center">@Model.FirstName @Model.LastName</h5>
+            <p class="card-text text-center">
+                <a href="/account/logout">Log out</a>
+            </p>
+            <a href="#" class="btn btn-primary btn-block">Authorize Questrade</a>
+        </div>
+    </div>
+</div>
