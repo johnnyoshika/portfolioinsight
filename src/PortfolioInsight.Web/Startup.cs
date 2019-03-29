@@ -29,6 +29,8 @@ namespace PortfolioInsight.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
                 {
@@ -54,10 +56,7 @@ namespace PortfolioInsight.Web
 
             app.UseAuthentication();
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseMvcWithDefaultRoute();
 
             applicationLifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());
         }
