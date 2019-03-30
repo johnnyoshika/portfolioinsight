@@ -4,8 +4,8 @@ using System.Text;
 
 namespace PortfolioInsight.Configuration
 {
-    public class ConfigSettings
+    public interface IQuestradeSettings
     {
-        public string QuestradeConsumerKey { get; set; }
+        string ConsumerKey { get; }
     }
 }

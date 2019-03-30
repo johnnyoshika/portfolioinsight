@@ -7,7 +7,8 @@ using Microsoft.Extensions.Options;
 namespace PortfolioInsight.Configuration
 {
     [Service]
-    public class Settings
+    public class Settings : 
+        IQuestradeSettings
     {
         public Settings(IOptions<ConfigSettings> configSettings)
         {
@@ -15,5 +16,7 @@ namespace PortfolioInsight.Configuration
         }
 
         ConfigSettings ConfigSettings { get; }
+
+        string IQuestradeSettings.ConsumerKey => ConfigSettings.QuestradeConsumerKey;
     }
 }
