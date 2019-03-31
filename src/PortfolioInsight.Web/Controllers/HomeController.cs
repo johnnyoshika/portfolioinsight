@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioInsight.Authorizations;
 using PortfolioInsight.Configuration;
+using PortfolioInsight.Exceptions;
 using PortfolioInsight.Security;
 using PortfolioInsight.Users;
 using PortfolioInsight.Web.Http;
@@ -55,12 +56,19 @@ namespace PortfolioInsight.Web.Controllers
         [HttpGet("questrade/response")]
         public async Task<IActionResult> QuestradeResponse(string code)
         {
-            await Tokenizer.ExchangeAsync(
-                code,
-                await AuthenticationClient.AuthenticateAsync(HttpContext.Request),
-                Request.AbsoluteUrl("/questrade/response").UrlEncode());
+            try
+            {
+                await Tokenizer.ExchangeAsync(
+                    code,
+                    await AuthenticationClient.AuthenticateAsync(HttpContext.Request),
+                    Request.AbsoluteUrl("/questrade/response").UrlEncode());
 
-            return Redirect("/");
+                return Redirect("/");
+            }
+            catch (ErrorException ex)
+            {
+                return Content(ex.Message);
+            }
         }
 
         [HttpGet("account/login")]
