@@ -13,6 +13,5 @@ namespace PortfolioInsight.Authorizations
         public Brokerage Brokerage { get; set; }
         public string BrokerageUserId { get; set; }
         public string RefreshToken { get; set; }
-        public bool IsValid { get; set; }
     }
 }

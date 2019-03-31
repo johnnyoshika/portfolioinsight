@@ -14,8 +14,7 @@ namespace PortfolioInsight
                 User = User.ToDto(),
                 Brokerage = Brokerage.ToDto(),
                 BrokerageUserId = BrokerageUserId,
-                RefreshToken = RefreshToken,
-                IsValid = IsValid
+                RefreshToken = RefreshToken
             };
 
         public AuthorizationEntity Assign(Authorization authorization)
@@ -24,7 +23,6 @@ namespace PortfolioInsight
             BrokerageId = authorization.Brokerage.Id;
             BrokerageUserId = authorization.BrokerageUserId;
             RefreshToken = authorization.RefreshToken;
-            IsValid = authorization.IsValid;
             return this;
         }
     }

@@ -175,7 +175,6 @@ namespace PortfolioInsight
         public UserEntity User { get; set; }
 
         public string RefreshToken { get; set; }
-        public bool IsValid { get; set; }
 
         public List<AccountEntity> Accounts { get; set; }
     }

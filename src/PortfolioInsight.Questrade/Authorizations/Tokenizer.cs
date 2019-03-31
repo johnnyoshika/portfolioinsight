@@ -46,7 +46,6 @@ namespace PortfolioInsight.Authorizations
                 };
 
             authorization.RefreshToken = token.RefreshToken;
-            authorization.IsValid = true;
 
             await AuthorizationWriter.WriteAsync(authorization);
             return accessToken;
@@ -56,7 +55,6 @@ namespace PortfolioInsight.Authorizations
         {
             var token = await FetchTokenAsync($"https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token={authorization.RefreshToken}");
             authorization.RefreshToken = token.RefreshToken;
-            // TODO: if an authorization exception is thrown, update authorization.IsValid
             await AuthorizationWriter.WriteAsync(authorization);
             return new AccessToken
             {
