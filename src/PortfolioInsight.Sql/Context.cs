@@ -11,7 +11,9 @@ namespace PortfolioInsight
         }
 
         public DbSet<CurrencyEntity> Currencies { get; set; }
+        public DbSet<SymbolEntity> Symbols { get; set; }
         public DbSet<BrokerageEntity> Brokerages { get; set; }
+        public DbSet<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<AuthorizationEntity> Authorizations { get; set; }
         public DbSet<AccountEntity> Accounts { get; set; }
@@ -34,6 +36,15 @@ namespace PortfolioInsight
                 );
             });
 
+            modelBuilder.Entity<SymbolEntity>(entity =>
+            {
+                entity.ToTable("Symbols");
+
+                entity.Property(s => s.Name)
+                    .HasMaxLength(10)
+                    .IsRequired();
+            });
+
             modelBuilder.Entity<BrokerageEntity>(entity =>
             {
                 entity.ToTable("Brokerages");
@@ -45,6 +56,27 @@ namespace PortfolioInsight
                     .IsRequired();
 
                 entity.HasData(new BrokerageEntity { Id = 1, Name = "Questrade" });
+            });
+
+            modelBuilder.Entity<BrokerageSymbolEntity>(entity =>
+            {
+                entity.ToTable("BrokerageSymbols");
+
+                entity.HasKey(bs => new { bs.SymbolId, bs.BrokerageId });
+
+                entity.Property(bs => bs.ReferenceId)
+                    .IsRequired();
+
+                entity.HasIndex(bs => new { bs.ReferenceId, bs.BrokerageId })
+                    .IsUnique();
+
+                entity.HasOne(bs => bs.Symbol)
+                    .WithMany(s => s.BrokerageSymbols)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(bs => bs.Brokerage)
+                    .WithMany(s => s.BrokerageSymbols)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<UserEntity>(entity =>
@@ -68,8 +100,7 @@ namespace PortfolioInsight
             {
                 entity.ToTable("Authorizations");
 
-                entity
-                    .HasIndex(a => new { a.BrokerageId, a.BrokerageUserId, a.UserId })
+                entity.HasIndex(a => new { a.BrokerageId, a.BrokerageUserId, a.UserId })
                     .IsUnique();
 
                 entity.Property(a => a.BrokerageUserId)
@@ -97,22 +128,17 @@ namespace PortfolioInsight
                 entity.Property(a => a.Name)
                     .IsRequired();
 
-                entity
-                    .HasIndex(a => new { a.Number, a.AuthorizationId })
+                entity.HasIndex(a => new { a.Number, a.AuthorizationId })
                     .IsUnique();
 
                 entity.HasOne(a => a.Authorization)
-                        .WithMany(a => a.Accounts)
-                        .OnDelete(DeleteBehavior.Restrict);
+                    .WithMany(a => a.Accounts)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<PositionEntity>(entity =>
             {
                 entity.ToTable("Positions");
-
-                entity.Property(p => p.Ticker)
-                    .HasMaxLength(10)
-                    .IsRequired();
 
                 entity.Property(p => p.Value)
                     .HasColumnType("money");
@@ -121,13 +147,16 @@ namespace PortfolioInsight
                     .HasMaxLength(3)
                     .IsRequired();
 
-                entity
-                    .HasIndex(a => new { a.Ticker, a.AccountId })
+                entity.HasIndex(p => new { p.SymbolId, p.AccountId })
                     .IsUnique();
 
                 entity.HasOne(p => p.Currency)
                     .WithMany()
                     .HasForeignKey(p => p.CurrencyCode)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(p => p.Symbol)
+                    .WithMany(s => s.Positions)
                     .OnDelete(DeleteBehavior.Restrict);
             });
         }
@@ -138,12 +167,33 @@ namespace PortfolioInsight
         public string Code { get; set; }
     }
 
+    public partial class SymbolEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public List<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
+        public List<PositionEntity> Positions { get; set; }
+    }
+
     public partial class BrokerageEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public List<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
         public List<AuthorizationEntity> Authorizations { get; set; }
+    }
+
+    public partial class BrokerageSymbolEntity
+    {
+        public int SymbolId { get; set; }
+        public SymbolEntity Symbol { get; set; }
+
+        public int BrokerageId { get; set; }
+        public BrokerageEntity Brokerage { get; set; }
+
+        public string ReferenceId { get; set; }
     }
 
     public partial class UserEntity
@@ -194,8 +244,10 @@ namespace PortfolioInsight
     public partial class PositionEntity
     {
         public int Id { get; set; }
-        public string Ticker { get; set; }
         public decimal Value { get; set; }
+
+        public int SymbolId { get; set; }
+        public SymbolEntity Symbol { get; set; }
 
         public string CurrencyCode { get; set; }
         public CurrencyEntity Currency { get; set; }
