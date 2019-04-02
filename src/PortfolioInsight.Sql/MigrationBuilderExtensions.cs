@@ -32,5 +32,12 @@ namespace PortfolioInsight
                 REFERENCES [dbo].[Currencies] ([Code])
                 ALTER TABLE [dbo].[Positions] CHECK CONSTRAINT [FK_Positions_Currencies_CurrencyCode]
             ", true);
+
+        public static void SetBalancesCurrencyCodeCollationToCaseSensitity(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                ALTER TABLE [dbo].[Balances]
+                ALTER COLUMN [CurrencyCode] [nvarchar](3)
+                COLLATE Latin1_General_CS_AS NOT NULL
+            ");
     }
 }

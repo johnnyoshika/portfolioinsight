@@ -29,6 +29,9 @@ namespace PortfolioInsight.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            // Inject custom migration code to change currency code collation to case-sensitive
+            migrationBuilder.SetBalancesCurrencyCodeCollationToCaseSensitity();
+
             migrationBuilder.CreateIndex(
                 name: "IX_Balances_AccountId",
                 table: "Balances",
