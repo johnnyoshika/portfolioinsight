@@ -17,6 +17,7 @@ namespace PortfolioInsight
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<AuthorizationEntity> Authorizations { get; set; }
         public DbSet<AccountEntity> Accounts { get; set; }
+        public DbSet<BalanceEntity> Balances { get; set; }
         public DbSet<PositionEntity> Positions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -136,6 +137,34 @@ namespace PortfolioInsight
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<BalanceEntity>(entity =>
+            {
+                entity.ToTable("Balances");
+
+                entity.Property(b => b.Value)
+                    .HasColumnType("money");
+
+                entity.Property(b => b.Type)
+                    .HasMaxLength(10)
+                    .IsRequired();
+
+                entity.Property(b => b.CurrencyCode)
+                    .HasMaxLength(3)
+                    .IsRequired();
+
+                entity.HasIndex(b => new { b.Type, b.CurrencyCode, b.AccountId })
+                    .IsUnique();
+
+                entity.HasOne(b => b.Currency)
+                    .WithMany()
+                    .HasForeignKey(b => b.CurrencyCode)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(b => b.Account)
+                    .WithMany(b => b.Balances)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             modelBuilder.Entity<PositionEntity>(entity =>
             {
                 entity.ToTable("Positions");
@@ -238,7 +267,22 @@ namespace PortfolioInsight
         public int AuthorizationId { get; set; }
         public AuthorizationEntity Authorization { get; set; }
 
+        public List<BalanceEntity> Balances { get; set; }
         public List<PositionEntity> Positions { get; set; }
+    }
+
+    public partial class BalanceEntity
+    {
+        public int Id { get; set; }
+        public decimal Value { get; set; }
+
+        public string Type { get; set; }
+
+        public string CurrencyCode { get; set; }
+        public CurrencyEntity Currency { get; set; }
+
+        public int AccountId { get; set; }
+        public AccountEntity Account { get; set; }
     }
 
     public partial class PositionEntity
