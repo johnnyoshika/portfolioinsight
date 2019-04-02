@@ -152,13 +152,13 @@ namespace PortfolioInsight
                     .HasMaxLength(3)
                     .IsRequired();
 
-                //entity.HasIndex(b => new { b.Type, b.CurrencyCode, b.AccountId })
-                //    .IsUnique();
+                entity.HasIndex(b => new { b.Type, b.CurrencyCode, b.AccountId })
+                    .IsUnique();
 
-                //entity.HasOne(b => b.Currency)
-                //    .WithMany()
-                //    .HasForeignKey(b => b.CurrencyCode)
-                //    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(b => b.Currency)
+                    .WithMany()
+                    .HasForeignKey(b => b.CurrencyCode)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(b => b.Account)
                     .WithMany(b => b.Balances)
@@ -279,7 +279,7 @@ namespace PortfolioInsight
         public string Type { get; set; }
 
         public string CurrencyCode { get; set; }
-        //public CurrencyEntity Currency { get; set; }
+        public CurrencyEntity Currency { get; set; }
 
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }
