@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using PortfolioInsight.Configuration;
+using PortfolioInsight.Exceptions;
 
 namespace PortfolioInsight.Http
 {
@@ -25,8 +26,16 @@ namespace PortfolioInsight.Http
             AddAuthorization(message.Headers);
             using (var client = new HttpClient())
             {
-                var response = await client.SendAsync(message);
-                return await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var response = await client.SendAsync(message);
+                    response.EnsureSuccessStatusCode();
+                    return await response.Content.ReadAsStringAsync();
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw new ErrorException(ex.Message);
+                }
             }
         }
     }
