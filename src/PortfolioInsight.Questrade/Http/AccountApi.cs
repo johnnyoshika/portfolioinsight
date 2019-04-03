@@ -10,7 +10,7 @@ namespace PortfolioInsight.Http
 {
     static class AccountApi
     {
-        public static async Task<QuestradeAccounts> FindAccounts(AccessToken accessToken)
+        public static async Task<QuestradeAccounts> FindAccountsAsync(AccessToken accessToken)
         {
             var client = new QuestradeClient(accessToken.Value);
             var data = await client.SendAsync(new HttpRequestMessage
