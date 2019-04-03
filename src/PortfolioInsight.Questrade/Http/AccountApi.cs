@@ -31,11 +31,11 @@ namespace PortfolioInsight.Http
 
     class QuestradeAccount
     {
-        public string Type { get; set; }
+        public QuestradeAccountType Type { get; set; }
         public string Number { get; set; }
         public string Status { get; set; }
         public bool IsPrimary { get; set; }
         public bool IsBilling { get; set; }
-        public string ClientAccounType { get; set; }
+        public string ClientAccountType { get; set; }
     }
 }
