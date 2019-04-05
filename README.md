@@ -9,14 +9,39 @@
 
 # Questrade Setup
 * Create an app at [App Hub](https://login.questrade.com/APIAccess/UserApps.aspx)
-* Add a callback URL. It must be https and it cannot be localhost.
-  * Unfortunately I couldn't get a custom base URL to work in Visual Studio, so use any https non-localhost URL, e.g. `https://johnny.netlify.com/questrade/response`
+* Add this callback URL. Note: it seems that callback URLs must be https and it cannot be localhost.
+  * `https://app.portfolioinsight.local:44348/questrade/response`
 * Get Consumer Key from App Hub and set `QuestradeConsumerKey` in `appsettings.json`
 
-# Questrade Authorization
-* It is recommended above that a https non-localhost URL be used for the Callback URL (e.g. `https://johnny.netlify.com/questrade/response`)
-* As a temporary workaround until Visual Studio supports [custom base URL with https](https://stackoverflow.com/q/55433429/188740), modify [ApplicationUrl's](https://github.com/johnnyoshika/portfolioinsight/blob/master/src/PortfolioInsight.Web/Http/ApplicationUrl.cs) AbsoluteHost() to return the host URL entered as a callback URL in App Hub (e.g. `https://johnny.netlify.com`)
-* After authorization and after user is redirected back to `https://johnny.netlify.com/questrade/response`, change the host URL to our app URL so that the URL looks like this: `https://localhost:44348/questrade/response?code={code}`. Load that page
+# Questrade Authorization (enable app.portfolioinsight.local)
+* In `.vs/config/applicationhost.config`
+* Find this:
+```
+        <bindings>
+          <binding protocol="http" bindingInformation="*:53837:localhost" />
+          <binding protocol="https" bindingInformation="*:44348:localhost" />
+        </bindings>
+```
+* Add an extra binding for `app.propertyinsight.local`
+```
+        <bindings>
+          <binding protocol="http" bindingInformation="*:53837:localhost" />
+          <binding protocol="https" bindingInformation="*:44348:localhost" />
+          <binding protocol="https" bindingInformation="*:44348:app.portfolioinsight.local" />
+        </bindings>
+```
+* The moment you add this `app.portfolioinsight.local` binding, you need to run Visual Studio as an administrator, otherwise, IIS Express won't run. That's a bit of a pain, so you may want to only add that binding for Questrade authorization, then remove it thereafter.
+* Add this entry in your host file:
+```
+        127.0.0.1		app.portfolioinsight.local
+```
+* Go through the OAuth flow using https://app.portfolioinsight.local:44348
+
+# Questrade Authorization (w/o administrator mode)
+* The above Questrade Authorization option has the downside of having to run Visual Studio as an administrator. To avoid this, use this workaround.
+* Delete `<binding protocol="https" bindingInformation="*:44348:app.portfolioinsight.local" />` binding entry in applicationhost.config if it was added
+* Modify [ApplicationUrl's](https://github.com/johnnyoshika/portfolioinsight/blob/master/src/PortfolioInsight.Web/Http/ApplicationUrl.cs) AbsoluteHost() to return the host URL entered as a callback URL in App Hub (e.g. `https://app.portfolioinsight.local:44348/questrade/response`)
+* After authorization and after user is redirected back to `https://app.portfolioinsight.local:44348/questrade/response`, change the host URL to our localhost URL so that the URL looks like this: `https://localhost:44348/questrade/response?code={code}`. Load that page
 * OAuth flow will continue as expected
 
 # EF Migration
