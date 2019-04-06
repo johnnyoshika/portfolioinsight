@@ -7,7 +7,7 @@ namespace PortfolioInsight.Portfolios
 {
     public class Symbol
     {
-        public Symbol(int id, string name, Currency currency, string listingExchange)
+        public Symbol(int id, string name, Currency currency, ListingExchange listingExchange)
         {
             Id = id;
             Name = name;
@@ -18,6 +18,6 @@ namespace PortfolioInsight.Portfolios
         public int Id { get; }
         public string Name { get; }
         public Currency Currency { get; }
-        public string ListingExchange { get; }
+        public ListingExchange ListingExchange { get; }
     }
 }
