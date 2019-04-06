@@ -5,8 +5,11 @@ using PortfolioInsight.Connections;
 
 namespace PortfolioInsight
 {
-    public partial class ConnectionEntity
+    public partial class ConnectionEntity : Entity<ConnectionEntity>
     {
+        internal override IEnumerable<object> EqualityAttributes =>
+            new object[] { Id };
+
         public Connection ToDto() =>
             new Connection
             {

@@ -6,8 +6,11 @@ using PortfolioInsight.Portfolios;
 
 namespace PortfolioInsight
 {
-    public partial class SymbolEntity
+    public partial class SymbolEntity : Entity<SymbolEntity>
     {
+        internal override IEnumerable<object> EqualityAttributes =>
+            new object[] { Id };
+
         public Symbol ToModel() =>
             new Symbol(
                 Id,

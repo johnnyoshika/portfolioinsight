@@ -5,8 +5,11 @@ using PortfolioInsight.Users;
 
 namespace PortfolioInsight
 {
-    public partial class UserEntity
+    public partial class UserEntity : Entity<UserEntity>
     {
+        internal override IEnumerable<object> EqualityAttributes =>
+            new object[] { Id };
+
         public User ToDto() =>
             new User
             {

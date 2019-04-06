@@ -5,8 +5,11 @@ using PortfolioInsight.Portfolios;
 
 namespace PortfolioInsight
 {
-    public partial class PositionEntity
+    public partial class PositionEntity : Entity<PositionEntity>
     {
+        internal override IEnumerable<object> EqualityAttributes =>
+            new object[] { Id };
+
         public Position ToModel() =>
             new Position(
                 Symbol.ToModel(),

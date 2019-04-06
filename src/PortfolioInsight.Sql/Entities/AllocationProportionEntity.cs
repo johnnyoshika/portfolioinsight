@@ -6,8 +6,11 @@ using PortfolioInsight.Portfolios;
 
 namespace PortfolioInsight
 {
-    public partial class AllocationProportionEntity
+    public partial class AllocationProportionEntity : Entity<AllocationProportionEntity>
     {
+        internal override IEnumerable<object> EqualityAttributes =>
+            new object[] { Id };
+
         public AllocationProportion ToModel() =>
             new AllocationProportion(
                 AssetClass.ToModel(),

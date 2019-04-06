@@ -6,8 +6,11 @@ using PortfolioInsight.Portfolios;
 
 namespace PortfolioInsight
 {
-    public partial class AccountEntity
+    public partial class AccountEntity : Entity<AccountEntity>
     {
+        internal override IEnumerable<object> EqualityAttributes =>
+            new object[] { Id };
+
         public Account ToModel() =>
             new Account(
                 Id,
