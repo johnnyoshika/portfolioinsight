@@ -13,14 +13,16 @@ namespace PortfolioInsight.Portfolios
     [Service]
     public class PortfolioSynchronizer : IPortfolioSynchronizer
     {
-        public PortfolioSynchronizer(IPortfolioWriter portfolioWriter, ISymbolWriter symbolWriter, ITokenizer tokenizer)
+        public PortfolioSynchronizer(IPortfolioWriter portfolioWriter, ISymbolReader symbolReader, ISymbolWriter symbolWriter, ITokenizer tokenizer)
         {
             PortfolioWriter = portfolioWriter;
+            SymbolReader = symbolReader;
             SymbolWriter = symbolWriter;
             Tokenizer = tokenizer;
         }
 
         IPortfolioWriter PortfolioWriter { get; }
+        ISymbolReader SymbolReader { get; }
         ISymbolWriter SymbolWriter { get; }
         ITokenizer Tokenizer { get; }
 
@@ -56,11 +58,17 @@ namespace PortfolioInsight.Portfolios
             return positions;
         }
 
-        async Task<Position> GetPositionAsync(QuestradePosition questradePosition, AccessToken accessToken)
+        async Task<Position> GetPositionAsync(QuestradePosition questradePosition, AccessToken accessToken) =>
+            new Position(await GetSymbolAsync(questradePosition.SymbolId, accessToken), questradePosition.CurrentMarketValue);
+
+        async Task<Symbol> GetSymbolAsync(int questradeSymbolId, AccessToken accessToken)
         {
-            var symbol = await SymbolWriter.WriteAsync(Brokerage.Questrade.Id, questradePosition.SymbolId.ToString(), questradePosition.Symbol);
-            var questradeSymbol = await SymbolApi.FindSymbolAsync(questradePosition.SymbolId, accessToken);
-            return new Position(symbol, questradePosition.CurrentMarketValue, new Currency(questradeSymbol.Currency));
+            var symbol = await SymbolReader.ReadByBrokerageReferenceAsync(Brokerage.Questrade.Id, questradeSymbolId.ToString());
+            if (symbol != null)
+                return symbol;
+
+            var questradeSymbol = await SymbolApi.FindSymbolAsync(questradeSymbolId, accessToken);
+            return await SymbolWriter.WriteAsync(Brokerage.Questrade.Id, questradeSymbol.SymbolId.ToString(), questradeSymbol.Symbol);
         }
     }
 }

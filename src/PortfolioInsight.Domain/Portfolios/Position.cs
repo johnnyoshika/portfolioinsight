@@ -7,15 +7,13 @@ namespace PortfolioInsight.Portfolios
 {
     public class Position
     {
-        public Position(Symbol symbol, Amount value, Currency currency)
+        public Position(Symbol symbol, Amount value)
         {
             Symbol = symbol;
             Value = value;
-            Currency = currency;
         }
 
         public Symbol Symbol { get; }
         public Amount Value { get; }
-        public Currency Currency { get; }
     }
 }

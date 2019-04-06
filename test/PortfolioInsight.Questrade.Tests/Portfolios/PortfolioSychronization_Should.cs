@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Moq;
 using PortfolioInsight.Authorizations;
 using PortfolioInsight.Configuration;
+using PortfolioInsight.Financial;
 using PortfolioInsight.Portfolios;
 using Xunit;
 
@@ -26,10 +27,12 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             tokenizer.Setup(_ => _.RefreshAsync(It.IsAny<Authorization>()))
                 .ReturnsAsync(await RefreshTokenAsync(refreshToken));
 
+            var symbolReader = new Mock<ISymbolReader>();
+            symbolReader.Setup(_ => _.ReadByBrokerageReferenceAsync(It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync(() => 
+                    new Symbol(1, "XIC", new Currency("CAD")));
+
             var symbolWriter = new Mock<ISymbolWriter>();
-            symbolWriter.Setup(_ => _.WriteAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(() =>
-                    new Symbol(1, "XIC"));
 
             Portfolio portfolio = null;
             var portfolioWriter = new Mock<IPortfolioWriter>();
@@ -40,7 +43,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                 })
                 .Returns(Task.CompletedTask);
 
-            var synchronizer = new PortfolioSynchronizer(portfolioWriter.Object, symbolWriter.Object, tokenizer.Object);
+            var synchronizer = new PortfolioSynchronizer(portfolioWriter.Object, symbolReader.Object, symbolWriter.Object, tokenizer.Object);
             await synchronizer.SyncAsync(new Authorization());
 
             Assert.NotNull(portfolio);
