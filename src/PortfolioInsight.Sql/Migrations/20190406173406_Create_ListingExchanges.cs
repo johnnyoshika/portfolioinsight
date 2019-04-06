@@ -24,6 +24,8 @@ namespace PortfolioInsight.Migrations
                     table.PrimaryKey("PK_ListingExchanges", x => x.Code);
                 });
 
+            migrationBuilder.SetListingExchangeCodeCollationToCaseSensitive();
+
             migrationBuilder.InsertData(
                 table: "ListingExchanges",
                 column: "Code",

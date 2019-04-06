@@ -46,5 +46,23 @@ namespace PortfolioInsight
                 ALTER COLUMN [CurrencyCode] [nvarchar](3)
                 COLLATE Latin1_General_CS_AS NOT NULL
             ");
+
+        public static void SetListingExchangeCodeCollationToCaseSensitive(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                ALTER TABLE [dbo].[ListingExchanges] DROP CONSTRAINT [PK_ListingExchanges] WITH ( ONLINE = OFF )
+
+                ALTER TABLE [dbo].[ListingExchanges]
+                ALTER COLUMN [Code] [nvarchar](10)
+                COLLATE Latin1_General_CS_AS NOT NULL
+
+                ALTER TABLE [dbo].[Symbols]
+                ALTER COLUMN [ListingExchangeCode] [nvarchar](10)
+                COLLATE Latin1_General_CS_AS NOT NULL
+
+                ALTER TABLE [dbo].[ListingExchanges] ADD  CONSTRAINT [PK_ListingExchanges] PRIMARY KEY CLUSTERED 
+                (
+	                [Code] ASC
+                )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+            ");
     }
 }
