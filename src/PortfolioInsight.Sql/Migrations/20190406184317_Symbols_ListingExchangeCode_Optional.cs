@@ -10,6 +10,8 @@ namespace PortfolioInsight.Migrations
                 name: "IX_Symbols_Name_ListingExchangeCode",
                 table: "Symbols");
 
+            migrationBuilder.BeforeSymbolsListingExchangeCodeChange();
+
             migrationBuilder.AlterColumn<string>(
                 name: "ListingExchangeCode",
                 table: "Symbols",
@@ -17,6 +19,9 @@ namespace PortfolioInsight.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 10);
+
+            migrationBuilder.SetSymbolsListingExchangeCodeNullCollationToCaseSensitive();
+            migrationBuilder.AfterSymbolsListingExchangeCodeChange();
 
             migrationBuilder.CreateIndex(
                 name: "IX_Symbols_Name_ListingExchangeCode",
@@ -32,6 +37,8 @@ namespace PortfolioInsight.Migrations
                 name: "IX_Symbols_Name_ListingExchangeCode",
                 table: "Symbols");
 
+            migrationBuilder.BeforeSymbolsListingExchangeCodeChange();
+
             migrationBuilder.AlterColumn<string>(
                 name: "ListingExchangeCode",
                 table: "Symbols",
@@ -40,6 +47,9 @@ namespace PortfolioInsight.Migrations
                 oldClrType: typeof(string),
                 oldMaxLength: 10,
                 oldNullable: true);
+
+            migrationBuilder.SetSymbolsListingExchangeCodeNotNullCollationToCaseSensitive();
+            migrationBuilder.AfterSymbolsListingExchangeCodeChange();
 
             migrationBuilder.CreateIndex(
                 name: "IX_Symbols_Name_ListingExchangeCode",

@@ -64,5 +64,37 @@ namespace PortfolioInsight
 	                [Code] ASC
                 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
             ");
+
+        public static void BeforeSymbolsListingExchangeCodeChange(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                DROP INDEX [IX_Symbols_ListingExchangeCode] ON [dbo].[Symbols]
+                ALTER TABLE [dbo].[Symbols] DROP CONSTRAINT [FK_Symbols_ListingExchanges_ListingExchangeCode]
+            ");
+
+        public static void AfterSymbolsListingExchangeCodeChange(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                ALTER TABLE [dbo].[Symbols]  WITH CHECK ADD  CONSTRAINT [FK_Symbols_ListingExchanges_ListingExchangeCode] FOREIGN KEY([ListingExchangeCode])
+                REFERENCES [dbo].[ListingExchanges] ([Code])
+                ALTER TABLE [dbo].[Symbols] CHECK CONSTRAINT [FK_Symbols_ListingExchanges_ListingExchangeCode]
+
+                CREATE NONCLUSTERED INDEX [IX_Symbols_ListingExchangeCode] ON [dbo].[Symbols]
+                (
+	                [ListingExchangeCode] ASC
+                )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+            ");
+
+        public static void SetSymbolsListingExchangeCodeNullCollationToCaseSensitive(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                        ALTER TABLE [dbo].[Symbols]
+                        ALTER COLUMN [ListingExchangeCode] [nvarchar](10)
+                        COLLATE Latin1_General_CS_AS
+                    ");
+
+        public static void SetSymbolsListingExchangeCodeNotNullCollationToCaseSensitive(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                ALTER TABLE [dbo].[Symbols]
+                ALTER COLUMN [ListingExchangeCode] [nvarchar](10)
+                COLLATE Latin1_General_CS_AS NOT NULL
+            ");
     }
 }
