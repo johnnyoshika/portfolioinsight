@@ -83,8 +83,7 @@ namespace PortfolioInsight
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(s => s.ListingExchangeCode)
-                    .HasMaxLength(10)
-                    .IsRequired();
+                    .HasMaxLength(10);
 
                 entity.HasOne(s => s.ListingExchange)
                     .WithMany(e => e.Symbols)
