@@ -207,10 +207,6 @@ namespace PortfolioInsight
                     .WithMany()
                     .HasForeignKey(b => b.CurrencyCode)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(b => b.Account)
-                    .WithMany(b => b.Balances)
-                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<PositionEntity>(entity =>
