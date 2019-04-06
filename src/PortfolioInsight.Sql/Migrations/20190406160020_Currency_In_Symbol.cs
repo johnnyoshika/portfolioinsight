@@ -32,6 +32,8 @@ namespace PortfolioInsight.Migrations
                 nullable: false,
                 defaultValue: "");
 
+            migrationBuilder.SetSymbolsCurrencyCodeCollationToCaseSensitive();
+
             migrationBuilder.CreateIndex(
                 name: "IX_Symbols_CurrencyCode",
                 table: "Symbols",

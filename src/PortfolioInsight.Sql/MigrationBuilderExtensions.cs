@@ -39,5 +39,12 @@ namespace PortfolioInsight
                 ALTER COLUMN [CurrencyCode] [nvarchar](3)
                 COLLATE Latin1_General_CS_AS NOT NULL
             ");
+
+        public static void SetSymbolsCurrencyCodeCollationToCaseSensitive(this MigrationBuilder builder) =>
+            builder.Sql(@"
+                ALTER TABLE [dbo].[Symbols]
+                ALTER COLUMN [CurrencyCode] [nvarchar](3)
+                COLLATE Latin1_General_CS_AS NOT NULL
+            ");
     }
 }
