@@ -70,6 +70,9 @@ namespace PortfolioInsight
                     .HasMaxLength(10)
                     .IsRequired();
 
+                entity.Property(s => s.Description)
+                    .HasMaxLength(450);
+
                 entity.Property(s => s.CurrencyCode)
                     .HasMaxLength(3)
                     .IsRequired();
