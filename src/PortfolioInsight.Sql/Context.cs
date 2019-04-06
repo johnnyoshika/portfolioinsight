@@ -11,6 +11,7 @@ namespace PortfolioInsight
         }
 
         public DbSet<CurrencyEntity> Currencies { get; set; }
+        public DbSet<ListingExchangeEntity> ListingExchanges { get; set; }
         public DbSet<SymbolEntity> Symbols { get; set; }
         public DbSet<BrokerageEntity> Brokerages { get; set; }
         public DbSet<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
@@ -37,6 +38,30 @@ namespace PortfolioInsight
                 );
             });
 
+            modelBuilder.Entity<ListingExchangeEntity>(entity =>
+            {
+                entity.ToTable("ListingExchanges");
+
+                entity.HasKey(e => e.Code);
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(10);
+
+                entity.HasData(
+                    new ListingExchangeEntity { Code = "TSX" },
+                    new ListingExchangeEntity { Code = "TSXV" },
+                    new ListingExchangeEntity { Code = "CNSX" },
+                    new ListingExchangeEntity { Code = "MX" },
+                    new ListingExchangeEntity { Code = "NASDAQ" },
+                    new ListingExchangeEntity { Code = "NYSE" },
+                    new ListingExchangeEntity { Code = "NYSEAM" },
+                    new ListingExchangeEntity { Code = "ARCA" },
+                    new ListingExchangeEntity { Code = "OPRA" },
+                    new ListingExchangeEntity { Code = "PinkSheets" },
+                    new ListingExchangeEntity { Code = "OTCBB" }
+                );
+            });
+
             modelBuilder.Entity<SymbolEntity>(entity =>
             {
                 entity.ToTable("Symbols");
@@ -53,6 +78,18 @@ namespace PortfolioInsight
                     .WithMany()
                     .HasForeignKey(s => s.CurrencyCode)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(s => s.ListingExchangeCode)
+                    .HasMaxLength(10)
+                    .IsRequired();
+
+                entity.HasOne(s => s.ListingExchange)
+                    .WithMany(e => e.Symbols)
+                    .HasForeignKey(s => s.ListingExchangeCode)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(s => new { s.Name, s.ListingExchangeCode})
+                    .IsUnique();
             });
 
             modelBuilder.Entity<BrokerageEntity>(entity =>
@@ -196,6 +233,13 @@ namespace PortfolioInsight
         public string Code { get; set; }
     }
 
+    public partial class ListingExchangeEntity
+    {
+        public string Code { get; set; }
+
+        public List<SymbolEntity> Symbols { get; set; }
+    }
+
     public partial class SymbolEntity
     {
         public int Id { get; set; }
@@ -203,6 +247,9 @@ namespace PortfolioInsight
 
         public string CurrencyCode { get; set; }
         public CurrencyEntity Currency { get; set; }
+
+        public string ListingExchangeCode { get; set; }
+        public ListingExchangeEntity ListingExchange { get; set; }
 
         public List<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
         public List<PositionEntity> Positions { get; set; }
