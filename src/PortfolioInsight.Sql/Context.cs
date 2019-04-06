@@ -34,7 +34,7 @@ namespace PortfolioInsight
 
                 entity.HasData(
                     new CurrencyEntity { Code = "CAD" },
-                    new CurrencyEntity { Code = "USA" }
+                    new CurrencyEntity { Code = "USD" }
                 );
             });
 
