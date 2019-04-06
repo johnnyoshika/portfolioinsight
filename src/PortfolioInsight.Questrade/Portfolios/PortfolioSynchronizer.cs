@@ -70,6 +70,7 @@ namespace PortfolioInsight.Portfolios
             var questradeSymbol = await SymbolApi.FindSymbolAsync(questradeSymbolId, accessToken);
             return await SymbolWriter.WriteAsync(
                 questradeSymbol.Symbol,
+                questradeSymbol.Description,
                 questradeSymbol.ListingExchange.ToString(),
                 questradeSymbol.Currency,
                 Brokerage.Questrade.Id,

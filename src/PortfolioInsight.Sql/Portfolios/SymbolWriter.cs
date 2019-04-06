@@ -17,7 +17,7 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
-        public async Task<Symbol> WriteAsync(string name, string listingExchangeCode, string currencyCode, int brokerageId, string referenceId)
+        public async Task<Symbol> WriteAsync(string name, string description, string listingExchangeCode, string currencyCode, int brokerageId, string referenceId)
         {
             using (var context = Context())
             {
@@ -31,6 +31,7 @@ namespace PortfolioInsight.Portfolios
                     eSymbol = new SymbolEntity
                     {
                         Name = name,
+                        Description = description,
                         ListingExchangeCode = listingExchangeCode,
                         CurrencyCode = currencyCode,
                         BrokerageSymbols = new List<BrokerageSymbolEntity>()

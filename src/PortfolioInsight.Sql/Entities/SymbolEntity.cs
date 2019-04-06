@@ -9,11 +9,12 @@ namespace PortfolioInsight
     public partial class SymbolEntity
     {
         public Symbol ToDto() =>
-            new Symbol(Id, Name, new Currency(CurrencyCode), new ListingExchange(ListingExchangeCode));
+            new Symbol(Id, Name, Description, new Currency(CurrencyCode), new ListingExchange(ListingExchangeCode));
 
         public SymbolEntity Assign(Symbol symbol)
         {
             Name = symbol.Name;
+            Description = symbol.Description;
             CurrencyCode = symbol.Currency.Code;
             ListingExchangeCode = symbol.ListingExchange.Code;
             return this;

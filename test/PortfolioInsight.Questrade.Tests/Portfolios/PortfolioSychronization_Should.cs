@@ -30,7 +30,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             var symbolReader = new Mock<ISymbolReader>();
             symbolReader.Setup(_ => _.ReadByBrokerageReferenceAsync(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(() => 
-                    new Symbol(1, "XIC", new Currency("CAD"), new ListingExchange("TSX")));
+                    new Symbol(1, "XIC", "TSX Composite ETF", new Currency("CAD"), new ListingExchange("TSX")));
 
             var symbolWriter = new Mock<ISymbolWriter>();
 
