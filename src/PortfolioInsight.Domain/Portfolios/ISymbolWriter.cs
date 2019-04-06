@@ -7,6 +7,6 @@ namespace PortfolioInsight.Portfolios
 {
     public interface ISymbolWriter
     {
-        Task<Symbol> WriteAsync(int brokerageId, string referenceId, string name);
+        Task<Symbol> WriteAsync(int brokerageId, string referenceId, string name, string currencyCode, string listingExchange);
     }
 }
