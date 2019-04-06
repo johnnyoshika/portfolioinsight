@@ -45,10 +45,6 @@ namespace PortfolioInsight
                     .HasMaxLength(10)
                     .IsRequired();
 
-                entity.Property(s => s.ListingExchange)
-                    .HasMaxLength(10)
-                    .IsRequired();
-
                 entity.Property(s => s.CurrencyCode)
                     .HasMaxLength(3)
                     .IsRequired();
@@ -204,7 +200,6 @@ namespace PortfolioInsight
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string ListingExchange { get; set; }
 
         public string CurrencyCode { get; set; }
         public CurrencyEntity Currency { get; set; }
