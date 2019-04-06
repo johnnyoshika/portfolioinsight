@@ -44,6 +44,19 @@ namespace PortfolioInsight
                 entity.Property(s => s.Name)
                     .HasMaxLength(10)
                     .IsRequired();
+
+                entity.Property(s => s.ListingExchange)
+                    .HasMaxLength(10)
+                    .IsRequired();
+
+                entity.Property(s => s.CurrencyCode)
+                    .HasMaxLength(3)
+                    .IsRequired();
+
+                entity.HasOne(s => s.Currency)
+                    .WithMany()
+                    .HasForeignKey(s => s.CurrencyCode)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<BrokerageEntity>(entity =>
@@ -172,17 +185,8 @@ namespace PortfolioInsight
                 entity.Property(p => p.Value)
                     .HasColumnType("money");
 
-                entity.Property(p => p.CurrencyCode)
-                    .HasMaxLength(3)
-                    .IsRequired();
-
                 entity.HasIndex(p => new { p.SymbolId, p.AccountId })
                     .IsUnique();
-
-                entity.HasOne(p => p.Currency)
-                    .WithMany()
-                    .HasForeignKey(p => p.CurrencyCode)
-                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(p => p.Symbol)
                     .WithMany(s => s.Positions)
@@ -200,6 +204,10 @@ namespace PortfolioInsight
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string ListingExchange { get; set; }
+
+        public string CurrencyCode { get; set; }
+        public CurrencyEntity Currency { get; set; }
 
         public List<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
         public List<PositionEntity> Positions { get; set; }
@@ -292,9 +300,6 @@ namespace PortfolioInsight
 
         public int SymbolId { get; set; }
         public SymbolEntity Symbol { get; set; }
-
-        public string CurrencyCode { get; set; }
-        public CurrencyEntity Currency { get; set; }
 
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }
