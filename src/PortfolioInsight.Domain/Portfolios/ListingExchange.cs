@@ -6,6 +6,8 @@ namespace PortfolioInsight.Portfolios
 {
     public class ListingExchange : ValueObject<ListingExchange>
     {
+        public static readonly ListingExchange None = new ListingExchange(null);
+
         public ListingExchange(string code)
         {
             Code = code;

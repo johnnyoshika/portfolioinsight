@@ -71,7 +71,7 @@ namespace PortfolioInsight.Portfolios
             return await SymbolWriter.WriteAsync(
                 questradeSymbol.Symbol,
                 questradeSymbol.Description,
-                questradeSymbol.ListingExchange.ToString(),
+                questradeSymbol.ListingExchange?.ToString(),
                 questradeSymbol.Currency,
                 Brokerage.Questrade.Id,
                 questradeSymbol.SymbolId.ToString());
