@@ -17,6 +17,14 @@ namespace PortfolioInsight.Authorizations
 
         Func<Context> Context { get; }
 
+        public async Task<List<Authorization>> ReadAllAsync()
+        {
+            using (var context = Context())
+                return await IncludeGraph(context)
+                    .Select(a => a.ToDto())
+                    .ToListAsync();
+        }
+
         public async Task<Authorization> ReadByIdAsync(int id)
         {
             using (var context = Context())
