@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using PortfolioInsight.Authorizations;
 using PortfolioInsight.Configuration;
 using PortfolioInsight.Exceptions;
+using PortfolioInsight.Portfolios;
 using PortfolioInsight.Security;
 using PortfolioInsight.Users;
 using PortfolioInsight.Web.Http;
@@ -24,7 +25,9 @@ namespace PortfolioInsight.Web.Controllers
             ISignOutClient signOutClient,
             IAuthenticationClient authenticationClient,
             IQuestradeSettings questradeSettings,
-            ITokenizer tokenizer)
+            ITokenizer tokenizer,
+            IAuthorizationReader authorizationReader,
+            IPortfolioSynchronizer portfolioSynchronizer)
         {
             UserReader = userReader;
             IdentityReader = identityReader;
@@ -33,6 +36,8 @@ namespace PortfolioInsight.Web.Controllers
             AuthenticationClient = authenticationClient;
             QuestradeSettings = questradeSettings;
             Tokenizer = tokenizer;
+            AuthorizationReader = authorizationReader;
+            PortfolioSynchronizer = portfolioSynchronizer;
         }
 
         IUserReader UserReader { get; }
@@ -42,6 +47,8 @@ namespace PortfolioInsight.Web.Controllers
         IAuthenticationClient AuthenticationClient { get; }
         IQuestradeSettings QuestradeSettings { get; }
         ITokenizer Tokenizer { get; }
+        IAuthorizationReader AuthorizationReader { get; }
+        IPortfolioSynchronizer PortfolioSynchronizer { get; }
 
         [Authorize]
         public async Task<IActionResult> Index() =>
@@ -94,6 +101,15 @@ namespace PortfolioInsight.Web.Controllers
         {
             await SignOutClient.SignOutAsync(HttpContext);
             return Redirect("/account/login");
+        }
+
+        [HttpPost("sync")]
+        public async Task<IActionResult> Sync()
+        {
+            foreach (var authorization in await AuthorizationReader.ReadAllAsync())
+                await PortfolioSynchronizer.SyncAsync(authorization);
+
+            return NoContent();
         }
     }
 }
