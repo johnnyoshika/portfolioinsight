@@ -47,7 +47,7 @@ namespace PortfolioInsight.Portfolios
                     });
 
                 await context.SaveChangesAsync();
-                return eSymbol.ToDto();
+                return eSymbol.ToModel();
             }
         }
     }

@@ -24,12 +24,33 @@ namespace PortfolioInsight.Portfolios
                 var eAuthorization = await context
                     .Authorizations
                     .Include(a => a.Accounts)
+                        .ThenInclude(a => a.Balances)
+                    .Include(a => a.Accounts)
+                        .ThenInclude(a => a.Positions)
                     .Where(a => a.Id == portfolio.AuthorizationId)
-                    .FirstOrDefaultAsync();
+                    .FirstAsync();
 
-                context.Accounts.RemoveRange(eAuthorization.Accounts);
-                eAuthorization.Accounts.AddRange(
-                    portfolio.Accounts.Select(a => new AccountEntity().Assign(a)));
+                context.Balances.RemoveRange(eAuthorization.Accounts.SelectMany(a => a.Balances));
+                context.Positions.RemoveRange(eAuthorization.Accounts.SelectMany(a => a.Positions));
+                context.Accounts.RemoveRange(
+                    eAuthorization.Accounts.Where(e => !portfolio.Accounts.Any(a => a.Id == e.Id)));
+
+                foreach (var a in portfolio.Accounts)
+                {
+                    var eAccount = eAuthorization.Accounts.FirstOrDefault(e => e.Id == a.Id);
+
+                    if (eAccount == null)
+                    {
+                        eAccount = new AccountEntity
+                        {
+                            AuthorizationId = eAuthorization.Id,
+                            Authorization = eAuthorization
+                        };
+                        context.Accounts.Add(eAccount);
+                    }
+
+                    eAccount.Assign(a);
+                }
 
                 await context.SaveChangesAsync();
             }

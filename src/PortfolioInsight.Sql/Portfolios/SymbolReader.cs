@@ -33,7 +33,7 @@ namespace PortfolioInsight.Portfolios
                 return await context
                     .Symbols
                     .Where(filter)
-                    .Select(e => e.ToDto())
+                    .Select(e => e.ToModel())
                     .FirstOrDefaultAsync();
         }
     }

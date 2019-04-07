@@ -13,36 +13,51 @@ namespace PortfolioInsight.Portfolios
     [Service]
     public class PortfolioSynchronizer : IPortfolioSynchronizer
     {
-        public PortfolioSynchronizer(IPortfolioWriter portfolioWriter, ISymbolReader symbolReader, ISymbolWriter symbolWriter, ITokenizer tokenizer)
+        public PortfolioSynchronizer(
+            IPortfolioReader portfolioReader,
+            IPortfolioWriter portfolioWriter,
+            ISymbolReader symbolReader,
+            ISymbolWriter symbolWriter,
+            ITokenizer tokenizer)
         {
+            PortfolioReader = portfolioReader;
             PortfolioWriter = portfolioWriter;
             SymbolReader = symbolReader;
             SymbolWriter = symbolWriter;
             Tokenizer = tokenizer;
         }
 
+        IPortfolioReader PortfolioReader { get; }
         IPortfolioWriter PortfolioWriter { get; }
         ISymbolReader SymbolReader { get; }
         ISymbolWriter SymbolWriter { get; }
         ITokenizer Tokenizer { get; }
 
-        public async Task SyncAsync(Authorization authorization) =>
+        public async Task SyncAsync(Authorization authorization)
+        {
+            var portfolio = await PortfolioReader.ReadByAuthorizationIdAsync(authorization.Id);
             await PortfolioWriter.WriteAsync(
                 new Portfolio(
                     authorization.Id,
-                    await GetAccounts(await Tokenizer.RefreshAsync(authorization))));
+                    await SyncAccounts(portfolio.Accounts, await Tokenizer.RefreshAsync(authorization))));
+        }
 
-        async Task<IEnumerable<Account>> GetAccounts(AccessToken accessToken)
+
+        async Task<IEnumerable<Account>> SyncAccounts(IEnumerable<Account> accounts, AccessToken accessToken)
         {
-            var accounts = new List<Account>();
+            var fresh = new List<Account>();
             foreach (var a in (await AccountApi.FindAccountsAsync(accessToken)).Accounts)
-                accounts.Add(new Account(
-                    a.Number, 
-                    $"{Brokerage.Questrade.Name} {a.Type} {a.Number}",
+            {
+                var account = accounts.FirstOrDefault(_ => _.Number == a.Number);
+                fresh.Add(new Account(
+                    account?.Id ?? 0,
+                    a.Number,
+                    account?.Name ?? $"{Brokerage.Questrade.Name} {a.Type} {a.Number}",
                     await GetBalancesAsync(a.Number, accessToken),
                     await GetPositionsAsync(a.Number, accessToken)));
+            }
 
-            return accounts;
+            return fresh;
         }
 
         async Task<IEnumerable<Balance>> GetBalancesAsync(string accountNumber, AccessToken accessToken) =>

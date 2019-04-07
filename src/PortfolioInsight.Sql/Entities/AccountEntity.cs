@@ -8,6 +8,14 @@ namespace PortfolioInsight
 {
     public partial class AccountEntity
     {
+        public Account ToModel() =>
+            new Account(
+                Id,
+                Number,
+                Name,
+                Balances.Select(b => b.ToModel()),
+                Positions.Select(p => p.ToModel()));
+
         public AccountEntity Assign(Account account)
         {
             Number = account.Number;

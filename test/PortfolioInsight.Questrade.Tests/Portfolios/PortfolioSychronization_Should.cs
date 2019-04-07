@@ -27,6 +27,10 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             tokenizer.Setup(_ => _.RefreshAsync(It.IsAny<Authorization>()))
                 .ReturnsAsync(await RefreshTokenAsync(refreshToken));
 
+            var portfolioReader = new Mock<IPortfolioReader>();
+            portfolioReader.Setup(_ => _.ReadByAuthorizationIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(new Portfolio(0, new List<Account>()));
+
             var symbolReader = new Mock<ISymbolReader>();
             symbolReader.Setup(_ => _.ReadByBrokerageReferenceAsync(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(() => 
@@ -43,7 +47,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                 })
                 .Returns(Task.CompletedTask);
 
-            var synchronizer = new PortfolioSynchronizer(portfolioWriter.Object, symbolReader.Object, symbolWriter.Object, tokenizer.Object);
+            var synchronizer = new PortfolioSynchronizer(portfolioReader.Object, portfolioWriter.Object, symbolReader.Object, symbolWriter.Object, tokenizer.Object);
             await synchronizer.SyncAsync(new Authorization());
 
             Assert.NotNull(portfolio);

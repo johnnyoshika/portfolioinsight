@@ -8,7 +8,7 @@ namespace PortfolioInsight
 {
     public partial class SymbolEntity
     {
-        public Symbol ToDto() =>
+        public Symbol ToModel() =>
             new Symbol(
                 Id,
                 Name,
