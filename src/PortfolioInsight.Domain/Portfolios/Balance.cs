@@ -7,15 +7,15 @@ namespace PortfolioInsight.Portfolios
 {
     public class Balance
     {
-        public Balance(string type, Amount amount, Currency currency)
+        public Balance(string type, Amount value, Currency currency)
         {
             Type = type;
-            Amount = amount;
+            Value = value;
             Currency = currency;
         }
 
         public string Type { get; }
-        public Amount Amount { get; }
+        public Amount Value { get; }
         public Currency Currency { get; }
     }
 }

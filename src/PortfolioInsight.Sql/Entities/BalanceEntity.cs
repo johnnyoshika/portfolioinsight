@@ -13,7 +13,7 @@ namespace PortfolioInsight
 
         public BalanceEntity Assign(Balance balance)
         {
-            Value = balance.Amount;
+            Value = balance.Value;
             Type = balance.Type;
             CurrencyCode = balance.Currency.Code;
             return this;
