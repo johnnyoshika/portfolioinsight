@@ -23,6 +23,7 @@ namespace PortfolioInsight.Portfolios
                 return await context
                     .Allocations
                     .Include(a => a.Symbol)
+                        .ThenInclude(s => s.Currency)
                     .Include(a => a.Proportions)
                         .ThenInclude(p => p.AssetClass)
                     .Where(a => a.UserId == userId)

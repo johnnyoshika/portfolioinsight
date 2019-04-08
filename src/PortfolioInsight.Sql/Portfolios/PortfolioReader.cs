@@ -23,8 +23,9 @@ namespace PortfolioInsight.Portfolios
                 return new Portfolio(authorizationId, await context
                     .Accounts
                     .Include(a => a.Balances)
+                        .ThenInclude(b => b.Currency)
                     .Include(a => a.Positions)
-                        .ThenInclude(p => p.Symbol)
+                        .ThenInclude(p => p.Symbol.Currency)
                     .Where(a => a.AuthorizationId == authorizationId)
                     .Select(a => a.ToModel())
                     .ToListAsync());

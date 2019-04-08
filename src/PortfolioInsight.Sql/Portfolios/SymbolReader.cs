@@ -32,6 +32,7 @@ namespace PortfolioInsight.Portfolios
             using (var context = Context())
                 return await context
                     .Symbols
+                    .Include(s => s.Currency)
                     .Where(filter)
                     .Select(e => e.ToModel())
                     .FirstOrDefaultAsync();

@@ -23,6 +23,7 @@ namespace PortfolioInsight.Portfolios
             {
                 var eSymbol = await context
                     .Symbols
+                    .Include(s => s.Currency)
                     .Where(s => s.Name == name && s.ListingExchangeCode == listingExchangeCode)
                     .FirstOrDefaultAsync();
 
@@ -34,6 +35,7 @@ namespace PortfolioInsight.Portfolios
                         Description = description,
                         ListingExchangeCode = listingExchangeCode,
                         CurrencyCode = currencyCode,
+                        Currency = await context.Currencies.FirstAsync(c => c.Code == currencyCode),
                         BrokerageSymbols = new List<BrokerageSymbolEntity>()
                     };
                     context.Symbols.Add(eSymbol);
