@@ -48,6 +48,15 @@ namespace PortfolioInsight.Authorizations
                     .FirstOrDefaultAsync();
         }
 
+        public async Task<List<Authorization>> ReadByUserAsync(int userId)
+        {
+            using (var context = Context())
+                return await IncludeGraph(context)
+                    .Where(a => a.UserId == userId)
+                    .Select(a => a.ToDto())
+                    .ToListAsync();
+        }
+
         IQueryable<AuthorizationEntity> IncludeGraph(Context context) =>
             context
                 .Authorizations

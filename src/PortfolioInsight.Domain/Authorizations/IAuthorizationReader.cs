@@ -10,5 +10,6 @@ namespace PortfolioInsight.Authorizations
         Task<List<Authorization>> ReadAllAsync();
         Task<Authorization> ReadByIdAsync(int id);
         Task<Authorization> ReadByUserBrokerageAsync(int userId, int brokerageId, string brokerargeUserId);
+        Task<List<Authorization>> ReadByUserAsync(int userId);
     }
 }
