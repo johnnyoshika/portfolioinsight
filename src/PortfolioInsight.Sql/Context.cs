@@ -276,6 +276,7 @@ namespace PortfolioInsight
     public partial class CurrencyEntity
     {
         public string Code { get; set; }
+        public decimal? Rate { get; set; }
     }
 
     public partial class ListingExchangeEntity
