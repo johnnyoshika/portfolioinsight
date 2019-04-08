@@ -37,6 +37,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                     new Symbol(1, "XIC", "TSX Composite ETF", new Currency("CAD"), new ListingExchange("TSX")));
 
             var symbolWriter = new Mock<ISymbolWriter>();
+            var currencyReader = new Mock<ICurrencyReader>();
 
             Portfolio portfolio = null;
             var portfolioWriter = new Mock<IPortfolioWriter>();
@@ -47,7 +48,14 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                 })
                 .Returns(Task.CompletedTask);
 
-            var synchronizer = new PortfolioSynchronizer(portfolioReader.Object, portfolioWriter.Object, symbolReader.Object, symbolWriter.Object, tokenizer.Object);
+            var synchronizer = new PortfolioSynchronizer(
+                portfolioReader.Object,
+                portfolioWriter.Object,
+                symbolReader.Object,
+                symbolWriter.Object,
+                currencyReader.Object,
+                tokenizer.Object);
+            
             await synchronizer.SyncAsync(new Authorization());
 
             Assert.NotNull(portfolio);

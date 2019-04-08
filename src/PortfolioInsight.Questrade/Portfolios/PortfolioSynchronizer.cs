@@ -18,12 +18,14 @@ namespace PortfolioInsight.Portfolios
             IPortfolioWriter portfolioWriter,
             ISymbolReader symbolReader,
             ISymbolWriter symbolWriter,
+            ICurrencyReader currencyReader,
             ITokenizer tokenizer)
         {
             PortfolioReader = portfolioReader;
             PortfolioWriter = portfolioWriter;
             SymbolReader = symbolReader;
             SymbolWriter = symbolWriter;
+            CurrencyReader = currencyReader;
             Tokenizer = tokenizer;
         }
 
@@ -31,6 +33,7 @@ namespace PortfolioInsight.Portfolios
         IPortfolioWriter PortfolioWriter { get; }
         ISymbolReader SymbolReader { get; }
         ISymbolWriter SymbolWriter { get; }
+        ICurrencyReader CurrencyReader { get; }
         ITokenizer Tokenizer { get; }
 
         public async Task SyncAsync(Authorization authorization)
@@ -60,9 +63,14 @@ namespace PortfolioInsight.Portfolios
             return fresh;
         }
 
-        async Task<IEnumerable<Balance>> GetBalancesAsync(string accountNumber, AccessToken accessToken) =>
-            (await BalanceApi.FindBalancesAsync(accountNumber, accessToken)).PerCurrencyBalances
-                .Select(b => new Balance("CASH", b.Cash, new Currency(b.Currency.ToString())));
+        async Task<IEnumerable<Balance>> GetBalancesAsync(string accountNumber, AccessToken accessToken)
+        {
+            var balances = new List<Balance>();
+            foreach (var b in (await BalanceApi.FindBalancesAsync(accountNumber, accessToken)).PerCurrencyBalances)
+                balances.Add(new Balance("CASH", b.Cash, await CurrencyReader.ReadByCodeAsync(b.Currency.ToString())));
+
+            return balances;
+        }
 
         async Task<IEnumerable<Position>> GetPositionsAsync(string accountNumber, AccessToken accessToken)
         {
