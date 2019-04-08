@@ -8,6 +8,6 @@ namespace PortfolioInsight.Portfolios
 {
     public interface IAssetClassWriter
     {
-        Task<AssetClass> WriteAsync(int userId, string name, Rate? taget);
+        Task<AssetClass> WriteAsync(int userId, string name, Rate? target);
     }
 }
