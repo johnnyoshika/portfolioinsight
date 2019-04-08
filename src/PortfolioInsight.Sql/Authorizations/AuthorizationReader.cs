@@ -34,7 +34,7 @@ namespace PortfolioInsight.Authorizations
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Authorization> ReadByUserBrokerage(int userId, int brokerageId, string brokerargeUserId)
+        public async Task<Authorization> ReadByUserBrokerageAsync(int userId, int brokerageId, string brokerargeUserId)
         {
             using (var context = Context())
                 return await IncludeGraph(context)

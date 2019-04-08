@@ -36,7 +36,7 @@ namespace PortfolioInsight.Authorizations
                 ApiServer = token.ApiServer
             };
             var accounts = await AccountApi.FindAccountsAsync(accessToken);
-            var authorization = await AuthorizationReader.ReadByUserBrokerage(user.Id, Brokerage.Questrade.Id, accounts.UserId);
+            var authorization = await AuthorizationReader.ReadByUserBrokerageAsync(user.Id, Brokerage.Questrade.Id, accounts.UserId);
             if (authorization == null)
                 authorization = new Authorization
                 {
