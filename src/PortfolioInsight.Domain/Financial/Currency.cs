@@ -6,8 +6,6 @@ namespace PortfolioInsight.Financial
 {
     public class Currency : ValueObject<Currency>
     {
-        public static readonly Currency Unknown = new Currency(null);
-
         public Currency(string code)
         {
             Code = code.ToUpper();
