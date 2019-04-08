@@ -5,15 +5,14 @@ using PortfolioInsight.Financial;
 
 namespace PortfolioInsight.Portfolios
 {
-    public class Position
+    public class Position : Holding
     {
         public Position(Symbol symbol, Amount value)
+            : base(value, symbol.Currency)
         {
             Symbol = symbol;
-            Value = value;
         }
 
         public Symbol Symbol { get; }
-        public Amount Value { get; }
     }
 }

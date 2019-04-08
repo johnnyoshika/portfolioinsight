@@ -5,17 +5,14 @@ using PortfolioInsight.Financial;
 
 namespace PortfolioInsight.Portfolios
 {
-    public class Balance
+    public class Balance : Holding
     {
         public Balance(string type, Amount value, Currency currency)
+            : base(value, currency)
         {
             Type = type;
-            Value = value;
-            Currency = currency;
         }
 
         public string Type { get; }
-        public Amount Value { get; }
-        public Currency Currency { get; }
     }
 }
