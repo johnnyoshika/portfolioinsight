@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioInsight;
 
 namespace PortfolioInsight.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20190408033416_Add_Currency_Nullable_Rate")]
+    partial class Add_Currency_Nullable_Rate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,15 +209,15 @@ namespace PortfolioInsight.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(3);
 
-                    b.Property<decimal>("Rate");
+                    b.Property<decimal?>("Rate");
 
                     b.HasKey("Code");
 
                     b.ToTable("Currencies");
 
                     b.HasData(
-                        new { Code = "CAD", Rate = 0m },
-                        new { Code = "USD", Rate = 0m }
+                        new { Code = "CAD" },
+                        new { Code = "USD" }
                     );
                 });
 
