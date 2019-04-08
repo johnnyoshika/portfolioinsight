@@ -7,6 +7,8 @@ namespace PortfolioInsight.Portfolios
 {
     public class AssetClass
     {
+        public static readonly AssetClass Unknown = new AssetClass(0, "???", null);
+
         public AssetClass(int id, string name, Rate? target)
         {
             Id = id;
@@ -17,5 +19,7 @@ namespace PortfolioInsight.Portfolios
         public int Id { get; }
         public string Name { get; }
         public Rate? Target { get; }
+
+        public override string ToString() => Name;
     }
 }
