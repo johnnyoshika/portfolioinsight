@@ -20,6 +20,9 @@ namespace PortfolioInsight
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<BalanceEntity> Balances { get; set; }
         public DbSet<PositionEntity> Positions { get; set; }
+        public DbSet<AssetClassEntity> AssetClasses { get; set; }
+        public DbSet<AllocationEntity> Allocations { get; set; }
+        public DbSet<AllocationProportionEntity> AllocationProportions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -223,6 +226,50 @@ namespace PortfolioInsight
                     .WithMany(s => s.Positions)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<AssetClassEntity>(entity =>
+            {
+                entity.ToTable("AssetClasses");
+
+                entity.Property(c => c.Name)
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.HasIndex(c => new { c.Name, c.UserId })
+                    .IsUnique();
+
+                entity.HasOne(c => c.User)
+                    .WithMany(u => u.AssetClasses)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<AllocationEntity>(entity =>
+            {
+                entity.ToTable("Allocations");
+
+                entity.HasIndex(a => new { a.UserId, a.SymbolId })
+                    .IsUnique();
+
+                entity.HasOne(c => c.User)
+                    .WithMany(u => u.Allocations)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(c => c.Symbol)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<AllocationProportionEntity>(entity =>
+            {
+                entity.ToTable("AllocationProportions");
+
+                entity.HasIndex(p => new { p.AllocationId, p.AssetClassId })
+                    .IsUnique();
+
+                entity.HasOne(p => p.AssetClass)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
     }
 
@@ -288,6 +335,8 @@ namespace PortfolioInsight
         public int LoginCount { get; set; }
 
         public List<AuthorizationEntity> Authorizations { get; set; }
+        public List<AssetClassEntity> AssetClasses { get; set; }
+        public List<AllocationEntity> Allocations { get; set; }
     }
 
     public partial class AuthorizationEntity
@@ -344,5 +393,41 @@ namespace PortfolioInsight
 
         public int AccountId { get; set; }
         public AccountEntity Account { get; set; }
+    }
+
+    public partial class AssetClassEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal? Target { get; set; }
+
+        public int UserId { get; set; }
+        public UserEntity User { get; set; }
+    }
+
+    public partial class AllocationEntity
+    {
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+        public UserEntity User { get; set; }
+
+        public int SymbolId { get; set; }
+        public SymbolEntity Symbol { get; set; }
+
+        public List<AllocationProportionEntity> Proportions { get; set; }
+    }
+
+    public partial class AllocationProportionEntity
+    {
+        public int Id { get; set; }
+
+        public int AllocationId { get; set; }
+        public AllocationEntity Allocation { get; set; }
+
+        public int AssetClassId { get; set; }
+        public AssetClassEntity AssetClass { get; set; }
+
+        public decimal Rate { get; set; }
     }
 }
