@@ -67,7 +67,7 @@ namespace PortfolioInsight.Portfolios
         {
             var balances = new List<Balance>();
             foreach (var b in (await BalanceApi.FindBalancesAsync(accountNumber, accessToken)).PerCurrencyBalances)
-                balances.Add(new Balance("CASH", b.Cash, await CurrencyReader.ReadByCodeAsync(b.Currency.ToString())));
+                balances.Add(new Balance(Balance.Cash, b.Cash, await CurrencyReader.ReadByCodeAsync(b.Currency.ToString())));
 
             return balances;
         }

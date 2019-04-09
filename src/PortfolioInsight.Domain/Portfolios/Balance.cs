@@ -7,6 +7,8 @@ namespace PortfolioInsight.Portfolios
 {
     public class Balance : Holding
     {
+        public const string Cash = "CASH";
+
         public Balance(string type, Amount value, Currency currency)
             : base(value, currency)
         {
