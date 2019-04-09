@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using PortfolioInsight.Authorizations;
 using PortfolioInsight.Configuration;
 using PortfolioInsight.Exceptions;
+using PortfolioInsight.Financial;
 using PortfolioInsight.Portfolios;
+using PortfolioInsight.Reports;
 using PortfolioInsight.Security;
 using PortfolioInsight.Users;
 using PortfolioInsight.Web.Http;
@@ -27,7 +29,10 @@ namespace PortfolioInsight.Web.Controllers
             IQuestradeSettings questradeSettings,
             ITokenizer tokenizer,
             IAuthorizationReader authorizationReader,
-            IPortfolioSynchronizer portfolioSynchronizer)
+            IPortfolioReader portfolioReader,
+            IPortfolioSynchronizer portfolioSynchronizer,
+            ICurrencyReader currencyReader,
+            IAllocationReader allocationReader)
         {
             UserReader = userReader;
             IdentityReader = identityReader;
@@ -37,7 +42,10 @@ namespace PortfolioInsight.Web.Controllers
             QuestradeSettings = questradeSettings;
             Tokenizer = tokenizer;
             AuthorizationReader = authorizationReader;
+            PortfolioReader = portfolioReader;
             PortfolioSynchronizer = portfolioSynchronizer;
+            CurrencyReader = currencyReader;
+            AllocationReader = allocationReader;
         }
 
         IUserReader UserReader { get; }
@@ -48,11 +56,29 @@ namespace PortfolioInsight.Web.Controllers
         IQuestradeSettings QuestradeSettings { get; }
         ITokenizer Tokenizer { get; }
         IAuthorizationReader AuthorizationReader { get; }
+        IPortfolioReader PortfolioReader { get; }
         IPortfolioSynchronizer PortfolioSynchronizer { get; }
+        ICurrencyReader CurrencyReader { get; }
+        IAllocationReader AllocationReader { get; }
 
         [Authorize]
-        public async Task<IActionResult> Index() =>
-            View(await AuthenticationClient.AuthenticateAsync(HttpContext.Request));
+        public async Task<IActionResult> Index()
+        {
+            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+            var portfolios = new List<Portfolio>();
+            foreach (var authorization in (await AuthorizationReader.ReadByUserAsync(user.Id)))
+                portfolios.Add(await PortfolioReader.ReadByAuthorizationIdAsync(authorization.Id));
+
+            return View(new DashboardViewModel
+            {
+                User = user,
+                Report = new Report(
+                    portfolios,
+                    await AllocationReader.ReadByUserIdAsync(user.Id),
+                    await CurrencyReader.ReadByCodeAsync("CAD")
+                )
+            });
+        }
 
         [Authorize]
         [HttpGet("questrade/request")]
@@ -111,5 +137,11 @@ namespace PortfolioInsight.Web.Controllers
 
             return NoContent();
         }
+    }
+
+    public class DashboardViewModel
+    {
+        public User User { get; set; }
+        public Report Report { get; set; }
     }
 }

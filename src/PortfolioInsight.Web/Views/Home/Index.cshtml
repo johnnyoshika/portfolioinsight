@@ -1,9 +1,9 @@
-﻿@model PortfolioInsight.Users.User
+﻿@model PortfolioInsight.Web.Controllers.DashboardViewModel
 
 <div class="my-5 mx-auto" style="max-width:400px;">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title text-center">@Model.FirstName @Model.LastName</h5>
+            <h5 class="card-title text-center">@Model.User.FirstName @Model.User.LastName</h5>
             <p class="card-text text-center">
                 <a href="/account/logout">Log out</a>
             </p>
