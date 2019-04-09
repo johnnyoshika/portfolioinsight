@@ -5,7 +5,7 @@ using PortfolioInsight.Financial;
 
 namespace PortfolioInsight.Portfolios
 {
-    public class AssetClass
+    public class AssetClass : ValueObject<AssetClass>
     {
         public static readonly AssetClass Unknown = new AssetClass(0, "???", null);
 
@@ -21,5 +21,8 @@ namespace PortfolioInsight.Portfolios
         public Rate? Target { get; }
 
         public override string ToString() => Name;
+
+        protected override IEnumerable<object> EqualityCheckAttributes =>
+            new object[] { Id, Name, Target };
     }
 }
