@@ -59,7 +59,14 @@ namespace PortfolioInsight.Reports
                 .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / PositionTotal.Value)))
                 .ToList();
 
-        public IReadOnlyList<Asset> BalanceAssets => throw new NotImplementedException();
+        public IReadOnlyList<Asset> BalanceAssets =>
+            Balances
+                .Where(b => b.Type == Balance.Cash)
+                .Select(b => new { Value = b.ValueIn(Currency) })
+                .GroupBy(b => true)
+                .Select(g => new { AssetClass = Cash, Value = g.Sum(v => v.Value) })
+                .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / BalanceTotal.Value)))
+                .ToList();
 
         public IReadOnlyList<Asset> Assets =>
             PositionAssets
