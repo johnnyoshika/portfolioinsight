@@ -32,7 +32,8 @@ namespace PortfolioInsight.Web.Controllers
             IPortfolioReader portfolioReader,
             IPortfolioSynchronizer portfolioSynchronizer,
             ICurrencyReader currencyReader,
-            IAllocationReader allocationReader)
+            IAllocationReader allocationReader,
+            IAssetClassReader assetClassReader)
         {
             UserReader = userReader;
             IdentityReader = identityReader;
@@ -46,6 +47,7 @@ namespace PortfolioInsight.Web.Controllers
             PortfolioSynchronizer = portfolioSynchronizer;
             CurrencyReader = currencyReader;
             AllocationReader = allocationReader;
+            AssetClassReader = assetClassReader;
         }
 
         IUserReader UserReader { get; }
@@ -60,6 +62,7 @@ namespace PortfolioInsight.Web.Controllers
         IPortfolioSynchronizer PortfolioSynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
         IAllocationReader AllocationReader { get; }
+        IAssetClassReader AssetClassReader { get; }
 
         [Authorize]
         public async Task<IActionResult> Index()
@@ -75,6 +78,7 @@ namespace PortfolioInsight.Web.Controllers
                 Report = new Report(
                     portfolios,
                     await AllocationReader.ReadByUserIdAsync(user.Id),
+                    await AssetClassReader.ReadCashByUserIdAsync(user.Id),
                     await CurrencyReader.ReadByCodeAsync("CAD")
                 )
             });

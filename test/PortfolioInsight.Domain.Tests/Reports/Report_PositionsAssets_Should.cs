@@ -16,6 +16,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
         static readonly Currency CAD = new Currency("CAD", CadConversion);
         static readonly Currency USD = new Currency("USD", Rate.Full);
 
+        static readonly AssetClass Cash = new AssetClass(0, Balance.Cash, null);
+
         static readonly ListingExchange TSX = new ListingExchange("TSX");
         static readonly ListingExchange NYSE = new ListingExchange("NYSE");
 
@@ -47,6 +49,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                     Allocation(
                         VOO, new AssetClass(1, "US", null))
                 },
+                Cash,
                 USD
             );
 
@@ -73,6 +76,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                     Allocation(
                         XIC, new AssetClass(1, "CA", null))
                 },
+                Cash,
                 CAD
             );
 
@@ -102,6 +106,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                     Allocation(
                         VOO, new AssetClass(1, "US", null))
                 },
+                Cash,
                 CAD
             );
 
@@ -129,6 +134,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                     Allocation(
                         XIC, new AssetClass(1, "CA", null))
                 },
+                Cash,
                 CAD
             );
 
@@ -161,6 +167,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         new AllocationProportion(new AssetClass(2, "INTL", null), (Rate)0.325m),
                         new AllocationProportion(new AssetClass(3, "EM", null), (Rate)0.125m))
                 },
+                Cash,
                 CAD
             );
 
@@ -208,6 +215,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                     Allocation(
                         ZAG, new AssetClass(2, "BOND", null))
                 },
+                Cash,
                 CAD
             );
 
@@ -246,6 +254,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         new AllocationProportion(new AssetClass(2, "INTL", null), (Rate)0.325m),
                         new AllocationProportion(new AssetClass(3, "EM", null), (Rate)0.125m))
                 },
+                Cash,
                 CAD
             );
 
@@ -303,6 +312,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                     Allocation(
                         VTI, new AssetClass(1, "US", null))
                 },
+                Cash,
                 CAD
             );
 

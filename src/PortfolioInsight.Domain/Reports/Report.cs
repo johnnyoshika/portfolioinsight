@@ -9,15 +9,17 @@ namespace PortfolioInsight.Reports
 {
     public class Report
     {
-        public Report(IReadOnlyList<Portfolio> portfolios, IReadOnlyList<Allocation> allocations, Currency currency)
+        public Report(IReadOnlyList<Portfolio> portfolios, IReadOnlyList<Allocation> allocations, AssetClass cash, Currency currency)
         {
             Portfolios = portfolios;
             Allocations = allocations;
+            Cash = cash;
             Currency = currency;
         }
 
         public IReadOnlyList<Portfolio> Portfolios { get; }
         public IReadOnlyList<Allocation> Allocations { get; }
+        public AssetClass Cash { get; }
         public Currency Currency { get; }
 
         public IReadOnlyList<Account> Accounts =>
