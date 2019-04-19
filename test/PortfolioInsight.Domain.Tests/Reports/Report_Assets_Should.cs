@@ -75,6 +75,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         XUS, new AssetClass(2, "US", null))
                 },
                 Cash,
+                new List<Currency>(),
                 CAD
             );
 

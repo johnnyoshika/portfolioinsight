@@ -9,18 +9,20 @@ namespace PortfolioInsight.Reports
 {
     public class Report
     {
-        public Report(IReadOnlyList<Portfolio> portfolios, IReadOnlyList<Allocation> allocations, AssetClass cash, Currency currency)
+        public Report(IReadOnlyList<Portfolio> portfolios, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<Currency> currencies,  Currency output)
         {
             Portfolios = portfolios;
             Allocations = allocations;
             Cash = cash;
-            Currency = currency;
+            Currencies = currencies;
+            Output = output;
         }
 
         public IReadOnlyList<Portfolio> Portfolios { get; }
         public IReadOnlyList<Allocation> Allocations { get; }
         public AssetClass Cash { get; }
-        public Currency Currency { get; }
+        public IReadOnlyList<Currency> Currencies { get; }
+        public Currency Output { get; }
 
         public IReadOnlyList<Account> Accounts =>
             Portfolios.SelectMany(p => p.Accounts).ToList();
@@ -32,10 +34,10 @@ namespace PortfolioInsight.Reports
             Accounts.SelectMany(a => a.Balances).ToList();
 
         public Amount PositionTotal =>
-            Positions.Sum(p => p.ValueIn(Currency));
+            Positions.Sum(p => p.ValueIn(Output));
 
         public Amount BalanceTotal =>
-            Balances.Sum(b => b.ValueIn(Currency));
+            Balances.Sum(b => b.ValueIn(Output));
 
         public Amount Total =>
             PositionTotal + BalanceTotal;
@@ -43,7 +45,7 @@ namespace PortfolioInsight.Reports
         public IReadOnlyList<Asset> PositionAssets =>
             Positions
                 .GroupBy(p => p.Symbol)
-                .Select(g => new { Symbol = g.Key, Value = g.Sum(p => p.ValueIn(Currency)) })
+                .Select(g => new { Symbol = g.Key, Value = g.Sum(p => p.ValueIn(Output)) })
                 .SelectMany(sv =>
                     (
                         Allocations.FirstOrDefault(a => a.Symbol == sv.Symbol)?.Proportions
@@ -62,7 +64,7 @@ namespace PortfolioInsight.Reports
         public IReadOnlyList<Asset> BalanceAssets =>
             Balances
                 .Where(b => b.Type == Balance.Cash)
-                .Select(b => new { Value = b.ValueIn(Currency) })
+                .Select(b => new { Value = b.ValueIn(Output) })
                 .GroupBy(b => true)
                 .Select(g => new { AssetClass = Cash, Value = g.Sum(v => v.Value) })
                 .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / BalanceTotal.Value)))

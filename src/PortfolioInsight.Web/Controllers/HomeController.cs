@@ -72,6 +72,7 @@ namespace PortfolioInsight.Web.Controllers
             foreach (var authorization in await AuthorizationReader.ReadByUserAsync(user.Id))
                 portfolios.Add(await PortfolioReader.ReadByAuthorizationIdAsync(authorization.Id));
 
+            var currencies = await CurrencyReader.ReadAllAsync();
             return View(new DashboardViewModel
             {
                 User = user,
@@ -79,7 +80,8 @@ namespace PortfolioInsight.Web.Controllers
                     portfolios,
                     await AllocationReader.ReadByUserIdAsync(user.Id),
                     await AssetClassReader.ReadCashByUserIdAsync(user.Id),
-                    await CurrencyReader.ReadByCodeAsync("CAD")
+                    currencies,
+                    currencies.First(c => c.Code == "CAD")
                 )
             });
         }
