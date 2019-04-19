@@ -277,6 +277,7 @@ namespace PortfolioInsight
     {
         public string Code { get; set; }
         public decimal Rate { get; set; }
+        public DateTime AsOf { get; set; }
     }
 
     public partial class ListingExchangeEntity
