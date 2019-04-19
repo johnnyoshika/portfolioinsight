@@ -8,5 +8,6 @@ namespace PortfolioInsight.Financial
     public interface ICurrencyReader
     {
         Task<Currency> ReadByCodeAsync(string code);
+        Task<List<Currency>> ReadAllAsync();
     }
 }

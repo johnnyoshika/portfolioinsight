@@ -25,5 +25,15 @@ namespace PortfolioInsight.Financial
                     .Select(c => c.ToModel())
                     .FirstAsync(c => c.Code == code);
         }
+
+        public async Task<List<Currency>> ReadAllAsync()
+        {
+            using (var context = Context())
+                return await context
+                    .Currencies
+                    .Select(c => c.ToModel())
+                    .ToListAsync();
+
+        }
     }
 }
