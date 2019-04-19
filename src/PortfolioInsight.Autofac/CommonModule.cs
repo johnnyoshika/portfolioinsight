@@ -28,6 +28,7 @@ namespace PortfolioInsight
                 .RegisterAssemblyOf<PortfolioInsightDomainAssembly>()
                 .RegisterAssemblyOf<PortfolioInsightSqlAssembly>()
                 .RegisterAssemblyOf<PortfolioInsightQuestradeAssembly>()
+                .RegisterAssemblyOf<PortfolioInsightExchangeRatesApiAssembly>()
                 .RegisterAssembly(Assembly.GetEntryAssembly());
         }
     }

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PortfolioInsight.Domain\PortfolioInsight.Domain.csproj" />
+    <ProjectReference Include="..\PortfolioInsight.ExchangeRatesApi\PortfolioInsight.ExchangeRatesApi.csproj" />
     <ProjectReference Include="..\PortfolioInsight.Questrade\PortfolioInsight.Questrade.csproj" />
     <ProjectReference Include="..\PortfolioInsight.Sql\PortfolioInsight.Sql.csproj" />
   </ItemGroup>
