@@ -143,12 +143,12 @@ namespace PortfolioInsight.Domain.Tests.Reports
             );
 
             Assert.Equal(2, report.PositionAssets.Count);
-            Assert.Equal("CA", report.PositionAssets.ElementAt(0).AssetClass.Name);
-            Assert.Equal(100, report.PositionAssets.ElementAt(0).Value);
-            Assert.Equal((Rate)(100m / 300), report.PositionAssets.ElementAt(0).Proportion);
-            Assert.Equal(AssetClass.Unknown, report.PositionAssets.ElementAt(1).AssetClass);
-            Assert.Equal(200, report.PositionAssets.ElementAt(1).Value);
-            Assert.Equal((Rate)(200m / 300), report.PositionAssets.ElementAt(1).Proportion);
+            Assert.Equal(AssetClass.Unknown, report.PositionAssets.ElementAt(0).AssetClass);
+            Assert.Equal(200, report.PositionAssets.ElementAt(0).Value);
+            Assert.Equal((Rate)(200m / 300), report.PositionAssets.ElementAt(0).Proportion);
+            Assert.Equal("CA", report.PositionAssets.ElementAt(1).AssetClass.Name);
+            Assert.Equal(100, report.PositionAssets.ElementAt(1).Value);
+            Assert.Equal((Rate)(100m / 300), report.PositionAssets.ElementAt(1).Proportion);
         }
 
         [Fact]
@@ -226,12 +226,12 @@ namespace PortfolioInsight.Domain.Tests.Reports
             );
 
             Assert.Equal(2, report.PositionAssets.Count);
-            Assert.Equal("CA", report.PositionAssets.ElementAt(0).AssetClass.Name);
-            Assert.Equal(400, report.PositionAssets.ElementAt(0).Value);
-            Assert.Equal((Rate)(400m / 1200), report.PositionAssets.ElementAt(0).Proportion);
-            Assert.Equal("BOND", report.PositionAssets.ElementAt(1).AssetClass.Name);
-            Assert.Equal(800, report.PositionAssets.ElementAt(1).Value);
-            Assert.Equal((Rate)(800m / 1200), report.PositionAssets.ElementAt(1).Proportion);
+            Assert.Equal("BOND", report.PositionAssets.ElementAt(0).AssetClass.Name);
+            Assert.Equal(800, report.PositionAssets.ElementAt(0).Value);
+            Assert.Equal((Rate)(800m / 1200), report.PositionAssets.ElementAt(0).Proportion);
+            Assert.Equal("CA", report.PositionAssets.ElementAt(1).AssetClass.Name);
+            Assert.Equal(400, report.PositionAssets.ElementAt(1).Value);
+            Assert.Equal((Rate)(400m / 1200), report.PositionAssets.ElementAt(1).Proportion);
         }
 
         [Fact]
@@ -328,18 +328,18 @@ namespace PortfolioInsight.Domain.Tests.Reports
             Assert.Equal("US", report.PositionAssets.ElementAt(0).AssetClass.Name);
             Assert.Equal((Amount)300 + 200 + 55 + (700 + 800) / CadConversion, report.PositionAssets.ElementAt(0).Value);
             Assert.Equal((Rate)((300 + 200 + 55 + 700 / CadConversion + 800 / CadConversion) / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(0).Proportion);
-            Assert.Equal("INTL", report.PositionAssets.ElementAt(1).AssetClass.Name);
-            Assert.Equal((Amount)32.5m, report.PositionAssets.ElementAt(1).Value);
-            Assert.Equal((Rate)(32.5m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(1).Proportion);
-            Assert.Equal("EM", report.PositionAssets.ElementAt(2).AssetClass.Name);
-            Assert.Equal((Amount)12.5m, report.PositionAssets.ElementAt(2).Value);
-            Assert.Equal((Rate)(12.5m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(2).Proportion);
-            Assert.Equal(AssetClass.Unknown, report.PositionAssets.ElementAt(3).AssetClass);
-            Assert.Equal(1000, report.PositionAssets.ElementAt(3).Value);
-            Assert.Equal((Rate)(1000m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(3).Proportion);
-            Assert.Equal("BOND", report.PositionAssets.ElementAt(4).AssetClass.Name);
-            Assert.Equal(500, report.PositionAssets.ElementAt(4).Value);
-            Assert.Equal((Rate)(500m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(4).Proportion);
+            Assert.Equal(AssetClass.Unknown, report.PositionAssets.ElementAt(1).AssetClass);
+            Assert.Equal(1000, report.PositionAssets.ElementAt(1).Value);
+            Assert.Equal((Rate)(1000m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(1).Proportion);
+            Assert.Equal("BOND", report.PositionAssets.ElementAt(2).AssetClass.Name);
+            Assert.Equal(500, report.PositionAssets.ElementAt(2).Value);
+            Assert.Equal((Rate)(500m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(2).Proportion);
+            Assert.Equal("INTL", report.PositionAssets.ElementAt(3).AssetClass.Name);
+            Assert.Equal((Amount)32.5m, report.PositionAssets.ElementAt(3).Value);
+            Assert.Equal((Rate)(32.5m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(3).Proportion);
+            Assert.Equal("EM", report.PositionAssets.ElementAt(4).AssetClass.Name);
+            Assert.Equal((Amount)12.5m, report.PositionAssets.ElementAt(4).Value);
+            Assert.Equal((Rate)(12.5m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(4).Proportion);
         }
 
         Account Account(params Position[] positions) =>

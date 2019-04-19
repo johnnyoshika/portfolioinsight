@@ -59,6 +59,7 @@ namespace PortfolioInsight.Reports
                 .GroupBy(av => av.AssetClass)
                 .Select(g => new { AssetClass = g.Key, Value = g.Sum(av => av.Value) })
                 .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / PositionTotal.Value)))
+                .OrderByDescending(a => a.Value)
                 .ToList();
 
         public IReadOnlyList<Asset> BalanceAssets =>
@@ -68,6 +69,7 @@ namespace PortfolioInsight.Reports
                 .GroupBy(b => true)
                 .Select(g => new { AssetClass = Cash, Value = g.Sum(v => v.Value) })
                 .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / BalanceTotal.Value)))
+                .OrderByDescending(a => a.Value)
                 .ToList();
 
         public IReadOnlyList<Asset> Assets =>
