@@ -18,156 +18,174 @@
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm">
-            <div class="card mb-4" data-section="accounts">
-                <div class="card-header">
-                    Accounts
-                </div>
-                <div class="card-body">
-                    @foreach (var account in Model.Report.Accounts)
-                    {
-                        <div data-section="account">
-                            <div class="mb-1">
-                                <a href="#" data-action="toggle">
-                                    <i class="fas fa-chevron-down fa-sm" data-section="chevron"></i> @account.Name
-                                </a>
-                            </div>
-                            <div data-element="positions">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Symbol</th>
-                                            <th scope="col">Value</th>
-                                            <th scope="col">Currency</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var position in account.Positions)
+<div class="row">
+    <div class="col-sm">
+        <div class="card mb-4">
+            <div class="card-header">
+                Assets
+            </div>
+            <div class="card-body" data-element="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Asset Class</th>
+                            <th scope="col">Actual (%)</th>
+                            <th scope="col">Target (%)</th>
+                            <th scope="col">Actual ($)</th>
+                            <th scope="col">Target ($)</th>
+                            <th scope="col"><span class="text-success">Buy</span> or <span class="text-danger">Sell</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var asset in Model.Report.Assets)
+                        {
+                            <tr>
+                                <td>@asset.AssetClass.Name</td>
+                                <td>@asset.Proportion.RoundedTo(1)</td>
+                                <td>@asset.AssetClass.Target?.RoundedTo(1)</td>
+                                <td>@asset.Value</td>
+                                <td>@asset.Target</td>
+                                <td>
+                                    @if (asset.Variance.HasValue)
+                                    {
+                                        @if (asset.Variance.Value > Amount.Zero)
                                         {
-                                            <tr>
-                                                <td>@position.Symbol.Name</td>
-                                                <td>@position.Value</td>
-                                                <td>@position.Currency.Code</td>
-                                            </tr>
+                                            <span class="text-success">@asset.Variance.Value</span>
                                         }
-                                        @foreach (var balance in account.Balances)
+                                        else
                                         {
-                                            <tr>
-                                                <td>@balance.Type</td>
-                                                <td>@balance.Value</td>
-                                                <td>@balance.Currency.Code</td>
-                                            </tr>
+                                            <span class="text-danger">@asset.Variance.Value</span>
                                         }
-                                    </tbody>
-                                </table>
-                            </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th>@(((Rate)Model.Report.Assets.Sum(a => a.Proportion)).RoundedTo(0))</th>
+                            <th>@(((Rate)Model.Report.Assets.Sum(a => a.AssetClass.Target)).RoundedTo(0))</th>
+                            <th>@Model.Report.Total</th>
+                            <th>@((Amount)Model.Report.Assets.Sum(a => a.Target))</th>
+                            <th>@((Amount)Model.Report.Assets.Sum(a => a.Variance))</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        <div class="card mb-4" data-section="accounts">
+            <div class="card-header">
+                Accounts
+            </div>
+            <div class="card-body">
+                @foreach (var account in Model.Report.Accounts)
+                {
+                    <div data-section="account">
+                        <div class="mb-1">
+                            <a href="#" data-action="toggle">
+                                <i class="fas fa-chevron-down fa-sm" data-section="chevron"></i> @account.Name
+                            </a>
                         </div>
-                    }
-                </div>
+                        <div data-element="positions">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Symbol</th>
+                                        <th scope="col">Value</th>
+                                        <th scope="col">Currency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var position in account.Positions)
+                                    {
+                                        <tr>
+                                            <td>@position.Symbol.Name</td>
+                                            <td>@position.Value</td>
+                                            <td>@position.Currency.Code</td>
+                                        </tr>
+                                    }
+                                    @foreach (var balance in account.Balances)
+                                    {
+                                        <tr>
+                                            <td>@balance.Type</td>
+                                            <td>@balance.Value</td>
+                                            <td>@balance.Currency.Code</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
-        <div class="col-sm">
-            <div class="card mb-4">
-                <div class="card-header">
-                    Currencies
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">Currency</th>
-                                <th scope="col">Rate</th>
-                                <th scope="col">As Of</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var currency in Model.Report.Currencies)
-                            {
-                                <tr>
-                                    <td>@currency.Code</td>
-                                    <td>@currency.Rate.Value</td>
-                                    <td>@currency.AsOf.ToString("MMM d, yyyy")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+    </div>
+    <div class="col-sm">
+        <div class="card mb-4">
+            <div class="card-header">
+                Currencies
             </div>
-            <div class="card mb-4">
-                <div class="card-header">
-                    Allocations
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm mb-0">
-                        <thead>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Rate</th>
+                            <th scope="col">As Of</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var currency in Model.Report.Currencies)
+                        {
                             <tr>
-                                <th scope="col">Symbol</th>
-                                <th scope="col">Asset Class</th>
+                                <td>@currency.Code</td>
+                                <td>@currency.Rate.Value</td>
+                                <td>@currency.AsOf.ToString("MMM d, yyyy")</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var allocation in Model.Report.Allocations)
-                            {
-                                <tr>
-                                    <td>@allocation.Symbol.Name</td>
-                                    <td>
-                                        @if (allocation.Proportions.Count == 1)
-                                        {
-                                            @allocation.Proportions.First().AssetClass.Name
-                                        }
-                                        else if (allocation.Proportions.Count > 1)
-                                        {
-                                            foreach (var proportion in allocation.Proportions)
-                                            {
-                                                <div><small>@proportion.AssetClass.Name @proportion.Rate</small></div>
-                                            }
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="col-sm">
-            <div class="card mb-4">
-                <div class="card-header">
-                    Assets
-                </div>
-                <div class="card-body" data-element="card-body">
-                    <table class="table table-sm">
-                        <thead>
+        <div class="card mb-4">
+            <div class="card-header">
+                Allocations
+            </div>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Symbol</th>
+                            <th scope="col">Asset Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var allocation in Model.Report.Allocations)
+                        {
                             <tr>
-                                <th scope="col">Asset Class</th>
-                                <th scope="col">Value</th>
-                                <th scope="col">Actual</th>
-                                <th scope="col">Target</th>
+                                <td>@allocation.Symbol.Name</td>
+                                <td>
+                                    @if (allocation.Proportions.Count == 1)
+                                    {
+                                        @allocation.Proportions.First().AssetClass.Name
+                                    }
+                                    else if (allocation.Proportions.Count > 1)
+                                    {
+                                        foreach (var proportion in allocation.Proportions)
+                                        {
+                                            <div><small>@proportion.AssetClass.Name @proportion.Rate</small></div>
+                                        }
+                                    }
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var asset in Model.Report.Assets)
-                            {
-                                <tr>
-                                    <td>@asset.AssetClass.Name</td>
-                                    <td>@asset.Value</td>
-                                    <td>@asset.Proportion.RoundedTo(1)</td>
-                                    <td>@asset.AssetClass.Target?.RoundedTo(1)</td>
-                                </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <th>@Model.Report.Total</th>
-                                <th>@(((Rate)Model.Report.Assets.Sum(a => a.Proportion)).RoundedTo(0))</th>
-                                <th>@(((Rate)Model.Report.Assets.Sum(a => a.AssetClass.Target)).RoundedTo(0))</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

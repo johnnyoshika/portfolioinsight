@@ -18,6 +18,8 @@ namespace PortfolioInsight.Reports
         public AssetClass AssetClass { get; }
         public Amount Value { get; }
         public Rate Proportion { get; }
+        public Amount? Target => Value / Proportion * AssetClass?.Target;
+        public Amount? Variance => Target - Value;
 
         public override string ToString() => $"{AssetClass.Name} {Value} ({Proportion.Rounded}%)";
     }
