@@ -1,13 +1,68 @@
 ﻿@model PortfolioInsight.Web.Controllers.DashboardViewModel
 
-<div class="my-5 mx-auto" style="max-width:400px;">
+<div class="my-5 mx-auto" style="max-width:500px;">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title text-center">@Model.User.FirstName @Model.User.LastName</h5>
             <p class="card-text text-center">
                 <a href="/account/logout">Log out</a>
             </p>
-            <a href="/questrade/request" class="btn btn-primary btn-block">Authorize Questrade</a>
+            <div class="row">
+                <div class="col-sm">
+                    <a href="/questrade/request" class="btn btn-primary btn-block">Authorize Questrade</a>
+                </div>
+                <div class="col-sm" data-outlet="sync"></div>
+            </div>
         </div>
     </div>
 </div>
+
+<script id="sync" type="text/html">
+    <button class="btn btn-primary btn-block" data-action="sync">
+        Sync
+    </button>
+</script>
+
+<script id="syncing" type="text/html">
+    <button class="btn btn-primary btn-block" data-section="syncing" disabled>
+        <span class="spinner-border spinner-border-sm"></span>
+        Syncing...
+    </button>
+</script>
+
+@section Scripts {
+    <script>
+        (function () {
+
+            var renderSync = function () {
+                $('[data-outlet="sync"]').html($('#sync').html());
+            };
+
+            var renderSyncing = function () {
+                $('[data-outlet="sync"]').html($('#syncing').html());
+            };
+
+            renderSync();
+
+            $('[data-outlet="sync"]').on('click', '[data-action="sync"]', function () {
+                renderSyncing();
+                $.ajax({
+                    url: '/sync',
+                    type: 'PUT',
+                    success: function (response, textStatus, jqXHR) {
+                        toastr.success('Sync successful!');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.message)
+                            toastr.error(jqXHR.responseJSON.message);
+                        else
+                            toastr.error('Unexpected error!');
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        renderSync();
+                    }
+                });
+            });
+        }());
+    </script>
+}

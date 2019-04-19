@@ -133,13 +133,25 @@ namespace PortfolioInsight.Web.Controllers
             return Redirect("/account/login");
         }
 
-        [HttpPost("sync")]
+        [Authorize]
+        [HttpPut("sync")]
         public async Task<IActionResult> Sync()
         {
-            foreach (var authorization in await AuthorizationReader.ReadAllAsync())
-                await PortfolioSynchronizer.SyncAsync(authorization);
+            try
+            {
+            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+                foreach (var authorization in await AuthorizationReader.ReadByUserAsync(user.Id))
+                    await PortfolioSynchronizer.SyncAsync(authorization);
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (ErrorException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
         }
     }
 
