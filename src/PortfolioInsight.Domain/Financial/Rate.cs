@@ -48,6 +48,7 @@ namespace PortfolioInsight.Financial
         public decimal Percent => Value * 100;
         public int Rounded => (int)Math.Round(Percent, 0, MidpointRounding.AwayFromZero);
         public override string ToString() => $"{Percent}%";
+        public string RoundedTo(int decimals) => $"{Math.Round(Percent, decimals, MidpointRounding.AwayFromZero)}%";
 
         public int CompareTo(Rate other) =>
             Value.CompareTo(other.Value);
