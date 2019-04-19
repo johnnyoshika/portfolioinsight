@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioInsight.Questrade.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioInsight.ExchangeRatesApi", "src\PortfolioInsight.ExchangeRatesApi\PortfolioInsight.ExchangeRatesApi.csproj", "{2514EB7E-C5FB-4FBC-82E1-1E900CEEA6DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioInsight.ExchangeRatesApi.Tests", "test\PortfolioInsight.ExchangeRatesApi.Tests\PortfolioInsight.ExchangeRatesApi.Tests.csproj", "{7258A112-8D48-4176-B6B3-0F1ADD146CAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{2514EB7E-C5FB-4FBC-82E1-1E900CEEA6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2514EB7E-C5FB-4FBC-82E1-1E900CEEA6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2514EB7E-C5FB-4FBC-82E1-1E900CEEA6DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7258A112-8D48-4176-B6B3-0F1ADD146CAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7258A112-8D48-4176-B6B3-0F1ADD146CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7258A112-8D48-4176-B6B3-0F1ADD146CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7258A112-8D48-4176-B6B3-0F1ADD146CAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{940A4519-71EE-4E9C-9107-D177B598A7C3} = {343D91DB-D27B-41C5-A524-2A6E3D659ADA}
 		{381D8735-B0A9-4759-949E-1E3A6FE97230} = {3DE49B8C-DFEA-48AC-BC2C-48FFBCE67572}
 		{2514EB7E-C5FB-4FBC-82E1-1E900CEEA6DF} = {343D91DB-D27B-41C5-A524-2A6E3D659ADA}
+		{7258A112-8D48-4176-B6B3-0F1ADD146CAD} = {3DE49B8C-DFEA-48AC-BC2C-48FFBCE67572}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD763D72-63DA-429C-94F0-FA3C4E9F14F8}
