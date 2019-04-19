@@ -79,6 +79,7 @@
                             <tr>
                                 <th scope="col">Currency</th>
                                 <th scope="col">Rate</th>
+                                <th scope="col">As Of</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,6 +88,7 @@
                                 <tr>
                                     <td>@currency.Code</td>
                                     <td>@currency.Rate.Value</td>
+                                    <td>@currency.AsOf.ToString("MMM d, yyyy")</td>
                                 </tr>
                             }
                         </tbody>
