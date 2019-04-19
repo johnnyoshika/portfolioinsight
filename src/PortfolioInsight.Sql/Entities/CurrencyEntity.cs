@@ -8,6 +8,6 @@ namespace PortfolioInsight
     public partial class CurrencyEntity
     {
         public Currency ToModel() =>
-            new Currency(Code, (Rate)Rate);
+            new Currency(Code, (Rate)Rate, AsOf);
     }
 }

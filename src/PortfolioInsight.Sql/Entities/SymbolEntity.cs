@@ -13,7 +13,7 @@ namespace PortfolioInsight
                 Id,
                 Name,
                 Description,
-                new Currency(Currency.Code, (Rate)Currency.Rate),
+                Currency.ToModel(),
                 ListingExchangeCode == null ? Portfolios.ListingExchange.None : new ListingExchange(ListingExchangeCode));
 
         public SymbolEntity Assign(Symbol symbol)

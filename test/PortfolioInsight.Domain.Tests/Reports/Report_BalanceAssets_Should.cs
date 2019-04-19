@@ -13,8 +13,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
     {
         static readonly Rate CadConversion = (Rate)0.75m;
 
-        static readonly Currency CAD = new Currency("CAD", CadConversion);
-        static readonly Currency USD = new Currency("USD", Rate.Full);
+        static readonly Currency CAD = new Currency("CAD", CadConversion, DateTime.UtcNow.Date);
+        static readonly Currency USD = new Currency("USD", Rate.Full, DateTime.UtcNow.Date);
 
         [Fact]
         public void Calculate_Assets_In_USD_Currency()

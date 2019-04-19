@@ -9,7 +9,7 @@ namespace PortfolioInsight
     public partial class BalanceEntity
     {
         public Balance ToModel() =>
-            new Balance(Type, Value, new Currency(Currency.Code, (Rate)Currency.Rate));
+            new Balance(Type, Value, Currency.ToModel());
 
         public BalanceEntity Assign(Balance balance)
         {
