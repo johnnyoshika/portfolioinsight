@@ -31,6 +31,7 @@ namespace PortfolioInsight.Web.Controllers
             IAuthorizationReader authorizationReader,
             IPortfolioReader portfolioReader,
             IPortfolioSynchronizer portfolioSynchronizer,
+            ICurrencySynchronizer currencySynchronizer,
             ICurrencyReader currencyReader,
             IAllocationReader allocationReader,
             IAssetClassReader assetClassReader)
@@ -45,6 +46,7 @@ namespace PortfolioInsight.Web.Controllers
             AuthorizationReader = authorizationReader;
             PortfolioReader = portfolioReader;
             PortfolioSynchronizer = portfolioSynchronizer;
+            CurrencySynchronizer = currencySynchronizer;
             CurrencyReader = currencyReader;
             AllocationReader = allocationReader;
             AssetClassReader = assetClassReader;
@@ -60,6 +62,7 @@ namespace PortfolioInsight.Web.Controllers
         IAuthorizationReader AuthorizationReader { get; }
         IPortfolioReader PortfolioReader { get; }
         IPortfolioSynchronizer PortfolioSynchronizer { get; }
+        ICurrencySynchronizer CurrencySynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
         IAllocationReader AllocationReader { get; }
         IAssetClassReader AssetClassReader { get; }
@@ -141,9 +144,11 @@ namespace PortfolioInsight.Web.Controllers
         {
             try
             {
-            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+                var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
                 foreach (var authorization in await AuthorizationReader.ReadByUserAsync(user.Id))
                     await PortfolioSynchronizer.SyncAsync(authorization);
+
+                await CurrencySynchronizer.SyncAsync();
 
                 return NoContent();
             }
