@@ -35,6 +35,9 @@ namespace PortfolioInsight
                 entity.Property(c => c.Code)
                     .HasMaxLength(3);
 
+                entity.Property(c => c.Rate)
+                    .HasColumnType("decimal(14, 9)");
+
                 entity.HasData(
                     new CurrencyEntity { Code = "CAD" },
                     new CurrencyEntity { Code = "USD" }
@@ -234,6 +237,9 @@ namespace PortfolioInsight
                 entity.Property(c => c.Name)
                     .HasMaxLength(50)
                     .IsRequired();
+
+                entity.Property(c => c.Target)
+                    .HasColumnType("decimal(4, 3)");
 
                 entity.HasIndex(c => new { c.Name, c.UserId })
                     .IsUnique();
