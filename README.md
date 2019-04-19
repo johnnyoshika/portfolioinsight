@@ -1,6 +1,7 @@
 # Setup
 * Clone this repo
-* In `appsettings.json`, set default connection string
+* Copy `appsettings.json` and name it `appsettings.development.json`
+* Set default connection string in `appsettings.development.json`
 * Set connection string in [ContextFactory](https://github.com/johnnyoshika/portfolioinsight/blob/master/src/PortfolioInsight.Sql/ContextFactory.cs)
   * This connectoin string will be used by EF Migration
 * To create database, from Package Manager Console:
@@ -11,7 +12,7 @@
 * Create an app at [App Hub](https://login.questrade.com/APIAccess/UserApps.aspx)
 * Add this callback URL. Note: it seems that callback URLs must be https and it cannot be localhost.
   * `https://app.portfolioinsight.local:44348/questrade/response`
-* Get Consumer Key from App Hub and set `QuestradeConsumerKey` in `appsettings.json`
+* Get Consumer Key from App Hub and set `QuestradeConsumerKey` in `appsettings.development.json`
 
 # Questrade Authorization (enable app.portfolioinsight.local)
 * In `.vs/config/applicationhost.config`
