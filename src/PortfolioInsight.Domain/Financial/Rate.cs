@@ -38,9 +38,6 @@ namespace PortfolioInsight.Financial
         public Rate(decimal value)
             : this()
         {
-            if (value < 0m || value > 1m)
-                throw new ArgumentOutOfRangeException(nameof(value), "Rate value must be in the range from 0 to 1.");
-
             Value = value;
         }
 
