@@ -1,4 +1,5 @@
-﻿@model PortfolioInsight.Web.Controllers.DashboardViewModel
+﻿@using PortfolioInsight.Financial;
+@model PortfolioInsight.Web.Controllers.DashboardViewModel
 
 <div class="my-5 mx-auto" style="max-width:500px;">
     <div class="card">
@@ -12,6 +13,159 @@
                     <a href="/questrade/request" class="btn btn-primary btn-block">Authorize Questrade</a>
                 </div>
                 <div class="col-sm" data-outlet="sync"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card mb-4" data-section="accounts">
+                <div class="card-header">
+                    Accounts
+                </div>
+                <div class="card-body">
+                    @foreach (var account in Model.Report.Accounts)
+                    {
+                        <div data-section="account">
+                            <div class="mb-1">
+                                <a href="#" data-action="toggle">
+                                    <i class="fas fa-chevron-down fa-sm" data-section="chevron"></i> @account.Name
+                                </a>
+                            </div>
+                            <div data-element="positions">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Symbol</th>
+                                            <th scope="col">Value</th>
+                                            <th scope="col">Currency</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var position in account.Positions)
+                                        {
+                                            <tr>
+                                                <td>@position.Symbol.Name</td>
+                                                <td>@position.Value</td>
+                                                <td>@position.Currency.Code</td>
+                                            </tr>
+                                        }
+                                        @foreach (var balance in account.Balances)
+                                        {
+                                            <tr>
+                                                <td>@balance.Type</td>
+                                                <td>@balance.Value</td>
+                                                <td>@balance.Currency.Code</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Currencies
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Currency</th>
+                                <th scope="col">Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var currency in Model.Report.Currencies)
+                            {
+                                <tr>
+                                    <td>@currency.Code</td>
+                                    <td>@currency.Rate.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    Allocations
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Symbol</th>
+                                <th scope="col">Asset Class</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var allocation in Model.Report.Allocations)
+                            {
+                                <tr>
+                                    <td>@allocation.Symbol.Name</td>
+                                    <td>
+                                        @if (allocation.Proportions.Count == 1)
+                                        {
+                                            @allocation.Proportions.First().AssetClass.Name
+                                        }
+                                        else if (allocation.Proportions.Count > 1)
+                                        {
+                                            foreach (var proportion in allocation.Proportions)
+                                            {
+                                                <div><small>@proportion.AssetClass.Name @proportion.Rate</small></div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Assets
+                </div>
+                <div class="card-body" data-element="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Asset Class</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Actual</th>
+                                <th scope="col">Target</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var asset in Model.Report.Assets)
+                            {
+                                <tr>
+                                    <td>@asset.AssetClass.Name</td>
+                                    <td>@asset.Value</td>
+                                    <td>@asset.Proportion.RoundedTo(1)</td>
+                                    <td>@asset.AssetClass.Target?.RoundedTo(1)</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th>@Model.Report.Total</th>
+                                <th>@(((Rate)Model.Report.Assets.Sum(a => a.Proportion)).RoundedTo(0))</th>
+                                <th>@(((Rate)Model.Report.Assets.Sum(a => a.AssetClass.Target)).RoundedTo(0))</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -62,6 +216,25 @@
                         renderSync();
                     }
                 });
+            });
+
+            $('[data-section="accounts"]').on('click', '[data-action="toggle"]', function (e) {
+                e.preventDefault();
+                $(this)
+                    .find('[data-section="chevron"]')
+                    .each(function () {
+                        if ($(this).hasClass('fa-chevron-down'))
+                            $(this)
+                                .removeClass('fa-chevron-down')
+                                .addClass('fa-chevron-up');
+                        else
+                            $(this)
+                                .removeClass('fa-chevron-up')
+                                .addClass('fa-chevron-down');
+                    })
+                    .closest('[data-section="account"]')
+                    .find('[data-element="positions"]')
+                    .slideToggle()
             });
         }());
     </script>
