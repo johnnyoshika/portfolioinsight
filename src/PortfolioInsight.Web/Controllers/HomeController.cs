@@ -69,7 +69,7 @@ namespace PortfolioInsight.Web.Controllers
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             var portfolios = new List<Portfolio>();
-            foreach (var authorization in (await AuthorizationReader.ReadByUserAsync(user.Id)))
+            foreach (var authorization in await AuthorizationReader.ReadByUserAsync(user.Id))
                 portfolios.Add(await PortfolioReader.ReadByAuthorizationIdAsync(authorization.Id));
 
             return View(new DashboardViewModel
