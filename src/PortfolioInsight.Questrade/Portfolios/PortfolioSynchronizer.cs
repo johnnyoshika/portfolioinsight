@@ -75,14 +75,14 @@ namespace PortfolioInsight.Portfolios
         async Task<IEnumerable<Position>> GetPositionsAsync(string accountNumber, AccessToken accessToken)
         {
             var positions = new List<Position>();
-            foreach (var p in (await PositionApi.FindPositionsAsync(accountNumber, accessToken)).Positions)
+            foreach (var p in (await PositionApi.FindPositionsAsync(accountNumber, accessToken)).Positions.Where(p => p.CurrentMarketValue.HasValue))
                 positions.Add(await GetPositionAsync(p, accessToken));
 
             return positions;
         }
 
         async Task<Position> GetPositionAsync(QuestradePosition questradePosition, AccessToken accessToken) =>
-            new Position(await GetSymbolAsync(questradePosition.SymbolId, accessToken), questradePosition.CurrentMarketValue);
+            new Position(await GetSymbolAsync(questradePosition.SymbolId, accessToken), questradePosition.CurrentMarketValue.Value);
 
         async Task<Symbol> GetSymbolAsync(int questradeSymbolId, AccessToken accessToken)
         {
