@@ -45,6 +45,9 @@
 * After authorization and after user is redirected back to `https://app.portfolioinsight.local:44348/questrade/response`, change the host URL to our localhost URL so that the URL looks like this: `https://localhost:44348/questrade/response?code={code}`. Load that page
 * OAuth flow will continue as expected
 
+# PortfolioInsight.Questrade.Tests
+* In order to run tests in `PortfolioInsight.Questrade.Tests`, you must first create a file in `PortfolioInsight.Questrade.Tests/keys` directory with filename `token.txt` with the content being a manually generate a refresh token from [https://login.questrade.com/APIAccess/UserApps.aspx](https://login.questrade.com/APIAccess/UserApps.aspx]).
+
 # EF Migration
 * After making changes to entities, open the Package Manager Console and:
   * Set the default project to `src\PortfolioInsight.Sql`
