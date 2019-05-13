@@ -17,6 +17,16 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
 {
     public class PortfolioSychronization_Should
     {
+        public string KeysDirectory {
+            get
+            {
+                string project = "PortfolioInsight.Questrade.Tests";
+                string running = GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                return Combine(running.Substring(0, running.IndexOf(project) + project.Length), "keys");
+            }
+        }
+
+
         [Fact]
         public async Task Synchronize()
         {
@@ -73,10 +83,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
         /// </summary>
         async Task<AccessToken> RefreshTokenAsync(string refreshToken)
         {
-            string project = "PortfolioInsight.Questrade.Tests";
-            string running = GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string directory = Combine(running.Substring(0, running.IndexOf(project) + project.Length), "keys");
-            string file = Combine(directory, $"{refreshToken}.txt");
+            string file = Combine(KeysDirectory, $"{refreshToken}.txt");
 
             var questradeSettings = new Mock<IQuestradeSettings>();
             var authorizationReader = new Mock<IAuthorizationReader>();
