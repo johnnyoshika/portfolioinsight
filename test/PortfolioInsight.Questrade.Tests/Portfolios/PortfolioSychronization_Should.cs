@@ -30,12 +30,9 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
         [Fact]
         public async Task Synchronize()
         {
-            // Manually generate from here: https://login.questrade.com/APIAccess/UserApps.aspx
-            string refreshToken = "";
-
             var tokenizer = new Mock<ITokenizer>();
             tokenizer.Setup(_ => _.RefreshAsync(It.IsAny<Authorization>()))
-                .ReturnsAsync(await RefreshTokenAsync(refreshToken));
+                .ReturnsAsync(await RefreshTokenAsync());
 
             var portfolioReader = new Mock<IPortfolioReader>();
             portfolioReader.Setup(_ => _.ReadByAuthorizationIdAsync(It.IsAny<int>()))
@@ -73,6 +70,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
 
         /// <summary>
         /// Manually generate refresh token from here: https://login.questrade.com/APIAccess/UserApps.aspx
+        /// and save it into the keys directory as 'refreshToken.txt' with only the refresh token as the content.
         /// The first time that refresh token is used, this method retrieves an access token from Questrade's API using that refresh token.
         /// It then stores the next refresh token in the 'keys' folder with the following pattern:
         /// 
@@ -81,9 +79,18 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
         /// 
         /// All subsequent use of the refresh token will retrieve the next refresh token from the 'keys' folder.
         /// </summary>
-        async Task<AccessToken> RefreshTokenAsync(string refreshToken)
+        async Task<AccessToken> RefreshTokenAsync()
         {
-            string file = Combine(KeysDirectory, $"{refreshToken}.txt");
+            string tokenFileName = "token.txt";
+            string tokenFile = Combine(KeysDirectory, tokenFileName);
+            if (!Exists(tokenFile))
+                throw new InvalidOperationException($"" +
+                    $"'{tokenFileName}' missing. " +
+                    $"Manually generate it from https://login.questrade.com/APIAccess/UserApps.aspx " +
+                    $"and save it in 'keys' directory.");
+
+            string refreshToken = await ReadAllTextAsync(tokenFile);
+            string nextTokenFile = Combine(KeysDirectory, $"{refreshToken}.txt");
 
             var questradeSettings = new Mock<IQuestradeSettings>();
             var authorizationReader = new Mock<IAuthorizationReader>();
@@ -101,12 +108,12 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             var accessToken = await tokenizer.RefreshAsync(
                 new Authorization
                 {
-                    RefreshToken = Exists(file)
-                        ? await ReadAllTextAsync(file)
+                    RefreshToken = Exists(nextTokenFile)
+                        ? await ReadAllTextAsync(nextTokenFile)
                         : refreshToken
                 });
 
-            WriteAllText(file, authorization.RefreshToken);
+            WriteAllText(nextTokenFile, authorization.RefreshToken);
             return accessToken;
         }
     }
