@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -65,11 +66,18 @@ namespace PortfolioInsight.Authorizations
 
         async Task<QuestradeToken> FetchTokenAsync(string url)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(new HttpClientHandler
+            {
+                AllowAutoRedirect = false
+            }))
             {
                 try
                 {
                     var response = await client.PostAsync(url, null);
+
+                    if (response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.StartsWith("/OAuth2/Errors/GenericError.aspx"))
+                        throw new ErrorException("Temporary error fetching access token. Try again later!");
+
                     response.EnsureSuccessStatusCode();
                     var data = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<QuestradeToken>(data);
