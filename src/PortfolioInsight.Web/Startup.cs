@@ -38,7 +38,7 @@ namespace PortfolioInsight.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
                 {
-                    o.Cookie.Name = "auth-token";
+                    o.Cookie.Name = "auth-pi";
                 });
 
             services.Configure<RouteOptions>(options =>
