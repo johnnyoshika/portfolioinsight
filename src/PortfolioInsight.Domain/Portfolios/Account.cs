@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PortfolioInsight.Financial;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +22,9 @@ namespace PortfolioInsight.Portfolios
         public string Name { get; }
         public IReadOnlyList<Balance> Balances { get; }
         public IReadOnlyList<Position> Positions { get; }
+        public Amount TotalIn(Currency currency) =>
+            Positions.Sum(p => p.ValueIn(currency))
+            +
+            Balances.Sum(b => b.ValueIn(currency));
     }
 }
