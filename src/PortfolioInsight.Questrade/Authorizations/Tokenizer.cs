@@ -75,8 +75,15 @@ namespace PortfolioInsight.Authorizations
                 {
                     var response = await client.PostAsync(url, null);
 
-                    if (response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.StartsWith("/OAuth2/Errors/GenericError.aspx"))
-                        throw new ErrorException("Temporary error fetching access token. Try again later!");
+                    if (response.StatusCode == HttpStatusCode.Redirect)
+                    {
+                        if (response.Headers.Location.OriginalString.StartsWith("/OAuth2/Errors/GenericError.aspx"))
+                            throw new ErrorException("Temporary error fetching access token. Try again later!");
+
+                        // Although the redirect URL indicates access-denied, on 2019-06-10 it was just temporary API auth downtime
+                        if (response.Headers.Location.OriginalString.Contains("access-denied"))
+                            throw new ErrorException("Refresh token denied. Please re-authorize!");
+                    }
 
                     response.EnsureSuccessStatusCode();
                     var data = await response.Content.ReadAsStringAsync();
