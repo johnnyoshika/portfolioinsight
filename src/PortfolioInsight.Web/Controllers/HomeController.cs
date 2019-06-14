@@ -152,13 +152,13 @@ namespace PortfolioInsight.Web.Controllers
 
             var allocations = new Allocation[]
             {
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XEF.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "INTL", (Rate)0.18m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XEC.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "EM", (Rate)0.09m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XIC.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "CA", (Rate)0.26m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XUU.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "US", (Rate)0.32m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("ITOT",    "ARCA" ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "US", (Rate)0.32m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("ZDB.TO",  "TSX" ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "BOND", (Rate)0.15m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("ZAG.TO",  "TSX" ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "BOND", (Rate)0.15m), Rate.Full)})
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XEF.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "INTL", (Rate)0.17m), Rate.Full)}),
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XEC.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "EM", (Rate)0.08m), Rate.Full)}),
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XIC.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "CA", (Rate)0.25m), Rate.Full)}),
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("XUU.TO", "TSX"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "US", (Rate)0.30m), Rate.Full)}),
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("ITOT",    "ARCA" ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "US", (Rate)0.30m), Rate.Full)}),
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("ZDB.TO",  "TSX" ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "BOND", (Rate)0.20m), Rate.Full)}),
+                new Allocation(await SymbolReader.ReadByNameAtListingExchangeAsync("ZAG.TO",  "TSX" ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "BOND", (Rate)0.20m), Rate.Full)})
             };
 
             foreach (var allocation in allocations)
