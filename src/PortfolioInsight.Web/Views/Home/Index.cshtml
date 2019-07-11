@@ -109,7 +109,7 @@
                                             <td>@position.Currency.Code</td>
                                         </tr>
                                     }
-                                    @foreach (var balance in account.Balances)
+                                    @foreach (var balance in account.Balances.Where(b => b.Value != 0))
                                     {
                                         <tr>
                                             <td>@balance.Type</td>

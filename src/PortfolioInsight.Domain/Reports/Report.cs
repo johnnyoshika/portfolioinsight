@@ -25,10 +25,10 @@ namespace PortfolioInsight.Reports
         public Currency Output { get; }
 
         public IReadOnlyList<Account> Accounts =>
-            Portfolios.SelectMany(p => p.Accounts).ToList();
+            Portfolios.SelectMany(p => p.Accounts).OrderBy(a => a.Name).ToList();
 
         public IReadOnlyList<Position> Positions =>
-            Accounts.SelectMany(a => a.Positions).ToList();
+            Accounts.SelectMany(a => a.Positions).OrderByDescending(p => p.ValueIn(Output)).ToList();
 
         public IReadOnlyList<Balance> Balances =>
             Accounts.SelectMany(a => a.Balances).ToList();
