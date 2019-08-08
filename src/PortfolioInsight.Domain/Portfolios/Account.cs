@@ -13,8 +13,8 @@ namespace PortfolioInsight.Portfolios
             Id = id;
             Number = number ?? throw new ArgumentNullException(nameof(name));
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Balances = balances?.ToArray() ?? throw new ArgumentNullException(nameof(balances));
-            Positions = positions?.ToArray() ?? throw new ArgumentNullException(nameof(positions)); ;
+            Balances = balances?.OrderBy(b => b.Currency.Code).ToArray() ?? throw new ArgumentNullException(nameof(balances));
+            Positions = positions?.OrderBy(p => p.Symbol.Name).ToArray() ?? throw new ArgumentNullException(nameof(positions)); ;
         }
 
         public int Id { get; }
