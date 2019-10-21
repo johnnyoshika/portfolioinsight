@@ -62,6 +62,8 @@ namespace PortfolioInsight.Web
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
+
+            applicationLifetime.ApplicationStopped.Register(() => app.ApplicationServices.GetAutofacRoot().Dispose());
         }
     }
 }
