@@ -22,8 +22,9 @@ namespace PortfolioInsight.Financial
             using (var context = Context())
                 return await context
                     .Currencies
+                    .Where(c => c.Code == code)
                     .Select(c => c.ToModel())
-                    .FirstAsync(c => c.Code == code);
+                    .FirstAsync();
         }
 
         public async Task<List<Currency>> ReadAllAsync()
