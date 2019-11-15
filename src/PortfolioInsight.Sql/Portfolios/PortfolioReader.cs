@@ -26,7 +26,7 @@ namespace PortfolioInsight.Portfolios
                         .ThenInclude(b => b.Currency)
                     .Include(a => a.Positions)
                         .ThenInclude(p => p.Symbol.Currency)
-                    .Where(a => a.AuthorizationId == connectionId)
+                    .Where(a => a.ConnectionId == connectionId)
                     .Select(a => a.ToModel())
                     .ToListAsync());
         }

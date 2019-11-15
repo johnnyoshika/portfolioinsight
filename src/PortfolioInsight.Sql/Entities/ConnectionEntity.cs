@@ -5,7 +5,7 @@ using PortfolioInsight.Connections;
 
 namespace PortfolioInsight
 {
-    public partial class AuthorizationEntity
+    public partial class ConnectionEntity
     {
         public Connection ToDto() =>
             new Connection
@@ -17,7 +17,7 @@ namespace PortfolioInsight
                 RefreshToken = RefreshToken
             };
 
-        public AuthorizationEntity Assign(Connection connection)
+        public ConnectionEntity Assign(Connection connection)
         {
             UserId = connection.User.Id;
             BrokerageId = connection.Brokerage.Id;

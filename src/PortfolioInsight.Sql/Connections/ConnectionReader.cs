@@ -57,9 +57,9 @@ namespace PortfolioInsight.Connections
                     .ToListAsync();
         }
 
-        IQueryable<AuthorizationEntity> IncludeGraph(Context context) =>
+        IQueryable<ConnectionEntity> IncludeGraph(Context context) =>
             context
-                .Authorizations
+                .Connections
                 .Include(a => a.User)
                 .Include(a => a.Brokerage);
     }

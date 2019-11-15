@@ -21,20 +21,20 @@ namespace PortfolioInsight.Connections
         {
             using (var context = Context())
             {
-                var eAuthorization = await context
-                    .Authorizations
+                var eConnection = await context
+                    .Connections
                     .Where(a => a.Id == connection.Id)
                     .FirstOrDefaultAsync();
 
-                if (eAuthorization == null)
+                if (eConnection == null)
                 {
-                    eAuthorization = new AuthorizationEntity();
-                    context.Authorizations.Add(eAuthorization);
+                    eConnection = new ConnectionEntity();
+                    context.Connections.Add(eConnection);
                 }
 
-                eAuthorization.Assign(connection);
+                eConnection.Assign(connection);
                 await context.SaveChangesAsync();
-                connection.Id = eAuthorization.Id;
+                connection.Id = eConnection.Id;
             }
         }
     }
