@@ -49,8 +49,11 @@
 * In order to run tests in `PortfolioInsight.Questrade.Tests`, you must first create a file in `PortfolioInsight.Questrade.Tests/keys` directory with filename `token.txt` with the content being a manually generate a refresh token from [https://login.questrade.com/APIAccess/UserApps.aspx](https://login.questrade.com/APIAccess/UserApps.aspx).
 
 # EF Migration
-* After making changes to entities, open the Package Manager Console and:
-  * Set the default project to `src\PortfolioInsight.Sql`
-  * Run: `add-migration <migration name>`
-  * Run: `update-database`
+* After making changes to entities:
+  * Set the Visual Studio startup project to `PortfolioInsight.Sql` - *This was required after upgrading to .Net Core 3. Hopefully this step can be removed in the future.*
+  * Open the Package Manager Console and:
+    * Set the default project to `src\PortfolioInsight.Sql`
+    * Run: `add-migration <migration name>`
+    * Run: `update-database`
+  * Set the Visual Studio startup project back to `PortfolioInsight.Web` - *This was required after upgrading to .Net Core 3. Hopefully this step can be removed in the future.*
 * `ContextFactory` is used to create DbContext with connection string injection when running these commands in Package Manager Console
