@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PortfolioInsight.Authorizations;
+using PortfolioInsight.Connections;
 using PortfolioInsight.Brokerages;
 using PortfolioInsight.Financial;
 using PortfolioInsight.Http;
@@ -36,13 +36,13 @@ namespace PortfolioInsight.Portfolios
         ICurrencyReader CurrencyReader { get; }
         ITokenizer Tokenizer { get; }
 
-        public async Task SyncAsync(Authorization authorization)
+        public async Task SyncAsync(Connection connection)
         {
-            var portfolio = await PortfolioReader.ReadByAuthorizationIdAsync(authorization.Id);
+            var portfolio = await PortfolioReader.ReadByConnectionIdAsync(connection.Id);
             await PortfolioWriter.WriteAsync(
                 new Portfolio(
-                    authorization.Id,
-                    await SyncAccounts(portfolio.Accounts, await Tokenizer.RefreshAsync(authorization))));
+                    connection.Id,
+                    await SyncAccounts(portfolio.Accounts, await Tokenizer.RefreshAsync(connection))));
         }
 
 

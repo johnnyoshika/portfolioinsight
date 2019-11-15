@@ -7,6 +7,6 @@ namespace PortfolioInsight.Portfolios
 {
     public interface IPortfolioReader
     {
-        Task<Portfolio> ReadByAuthorizationIdAsync(int authorizationId);
+        Task<Portfolio> ReadByConnectionIdAsync(int connectionId);
     }
 }

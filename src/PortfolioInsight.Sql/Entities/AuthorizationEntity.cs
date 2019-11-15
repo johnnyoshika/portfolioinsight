@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PortfolioInsight.Authorizations;
+using PortfolioInsight.Connections;
 
 namespace PortfolioInsight
 {
     public partial class AuthorizationEntity
     {
-        public Authorization ToDto() =>
-            new Authorization
+        public Connection ToDto() =>
+            new Connection
             {
                 Id = Id,
                 User = User.ToDto(),
@@ -17,12 +17,12 @@ namespace PortfolioInsight
                 RefreshToken = RefreshToken
             };
 
-        public AuthorizationEntity Assign(Authorization authorization)
+        public AuthorizationEntity Assign(Connection connection)
         {
-            UserId = authorization.User.Id;
-            BrokerageId = authorization.Brokerage.Id;
-            BrokerageUserId = authorization.BrokerageUserId;
-            RefreshToken = authorization.RefreshToken;
+            UserId = connection.User.Id;
+            BrokerageId = connection.Brokerage.Id;
+            BrokerageUserId = connection.BrokerageUserId;
+            RefreshToken = connection.RefreshToken;
             return this;
         }
     }

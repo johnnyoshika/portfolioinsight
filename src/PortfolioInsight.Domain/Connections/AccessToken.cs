@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PortfolioInsight.Authorizations
+namespace PortfolioInsight.Connections
 {
     public class AccessToken
     {

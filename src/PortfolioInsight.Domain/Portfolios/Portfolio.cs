@@ -7,13 +7,13 @@ namespace PortfolioInsight.Portfolios
 {
     public class Portfolio
     {
-        public Portfolio(int authorizationId, IEnumerable<Account> accounts)
+        public Portfolio(int connectionId, IEnumerable<Account> accounts)
         {
-            AuthorizationId = authorizationId;
+            ConnectionId = connectionId;
             Accounts = accounts?.ToArray() ?? throw new ArgumentNullException(nameof(accounts));
         }
 
-        public int AuthorizationId { get; }
+        public int ConnectionId { get; }
         public IReadOnlyList<Account> Accounts { get; }
     }
 }

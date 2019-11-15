@@ -17,16 +17,16 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
-        public async Task<Portfolio> ReadByAuthorizationIdAsync(int authorizationId)
+        public async Task<Portfolio> ReadByConnectionIdAsync(int connectionId)
         {
             using (var context = Context())
-                return new Portfolio(authorizationId, await context
+                return new Portfolio(connectionId, await context
                     .Accounts
                     .Include(a => a.Balances)
                         .ThenInclude(b => b.Currency)
                     .Include(a => a.Positions)
                         .ThenInclude(p => p.Symbol.Currency)
-                    .Where(a => a.AuthorizationId == authorizationId)
+                    .Where(a => a.AuthorizationId == connectionId)
                     .Select(a => a.ToModel())
                     .ToListAsync());
         }

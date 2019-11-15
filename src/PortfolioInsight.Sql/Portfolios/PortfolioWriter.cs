@@ -27,7 +27,7 @@ namespace PortfolioInsight.Portfolios
                         .ThenInclude(a => a.Balances)
                     .Include(a => a.Accounts)
                         .ThenInclude(a => a.Positions)
-                    .Where(a => a.Id == portfolio.AuthorizationId)
+                    .Where(a => a.Id == portfolio.ConnectionId)
                     .FirstAsync();
 
                 context.Balances.RemoveRange(eAuthorization.Accounts.SelectMany(a => a.Balances));

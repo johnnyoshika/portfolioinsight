@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
-using PortfolioInsight.Authorizations;
+using PortfolioInsight.Connections;
 using PortfolioInsight.Configuration;
 using PortfolioInsight.Financial;
 using PortfolioInsight.Portfolios;
@@ -31,11 +31,11 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
         public async Task Synchronize()
         {
             var tokenizer = new Mock<ITokenizer>();
-            tokenizer.Setup(_ => _.RefreshAsync(It.IsAny<Authorization>()))
+            tokenizer.Setup(_ => _.RefreshAsync(It.IsAny<Connection>()))
                 .ReturnsAsync(await RefreshTokenAsync());
 
             var portfolioReader = new Mock<IPortfolioReader>();
-            portfolioReader.Setup(_ => _.ReadByAuthorizationIdAsync(It.IsAny<int>()))
+            portfolioReader.Setup(_ => _.ReadByConnectionIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(new Portfolio(0, new List<Account>()));
 
             var symbolReader = new Mock<ISymbolReader>();
@@ -63,7 +63,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                 currencyReader.Object,
                 tokenizer.Object);
             
-            await synchronizer.SyncAsync(new Authorization());
+            await synchronizer.SyncAsync(new Connection());
 
             Assert.NotNull(portfolio);
         }
@@ -93,27 +93,27 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             string nextTokenFile = Combine(KeysDirectory, $"{refreshToken}.txt");
 
             var questradeSettings = new Mock<IQuestradeSettings>();
-            var authorizationReader = new Mock<IAuthorizationReader>();
+            var connectionReader = new Mock<IConnectionReader>();
 
-            Authorization authorization = null;
-            var authorizationWriter = new Mock<IAuthorizationWriter>();
-            authorizationWriter.Setup(_ => _.WriteAsync(It.IsAny<Authorization>()))
-                .Callback<Authorization>(a =>
+            Connection connection = null;
+            var connectionWriter = new Mock<IConnectionWriter>();
+            connectionWriter.Setup(_ => _.WriteAsync(It.IsAny<Connection>()))
+                .Callback<Connection>(c =>
                 {
-                    authorization = a;
+                    connection = c;
                 })
                 .Returns(Task.CompletedTask);
 
-            var tokenizer = new Tokenizer(questradeSettings.Object, authorizationReader.Object, authorizationWriter.Object);
+            var tokenizer = new Tokenizer(questradeSettings.Object, connectionReader.Object, connectionWriter.Object);
             var accessToken = await tokenizer.RefreshAsync(
-                new Authorization
+                new Connection
                 {
                     RefreshToken = Exists(nextTokenFile)
                         ? await ReadAllTextAsync(nextTokenFile)
                         : refreshToken
                 });
 
-            WriteAllText(nextTokenFile, authorization.RefreshToken);
+            WriteAllText(nextTokenFile, connection.RefreshToken);
             return accessToken;
         }
     }

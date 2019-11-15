@@ -12,21 +12,21 @@ using PortfolioInsight.Exceptions;
 using PortfolioInsight.Http;
 using PortfolioInsight.Users;
 
-namespace PortfolioInsight.Authorizations
+namespace PortfolioInsight.Connections
 {
     [Service]
     public class Tokenizer : ITokenizer
     {
-        public Tokenizer(IQuestradeSettings questradeSettings, IAuthorizationReader authorizationReader, IAuthorizationWriter authorizationWriter)
+        public Tokenizer(IQuestradeSettings questradeSettings, IConnectionReader connectionReader, IConnectionWriter connectionWriter)
         {
             QuestradeSettings = questradeSettings;
-            AuthorizationReader = authorizationReader;
-            AuthorizationWriter = authorizationWriter;
+            ConnectionReader = connectionReader;
+            ConnectionWriter = connectionWriter;
         }
 
         IQuestradeSettings QuestradeSettings { get; }
-        IAuthorizationReader AuthorizationReader { get; }
-        IAuthorizationWriter AuthorizationWriter { get; }
+        IConnectionReader ConnectionReader { get; }
+        IConnectionWriter ConnectionWriter { get; }
 
         public async Task<AccessToken> ExchangeAsync(string code, User user, string redirectUrl)
         {
@@ -37,26 +37,26 @@ namespace PortfolioInsight.Authorizations
                 ApiServer = token.ApiServer
             };
             var accounts = await AccountApi.FindAccountsAsync(accessToken);
-            var authorization = await AuthorizationReader.ReadByUserBrokerageAsync(user.Id, Brokerage.Questrade.Id, accounts.UserId);
-            if (authorization == null)
-                authorization = new Authorization
+            var connection = await ConnectionReader.ReadByUserBrokerageAsync(user.Id, Brokerage.Questrade.Id, accounts.UserId);
+            if (connection == null)
+                connection = new Connection
                 {
                     User = user,
                     Brokerage = Brokerage.Questrade,
                     BrokerageUserId = accounts.UserId
                 };
 
-            authorization.RefreshToken = token.RefreshToken;
+            connection.RefreshToken = token.RefreshToken;
 
-            await AuthorizationWriter.WriteAsync(authorization);
+            await ConnectionWriter.WriteAsync(connection);
             return accessToken;
         }
 
-        public async Task<AccessToken> RefreshAsync(Authorization authorization)
+        public async Task<AccessToken> RefreshAsync(Connection connection)
         {
-            var token = await FetchTokenAsync($"https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token={authorization.RefreshToken}");
-            authorization.RefreshToken = token.RefreshToken;
-            await AuthorizationWriter.WriteAsync(authorization);
+            var token = await FetchTokenAsync($"https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token={connection.RefreshToken}");
+            connection.RefreshToken = token.RefreshToken;
+            await ConnectionWriter.WriteAsync(connection);
             return new AccessToken
             {
                 Value = token.AccessToken,

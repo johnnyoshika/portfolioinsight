@@ -5,25 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace PortfolioInsight.Authorizations
+namespace PortfolioInsight.Connections
 {
     [Service]
-    public class AuthorizationWriter : IAuthorizationWriter
+    public class ConnectionWriter : IConnectionWriter
     {
-        public AuthorizationWriter(Func<Context> context)
+        public ConnectionWriter(Func<Context> context)
         {
             Context = context;
         }
 
         Func<Context> Context { get; }
 
-        public async Task WriteAsync(Authorization authorization)
+        public async Task WriteAsync(Connection connection)
         {
             using (var context = Context())
             {
                 var eAuthorization = await context
                     .Authorizations
-                    .Where(a => a.Id == authorization.Id)
+                    .Where(a => a.Id == connection.Id)
                     .FirstOrDefaultAsync();
 
                 if (eAuthorization == null)
@@ -32,9 +32,9 @@ namespace PortfolioInsight.Authorizations
                     context.Authorizations.Add(eAuthorization);
                 }
 
-                eAuthorization.Assign(authorization);
+                eAuthorization.Assign(connection);
                 await context.SaveChangesAsync();
-                authorization.Id = eAuthorization.Id;
+                connection.Id = eAuthorization.Id;
             }
         }
     }

@@ -4,9 +4,9 @@ using System.Text;
 using PortfolioInsight.Brokerages;
 using PortfolioInsight.Users;
 
-namespace PortfolioInsight.Authorizations
+namespace PortfolioInsight.Connections
 {
-    public class Authorization
+    public class Connection
     {
         public int Id { get; set; }
         public User User { get; set; }
