@@ -37,8 +37,7 @@ namespace PortfolioInsight.Portfolios
 
                 foreach (var a in portfolio.Accounts)
                 {
-                    var eAccount = eConnection.Accounts.FirstOrDefault(e => e.Id == a.Id);
-
+                    var eAccount = a.Id == 0 ? null : eConnection.Accounts.FirstOrDefault(e => e.Id == a.Id);
                     if (eAccount == null)
                     {
                         eAccount = new AccountEntity
