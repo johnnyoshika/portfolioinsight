@@ -50,10 +50,8 @@
 
 # EF Migration
 * After making changes to entities:
-  * Set the Visual Studio startup project to `PortfolioInsight.Sql` - *This wasn't required before Visual Studio 2019 (and .Net Core 3), so hopefully this step can be removed in the future.*
   * Open the Package Manager Console and:
     * Set the default project to `src\PortfolioInsight.Sql`
     * Run: `add-migration <migration name>`
     * Run: `update-database`
-  * Set the Visual Studio startup project back to `PortfolioInsight.Web` - *This wasn't required before Visual Studio 2019 (and .Net Core 3), so hopefully this step can be removed in the future.*
 * `ContextFactory` is used to create DbContext with connection string injection when running these commands in Package Manager Console
