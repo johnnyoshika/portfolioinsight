@@ -1,0 +1,15 @@
+﻿@using PortfolioInsight.Financial;
+@model IEnumerable<PortfolioInsight.Portfolios.Portfolio>
+
+<div class="my-5 mx-auto" style="max-width:500px;">
+    @foreach (var p in Model)
+    {
+        <div class="row my-2">
+            <div class="col">
+                <a href="/portfolios/@p.Id" class="btn btn-primary btn-block">@p.Name</a>
+            </div>
+        </div>
+    }
+</div>
+
+

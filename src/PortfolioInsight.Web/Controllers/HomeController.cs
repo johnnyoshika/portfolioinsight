@@ -33,6 +33,7 @@ namespace PortfolioInsight.Web.Controllers
             IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             ICurrencyReader currencyReader,
+            IPortfolioReader portfolioReader,
             IAllocationReader allocationReader,
             IAssetClassReader assetClassReader)
         {
@@ -48,6 +49,7 @@ namespace PortfolioInsight.Web.Controllers
             ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             CurrencyReader = currencyReader;
+            PortfolioReader = portfolioReader;
             AllocationReader = allocationReader;
             AssetClassReader = assetClassReader;
         }
@@ -64,9 +66,17 @@ namespace PortfolioInsight.Web.Controllers
         IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
+        IPortfolioReader PortfolioReader { get; }
         IAllocationReader AllocationReader { get; }
         IAssetClassReader AssetClassReader { get; }
 
+        [Authorize]
+        public async Task<IActionResult> Index()
+        {
+            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+            return View(await PortfolioReader.ReadByUserIdAsync(user.Id));
+        }
+             
         [Authorize]
         [HttpGet("portfolios/{id:int}")]
         public async Task<IActionResult> Portfolio(int id)
