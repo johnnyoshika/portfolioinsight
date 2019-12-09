@@ -17,6 +17,16 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
+        public async Task<Portfolio> ReadByIdAsync(int id)
+        {
+            using (var context = Context())
+                return await context
+                    .Portfolios
+                    .Where(p => p.Id == id)
+                    .Select(p => p.ToModel())
+                    .FirstOrDefaultAsync();
+        }
+
         public async Task<List<Portfolio>> ReadByUserIdAsync(int userId)
         {
             using (var context = Context())
