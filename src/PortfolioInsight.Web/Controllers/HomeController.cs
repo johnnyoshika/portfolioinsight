@@ -84,6 +84,7 @@ namespace PortfolioInsight.Web.Controllers
             return View(new PortfolioViewModel
             {
                 User = user,
+                Portfolio = await PortfolioReader.ReadByIdAsync(id),
                 Report = new Report(
                     accounts,
                     await AllocationReader.ReadByPortfolioIdAsync(id),
@@ -153,6 +154,7 @@ namespace PortfolioInsight.Web.Controllers
 
     public class PortfolioViewModel : DashboardViewModel
     {
+        public Portfolio Portfolio { get; set; }
         public Report Report { get; set; }
     }
 }
