@@ -83,7 +83,7 @@ namespace PortfolioInsight.Web.Controllers
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             var accounts = new List<Account>();
-            foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
+            foreach (var connection in await ConnectionReader.ReadByUserIdAsync(user.Id))
                 accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));
 
             var currencies = await CurrencyReader.ReadAllAsync();
@@ -156,7 +156,7 @@ namespace PortfolioInsight.Web.Controllers
             try
             {
                 var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
-                foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
+                foreach (var connection in await ConnectionReader.ReadByUserIdAsync(user.Id))
                     await ConnectionSynchronizer.SyncAsync(connection);
 
                 await CurrencySynchronizer.SyncAsync();

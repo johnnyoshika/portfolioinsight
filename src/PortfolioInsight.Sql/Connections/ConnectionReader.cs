@@ -48,7 +48,7 @@ namespace PortfolioInsight.Connections
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Connection>> ReadByUserAsync(int userId)
+        public async Task<List<Connection>> ReadByUserIdAsync(int userId)
         {
             using (var context = Context())
                 return await IncludeGraph(context)

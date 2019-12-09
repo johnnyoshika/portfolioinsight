@@ -10,6 +10,6 @@ namespace PortfolioInsight.Connections
         Task<List<Connection>> ReadAllAsync();
         Task<Connection> ReadByIdAsync(int id);
         Task<Connection> ReadByUserBrokerageAsync(int userId, int brokerageId, string brokerargeUserId);
-        Task<List<Connection>> ReadByUserAsync(int userId);
+        Task<List<Connection>> ReadByUserIdAsync(int userId);
     }
 }
