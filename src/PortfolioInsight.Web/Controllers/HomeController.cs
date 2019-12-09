@@ -61,7 +61,11 @@ namespace PortfolioInsight.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
-            return View(await PortfolioReader.ReadByUserIdAsync(user.Id));
+            return View(new IndexViewModel
+            {
+                User = user,
+                Portfolios = await PortfolioReader.ReadByUserIdAsync(user.Id)
+            });
         }
              
         [Authorize]
@@ -134,10 +138,18 @@ namespace PortfolioInsight.Web.Controllers
             }
         }
     }
-
-    public class PortfolioViewModel
+    public class DashboardViewModel
     {
         public User User { get; set; }
+    }
+
+    public class IndexViewModel : DashboardViewModel
+    {
+        public List<Portfolio> Portfolios { get; set; }
+    }
+
+    public class PortfolioViewModel : DashboardViewModel
+    {
         public Report Report { get; set; }
     }
 }

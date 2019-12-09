@@ -1,23 +1,6 @@
 ﻿@using PortfolioInsight.Financial;
 @model PortfolioInsight.Web.Controllers.PortfolioViewModel
 
-<div class="my-5 mx-auto" style="max-width:500px;">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title text-center">@Model.User.FirstName @Model.User.LastName</h5>
-            <p class="card-text text-center">
-                <a href="/account/logout">Log out</a>
-            </p>
-            <div class="row">
-                <div class="col-sm mb-2">
-                    <a href="/questrade/request" class="btn btn-primary btn-block">Authorize Questrade</a>
-                </div>
-                <div class="col-sm mb-2" data-outlet="sync"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-sm">
         <div class="card mb-4">
@@ -197,19 +180,6 @@
         </div>
     </div>
 </div>
-
-<script id="sync" type="text/html">
-    <button class="btn btn-primary btn-block" data-action="sync">
-        Sync
-    </button>
-</script>
-
-<script id="syncing" type="text/html">
-    <button class="btn btn-primary btn-block" data-section="syncing" disabled>
-        <span class="spinner-border spinner-border-sm"></span>
-        Syncing...
-    </button>
-</script>
 
 @section Scripts {
     <script>
