@@ -5,19 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace PortfolioInsight.Authorizations
+namespace PortfolioInsight.Connections
 {
     [Service]
-    public class AuthorizationReader : IAuthorizationReader
+    public class ConnectionReader : IConnectionReader
     {
-        public AuthorizationReader(Func<Context> context)
+        public ConnectionReader(Func<Context> context)
         {
             Context = context;
         }
 
         Func<Context> Context { get; }
 
-        public async Task<List<Authorization>> ReadAllAsync()
+        public async Task<List<Connection>> ReadAllAsync()
         {
             using (var context = Context())
                 return await IncludeGraph(context)
@@ -25,7 +25,7 @@ namespace PortfolioInsight.Authorizations
                     .ToListAsync();
         }
 
-        public async Task<Authorization> ReadByIdAsync(int id)
+        public async Task<Connection> ReadByIdAsync(int id)
         {
             using (var context = Context())
                 return await IncludeGraph(context)
@@ -34,7 +34,7 @@ namespace PortfolioInsight.Authorizations
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<Authorization> ReadByUserBrokerageAsync(int userId, int brokerageId, string brokerargeUserId)
+        public async Task<Connection> ReadByUserBrokerageAsync(int userId, int brokerageId, string brokerargeUserId)
         {
             using (var context = Context())
                 return await IncludeGraph(context)
@@ -48,7 +48,7 @@ namespace PortfolioInsight.Authorizations
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Authorization>> ReadByUserAsync(int userId)
+        public async Task<List<Connection>> ReadByUserAsync(int userId)
         {
             using (var context = Context())
                 return await IncludeGraph(context)
@@ -57,9 +57,9 @@ namespace PortfolioInsight.Authorizations
                     .ToListAsync();
         }
 
-        IQueryable<AuthorizationEntity> IncludeGraph(Context context) =>
+        IQueryable<ConnectionEntity> IncludeGraph(Context context) =>
             context
-                .Authorizations
+                .Connections
                 .Include(a => a.User)
                 .Include(a => a.Brokerage);
     }

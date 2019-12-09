@@ -4,11 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using PortfolioInsight.Users;
 
-namespace PortfolioInsight.Authorizations
+namespace PortfolioInsight.Connections
 {
     public interface ITokenizer
     {
         Task<AccessToken> ExchangeAsync(string code, User user, string redirectUrl);
-        Task<AccessToken> RefreshAsync(Authorization authorization);
+        Task<AccessToken> RefreshAsync(Connection connection);
     }
 }

@@ -21,30 +21,30 @@ namespace PortfolioInsight.Portfolios
         {
             using (var context = Context())
             {
-                var eAuthorization = await context
-                    .Authorizations
+                var eConnection = await context
+                    .Connections
                     .Include(a => a.Accounts)
                         .ThenInclude(a => a.Balances)
                     .Include(a => a.Accounts)
                         .ThenInclude(a => a.Positions)
-                    .Where(a => a.Id == portfolio.AuthorizationId)
+                    .Where(a => a.Id == portfolio.ConnectionId)
                     .FirstAsync();
 
-                context.Balances.RemoveRange(eAuthorization.Accounts.SelectMany(a => a.Balances));
-                context.Positions.RemoveRange(eAuthorization.Accounts.SelectMany(a => a.Positions));
+                context.Balances.RemoveRange(eConnection.Accounts.SelectMany(a => a.Balances));
+                context.Positions.RemoveRange(eConnection.Accounts.SelectMany(a => a.Positions));
                 context.Accounts.RemoveRange(
-                    eAuthorization.Accounts.Where(e => !portfolio.Accounts.Any(a => a.Id == e.Id)));
+                    eConnection.Accounts.Where(e => !portfolio.Accounts.Any(a => a.Id == e.Id)));
 
                 foreach (var a in portfolio.Accounts)
                 {
-                    var eAccount = eAuthorization.Accounts.FirstOrDefault(e => e.Id == a.Id);
+                    var eAccount = eConnection.Accounts.FirstOrDefault(e => e.Id == a.Id);
 
                     if (eAccount == null)
                     {
                         eAccount = new AccountEntity
                         {
-                            AuthorizationId = eAuthorization.Id,
-                            Authorization = eAuthorization
+                            ConnectionId = eConnection.Id,
+                            Connection = eConnection
                         };
                         context.Accounts.Add(eAccount);
                     }

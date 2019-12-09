@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PortfolioInsight.Authorizations;
+using PortfolioInsight.Connections;
 using PortfolioInsight.Configuration;
 using PortfolioInsight.Exceptions;
 using PortfolioInsight.Financial;
@@ -28,7 +28,7 @@ namespace PortfolioInsight.Web.Controllers
             IAuthenticationClient authenticationClient,
             IQuestradeSettings questradeSettings,
             ITokenizer tokenizer,
-            IAuthorizationReader authorizationReader,
+            IConnectionReader connectionReader,
             IPortfolioReader portfolioReader,
             IPortfolioSynchronizer portfolioSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
@@ -43,7 +43,7 @@ namespace PortfolioInsight.Web.Controllers
             AuthenticationClient = authenticationClient;
             QuestradeSettings = questradeSettings;
             Tokenizer = tokenizer;
-            AuthorizationReader = authorizationReader;
+            ConnectionReader = connectionReader;
             PortfolioReader = portfolioReader;
             PortfolioSynchronizer = portfolioSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
@@ -59,7 +59,7 @@ namespace PortfolioInsight.Web.Controllers
         IAuthenticationClient AuthenticationClient { get; }
         IQuestradeSettings QuestradeSettings { get; }
         ITokenizer Tokenizer { get; }
-        IAuthorizationReader AuthorizationReader { get; }
+        IConnectionReader ConnectionReader { get; }
         IPortfolioReader PortfolioReader { get; }
         IPortfolioSynchronizer PortfolioSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
@@ -72,8 +72,8 @@ namespace PortfolioInsight.Web.Controllers
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             var portfolios = new List<Portfolio>();
-            foreach (var authorization in await AuthorizationReader.ReadByUserAsync(user.Id))
-                portfolios.Add(await PortfolioReader.ReadByAuthorizationIdAsync(authorization.Id));
+            foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
+                portfolios.Add(await PortfolioReader.ReadByConnectionIdAsync(connection.Id));
 
             var currencies = await CurrencyReader.ReadAllAsync();
             return View(new DashboardViewModel
@@ -145,8 +145,8 @@ namespace PortfolioInsight.Web.Controllers
             try
             {
                 var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
-                foreach (var authorization in await AuthorizationReader.ReadByUserAsync(user.Id))
-                    await PortfolioSynchronizer.SyncAsync(authorization);
+                foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
+                    await PortfolioSynchronizer.SyncAsync(connection);
 
                 await CurrencySynchronizer.SyncAsync();
 

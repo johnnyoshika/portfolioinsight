@@ -16,7 +16,7 @@ namespace PortfolioInsight
         public DbSet<BrokerageEntity> Brokerages { get; set; }
         public DbSet<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
         public DbSet<UserEntity> Users { get; set; }
-        public DbSet<AuthorizationEntity> Authorizations { get; set; }
+        public DbSet<ConnectionEntity> Connections { get; set; }
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<BalanceEntity> Balances { get; set; }
         public DbSet<PositionEntity> Positions { get; set; }
@@ -151,9 +151,9 @@ namespace PortfolioInsight
                     .HasMaxLength(48);
             });
 
-            modelBuilder.Entity<AuthorizationEntity>(entity =>
+            modelBuilder.Entity<ConnectionEntity>(entity =>
             {
-                entity.ToTable("Authorizations");
+                entity.ToTable("Connections");
 
                 entity.HasIndex(a => new { a.BrokerageId, a.BrokerageUserId, a.UserId })
                     .IsUnique();
@@ -165,11 +165,11 @@ namespace PortfolioInsight
                     .IsRequired();
 
                 entity.HasOne(a => a.Brokerage)
-                        .WithMany(b => b.Authorizations)
+                        .WithMany(b => b.Connections)
                         .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(a => a.User)
-                        .WithMany(u => u.Authorizations)
+                        .WithMany(u => u.Connections)
                         .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -183,10 +183,10 @@ namespace PortfolioInsight
                 entity.Property(a => a.Name)
                     .IsRequired();
 
-                entity.HasIndex(a => new { a.Number, a.AuthorizationId })
+                entity.HasIndex(a => new { a.Number, a.ConnectionId })
                     .IsUnique();
 
-                entity.HasOne(a => a.Authorization)
+                entity.HasOne(a => a.Connection)
                     .WithMany(a => a.Accounts)
                     .OnDelete(DeleteBehavior.Restrict);
             });
@@ -315,7 +315,7 @@ namespace PortfolioInsight
         public string Name { get; set; }
 
         public List<BrokerageSymbolEntity> BrokerageSymbols { get; set; }
-        public List<AuthorizationEntity> Authorizations { get; set; }
+        public List<ConnectionEntity> Connections { get; set; }
     }
 
     public partial class BrokerageSymbolEntity
@@ -342,12 +342,12 @@ namespace PortfolioInsight
         public DateTime? LastLoginAt { get; set; }
         public int LoginCount { get; set; }
 
-        public List<AuthorizationEntity> Authorizations { get; set; }
+        public List<ConnectionEntity> Connections { get; set; }
         public List<AssetClassEntity> AssetClasses { get; set; }
         public List<AllocationEntity> Allocations { get; set; }
     }
 
-    public partial class AuthorizationEntity
+    public partial class ConnectionEntity
     {
         public int Id { get; set; }
 
@@ -370,8 +370,8 @@ namespace PortfolioInsight
         public string Number { get; set; }
         public string Name { get; set; }
 
-        public int AuthorizationId { get; set; }
-        public AuthorizationEntity Authorization { get; set; }
+        public int ConnectionId { get; set; }
+        public ConnectionEntity Connection { get; set; }
 
         public List<BalanceEntity> Balances { get; set; }
         public List<PositionEntity> Positions { get; set; }
