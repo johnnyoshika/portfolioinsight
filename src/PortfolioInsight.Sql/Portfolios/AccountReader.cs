@@ -8,19 +8,19 @@ using Microsoft.EntityFrameworkCore;
 namespace PortfolioInsight.Portfolios
 {
     [Service]
-    public class PortfolioReader : IPortfolioReader
+    public class AccountReader : IAccountReader
     {
-        public PortfolioReader(Func<Context> context)
+        public AccountReader(Func<Context> context)
         {
             Context = context;
         }
 
         Func<Context> Context { get; }
 
-        public async Task<Portfolio> ReadByConnectionIdAsync(int connectionId)
+        public async Task<List<Account>> ReadByConnectionIdAsync(int connectionId)
         {
             using (var context = Context())
-                return new Portfolio(connectionId, await context
+                return await context
                     .Accounts
                     .Include(a => a.Balances)
                         .ThenInclude(b => b.Currency)
@@ -28,7 +28,7 @@ namespace PortfolioInsight.Portfolios
                         .ThenInclude(p => p.Symbol.Currency)
                     .Where(a => a.ConnectionId == connectionId)
                     .Select(a => a.ToModel())
-                    .ToListAsync());
+                    .ToListAsync();
         }
     }
 }

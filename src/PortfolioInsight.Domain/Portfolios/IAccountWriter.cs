@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using PortfolioInsight.Connections;
 
 namespace PortfolioInsight.Portfolios
 {
-    public interface IPortfolioSynchronizer
+    public interface IAccountWriter
     {
-        Task SyncAsync(Connection connection);
+        Task WriteAsync(int connectionId, List<Account> accounts);
     }
 }

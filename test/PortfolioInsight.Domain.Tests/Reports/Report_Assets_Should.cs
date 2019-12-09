@@ -28,44 +28,38 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void List_All_Assets()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new List<Balance>
-                            {
-                                new Balance(Balance.Cash, 100, CAD),
-                                new Balance(Balance.Cash, 200, USD)
-                            },
-                            new List<Position>
-                            {
-                                new Position(XIC, 300),
-                                new Position(XUS, 400)
-                            }),
-                        Account(
-                            new List<Balance>
-                            {
-                                new Balance(Balance.Cash, 500, CAD),
-                                new Balance(Balance.Cash, 600, USD)
-                            },
-                            new List<Position>
-                            {
-                                new Position(XUS, 700)
-                            })
-                    }),
-                    new Portfolio(2, new List<Account>
-                    {
-                        Account(
-                            new List<Balance>
-                            {
-                                new Balance(Balance.Cash, 800, CAD)
-                            },
-                            new List<Position>
-                            {
-                                new Position(XIC, 900)
-                            })
-                    }),
+                    Account(
+                        new List<Balance>
+                        {
+                            new Balance(Balance.Cash, 100, CAD),
+                            new Balance(Balance.Cash, 200, USD)
+                        },
+                        new List<Position>
+                        {
+                            new Position(XIC, 300),
+                            new Position(XUS, 400)
+                        }),
+                    Account(
+                        new List<Balance>
+                        {
+                            new Balance(Balance.Cash, 500, CAD),
+                            new Balance(Balance.Cash, 600, USD)
+                        },
+                        new List<Position>
+                        {
+                            new Position(XUS, 700)
+                        }),
+                    Account(
+                        new List<Balance>
+                        {
+                            new Balance(Balance.Cash, 800, CAD)
+                        },
+                        new List<Position>
+                        {
+                            new Position(XIC, 900)
+                        })
                 },
                 new List<Allocation>
                 {

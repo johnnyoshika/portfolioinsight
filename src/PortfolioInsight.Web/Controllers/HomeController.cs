@@ -29,8 +29,8 @@ namespace PortfolioInsight.Web.Controllers
             IQuestradeSettings questradeSettings,
             ITokenizer tokenizer,
             IConnectionReader connectionReader,
-            IPortfolioReader portfolioReader,
-            IPortfolioSynchronizer portfolioSynchronizer,
+            IAccountReader accountReader,
+            IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             ICurrencyReader currencyReader,
             IAllocationReader allocationReader,
@@ -44,8 +44,8 @@ namespace PortfolioInsight.Web.Controllers
             QuestradeSettings = questradeSettings;
             Tokenizer = tokenizer;
             ConnectionReader = connectionReader;
-            PortfolioReader = portfolioReader;
-            PortfolioSynchronizer = portfolioSynchronizer;
+            AccountReader = accountReader;
+            ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             CurrencyReader = currencyReader;
             AllocationReader = allocationReader;
@@ -60,8 +60,8 @@ namespace PortfolioInsight.Web.Controllers
         IQuestradeSettings QuestradeSettings { get; }
         ITokenizer Tokenizer { get; }
         IConnectionReader ConnectionReader { get; }
-        IPortfolioReader PortfolioReader { get; }
-        IPortfolioSynchronizer PortfolioSynchronizer { get; }
+        IAccountReader AccountReader { get; }
+        IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
         IAllocationReader AllocationReader { get; }
@@ -71,16 +71,16 @@ namespace PortfolioInsight.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
-            var portfolios = new List<Portfolio>();
+            var accounts = new List<Account>();
             foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
-                portfolios.Add(await PortfolioReader.ReadByConnectionIdAsync(connection.Id));
+                accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));
 
             var currencies = await CurrencyReader.ReadAllAsync();
             return View(new DashboardViewModel
             {
                 User = user,
                 Report = new Report(
-                    portfolios,
+                    accounts,
                     await AllocationReader.ReadByUserIdAsync(user.Id),
                     await AssetClassReader.ReadCashByUserIdAsync(user.Id),
                     currencies,
@@ -146,7 +146,7 @@ namespace PortfolioInsight.Web.Controllers
             {
                 var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
                 foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
-                    await PortfolioSynchronizer.SyncAsync(connection);
+                    await ConnectionSynchronizer.SyncAsync(connection);
 
                 await CurrencySynchronizer.SyncAsync();
 

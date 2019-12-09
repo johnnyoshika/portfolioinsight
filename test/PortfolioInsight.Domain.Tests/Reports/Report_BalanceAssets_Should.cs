@@ -20,13 +20,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_USD_Currency()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Balance(Balance.Cash, 100, USD))
-                    })
+                    Account(
+                        new Balance(Balance.Cash, 100, USD))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -44,13 +41,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_CAD_Currency()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Balance(Balance.Cash, 100, USD))
-                    })
+                    Account(
+                        new Balance(Balance.Cash, 100, USD))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -68,13 +62,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Convert_USD_To_CAD()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Balance(Balance.Cash, 100, USD))
-                    })
+                    Account(
+                        new Balance(Balance.Cash, 100, USD))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -92,13 +83,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Be_Empty_If_No_Cash_Balance()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Balance("Unknown", 100, CAD))
-                    })
+                    Account(
+                        new Balance("Unknown", 100, CAD))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -114,24 +102,18 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Combine_All_Cash_Balances_And_Currencies()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Balance(Balance.Cash, 100, CAD),
-                            new Balance(Balance.Cash, 200, CAD),
-                            new Balance(Balance.Cash, 300, USD),
-                            new Balance(Balance.Cash, 400, USD))
-                    }),
-                    new Portfolio(2, new List<Account>
-                    {
-                        Account(
-                            new Balance("Unknown", 500, CAD),
-                            new Balance(Balance.Cash, 600, CAD),
-                            new Balance(Balance.Cash, 700, USD),
-                            new Balance(Balance.Cash, 800, USD))
-                    })
+                    Account(
+                        new Balance(Balance.Cash, 100, CAD),
+                        new Balance(Balance.Cash, 200, CAD),
+                        new Balance(Balance.Cash, 300, USD),
+                        new Balance(Balance.Cash, 400, USD)),
+                    Account(
+                        new Balance("Unknown", 500, CAD),
+                        new Balance(Balance.Cash, 600, CAD),
+                        new Balance(Balance.Cash, 700, USD),
+                        new Balance(Balance.Cash, 800, USD))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),

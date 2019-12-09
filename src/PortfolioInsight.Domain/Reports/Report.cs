@@ -9,23 +9,20 @@ namespace PortfolioInsight.Reports
 {
     public class Report
     {
-        public Report(IReadOnlyList<Portfolio> portfolios, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<Currency> currencies,  Currency output)
+        public Report(IReadOnlyList<Account> accounts, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<Currency> currencies,  Currency output)
         {
-            Portfolios = portfolios;
+            Accounts = accounts.OrderBy(a => a.Name).ToList();
             Allocations = allocations;
             Cash = cash;
             Currencies = currencies;
             Output = output;
         }
 
-        public IReadOnlyList<Portfolio> Portfolios { get; }
+        public IReadOnlyList<Account> Accounts { get; }
         public IReadOnlyList<Allocation> Allocations { get; }
         public AssetClass Cash { get; }
         public IReadOnlyList<Currency> Currencies { get; }
         public Currency Output { get; }
-
-        public IReadOnlyList<Account> Accounts =>
-            Portfolios.SelectMany(p => p.Accounts).OrderBy(a => a.Name).ToList();
 
         public IReadOnlyList<Position> Positions =>
             Accounts.SelectMany(a => a.Positions).OrderByDescending(p => p.ValueIn(Output)).ToList();
