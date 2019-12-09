@@ -178,6 +178,7 @@ namespace PortfolioInsight
                 entity.ToTable("Accounts");
 
                 entity.Property(a => a.Number)
+                    .HasMaxLength(50)
                     .IsRequired();
 
                 entity.Property(a => a.Name)
