@@ -149,6 +149,7 @@ namespace PortfolioInsight.Web.Controllers
         public async Task<IActionResult> Test()
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+            var portfolios = await PortfolioReader.ReadByUserIdAsync(user.Id);
 
             var allocations = new Allocation[]
             {
@@ -162,7 +163,7 @@ namespace PortfolioInsight.Web.Controllers
             };
 
             foreach (var allocation in allocations)
-                await AllocationWriter.WriteAsync(user.Id, allocation);
+                await AllocationWriter.WriteAsync(portfolios.First().Id, allocation);
 
             return NoContent();
         }
