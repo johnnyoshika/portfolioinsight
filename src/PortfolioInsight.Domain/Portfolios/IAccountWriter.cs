@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace PortfolioInsight.Portfolios
 {
-    public interface IPortfolioReader
+    public interface IAccountWriter
     {
-        Task<Portfolio> ReadByConnectionIdAsync(int connectionId);
+        Task WriteAsync(int connectionId, List<Account> accounts);
     }
 }

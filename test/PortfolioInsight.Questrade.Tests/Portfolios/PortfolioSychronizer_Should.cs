@@ -34,9 +34,9 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             tokenizer.Setup(_ => _.RefreshAsync(It.IsAny<Connection>()))
                 .ReturnsAsync(await RefreshTokenAsync());
 
-            var portfolioReader = new Mock<IPortfolioReader>();
-            portfolioReader.Setup(_ => _.ReadByConnectionIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(new Portfolio(0, new List<Account>()));
+            var accountReader = new Mock<IAccountReader>();
+            accountReader.Setup(_ => _.ReadByConnectionIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(new List<Account>());
 
             var symbolReader = new Mock<ISymbolReader>();
             symbolReader.Setup(_ => _.ReadByBrokerageReferenceAsync(It.IsAny<int>(), It.IsAny<string>()))
@@ -51,18 +51,20 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             currencyReader.Setup(_ => _.ReadByCodeAsync("USD"))
                 .ReturnsAsync(new Currency("USD", (Rate)0.75m, DateTime.Now));
 
-            Portfolio portfolio = null;
-            var portfolioWriter = new Mock<IPortfolioWriter>();
-            portfolioWriter.Setup(_ => _.WriteAsync(It.IsAny<Portfolio>()))
-                .Callback<Portfolio>(p =>
+            int? connectionId = null;
+            List<Account> accounts = null;
+            var accountWriter = new Mock<IAccountWriter>();
+            accountWriter.Setup(_ => _.WriteAsync(It.IsAny<int>(), It.IsAny<List<Account>>()))
+                .Callback<int, List<Account>>((i, a) =>
                 {
-                    portfolio = p;
+                    connectionId = i;
+                    accounts = a;
                 })
                 .Returns(Task.CompletedTask);
 
             var synchronizer = new PortfolioSynchronizer(
-                portfolioReader.Object,
-                portfolioWriter.Object,
+                accountReader.Object,
+                accountWriter.Object,
                 symbolReader.Object,
                 symbolWriter.Object,
                 currencyReader.Object,
@@ -70,12 +72,13 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
             
             await synchronizer.SyncAsync(new Connection());
 
-            Assert.NotNull(portfolio);
+            Assert.NotNull(connectionId);
+            Assert.NotNull(accounts);
         }
 
         /// <summary>
         /// Manually generate refresh token from here: https://login.questrade.com/APIAccess/UserApps.aspx
-        /// and save it into the keys directory as 'refreshToken.txt' with only the refresh token as the content.
+        /// and save it into the keys directory as 'token.txt' with only the refresh token as the content.
         /// The first time that refresh token is used, this method retrieves an access token from Questrade's API using that refresh token.
         /// It then stores the next refresh token in the 'keys' folder with the following pattern:
         /// 

@@ -14,23 +14,23 @@ namespace PortfolioInsight.Portfolios
     public class PortfolioSynchronizer : IPortfolioSynchronizer
     {
         public PortfolioSynchronizer(
-            IPortfolioReader portfolioReader,
-            IPortfolioWriter portfolioWriter,
+            IAccountReader accountReader,
+            IAccountWriter accountWriter,
             ISymbolReader symbolReader,
             ISymbolWriter symbolWriter,
             ICurrencyReader currencyReader,
             ITokenizer tokenizer)
         {
-            PortfolioReader = portfolioReader;
-            PortfolioWriter = portfolioWriter;
+            AccountReader = accountReader;
+            AccountWriter = accountWriter;
             SymbolReader = symbolReader;
             SymbolWriter = symbolWriter;
             CurrencyReader = currencyReader;
             Tokenizer = tokenizer;
         }
 
-        IPortfolioReader PortfolioReader { get; }
-        IPortfolioWriter PortfolioWriter { get; }
+        IAccountReader AccountReader { get; }
+        IAccountWriter AccountWriter { get; }
         ISymbolReader SymbolReader { get; }
         ISymbolWriter SymbolWriter { get; }
         ICurrencyReader CurrencyReader { get; }
@@ -38,15 +38,14 @@ namespace PortfolioInsight.Portfolios
 
         public async Task SyncAsync(Connection connection)
         {
-            var portfolio = await PortfolioReader.ReadByConnectionIdAsync(connection.Id);
-            await PortfolioWriter.WriteAsync(
-                new Portfolio(
+            var accounts = await AccountReader.ReadByConnectionIdAsync(connection.Id);
+            await AccountWriter.WriteAsync(
                     connection.Id,
-                    await SyncAccounts(portfolio.Accounts, await Tokenizer.RefreshAsync(connection))));
+                    await SyncAccounts(accounts, await Tokenizer.RefreshAsync(connection)));
         }
 
 
-        async Task<IEnumerable<Account>> SyncAccounts(IEnumerable<Account> accounts, AccessToken accessToken)
+        async Task<List<Account>> SyncAccounts(IEnumerable<Account> accounts, AccessToken accessToken)
         {
             var fresh = new List<Account>();
             foreach (var a in (await AccountApi.FindAccountsAsync(accessToken)).Accounts)
@@ -63,7 +62,7 @@ namespace PortfolioInsight.Portfolios
             return fresh;
         }
 
-        async Task<IEnumerable<Balance>> GetBalancesAsync(string accountNumber, AccessToken accessToken)
+        async Task<List<Balance>> GetBalancesAsync(string accountNumber, AccessToken accessToken)
         {
             var balances = new List<Balance>();
             foreach (var b in (await BalanceApi.FindBalancesAsync(accountNumber, accessToken)).PerCurrencyBalances)
@@ -72,7 +71,7 @@ namespace PortfolioInsight.Portfolios
             return balances;
         }
 
-        async Task<IEnumerable<Position>> GetPositionsAsync(string accountNumber, AccessToken accessToken)
+        async Task<List<Position>> GetPositionsAsync(string accountNumber, AccessToken accessToken)
         {
             var positions = new List<Position>();
             foreach (var p in (await PositionApi.FindPositionsAsync(accountNumber, accessToken)).Positions.Where(p => p.CurrentMarketValue.HasValue))

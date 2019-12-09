@@ -8,34 +8,34 @@ using Microsoft.EntityFrameworkCore;
 namespace PortfolioInsight.Portfolios
 {
     [Service]
-    public class PortfolioWriter : IPortfolioWriter
+    public class AccountWriter : IAccountWriter
     {
-        public PortfolioWriter(Func<Context> context)
+        public AccountWriter(Func<Context> context)
         {
             Context = context;
         }
 
         Func<Context> Context { get; }
 
-        public async Task WriteAsync(Portfolio portfolio)
+        public async Task WriteAsync(int connectionId, List<Account> accounts)
         {
             using (var context = Context())
             {
                 var eConnection = await context
                     .Connections
-                    .Include(a => a.Accounts)
+                    .Include(c => c.Accounts)
                         .ThenInclude(a => a.Balances)
-                    .Include(a => a.Accounts)
+                    .Include(c => c.Accounts)
                         .ThenInclude(a => a.Positions)
-                    .Where(a => a.Id == portfolio.ConnectionId)
+                    .Where(c => c.Id == connectionId)
                     .FirstAsync();
 
                 context.Balances.RemoveRange(eConnection.Accounts.SelectMany(a => a.Balances));
                 context.Positions.RemoveRange(eConnection.Accounts.SelectMany(a => a.Positions));
                 context.Accounts.RemoveRange(
-                    eConnection.Accounts.Where(e => !portfolio.Accounts.Any(a => a.Id == e.Id)));
+                    eConnection.Accounts.Where(e => !accounts.Any(a => a.Id == e.Id)));
 
-                foreach (var a in portfolio.Accounts)
+                foreach (var a in accounts)
                 {
                     var eAccount = a.Id == 0 ? null : eConnection.Accounts.FirstOrDefault(e => e.Id == a.Id);
                     if (eAccount == null)

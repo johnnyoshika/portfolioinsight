@@ -36,13 +36,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_USD_Currency()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(VOO, 100))
-                    })
+                    Account(
+                        new Position(VOO, 100))
                 },
                 new List<Allocation>
                 {
@@ -64,13 +61,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_CAD_Currency()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XIC, 100))
-                    })
+                    Account(
+                        new Position(XIC, 100))
                 },
                 new List<Allocation>
                 {
@@ -92,14 +86,11 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Convert_USD_To_CAD()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XUS, 100),
-                            new Position(VOO, 200))
-                    })
+                    Account(
+                        new Position(XUS, 100),
+                        new Position(VOO, 200))
                 },
                 new List<Allocation>
                 {
@@ -123,14 +114,11 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Report_Unclassified_Symbol_As_AssetClass_Unknown()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XIC, 100),
-                            new Position(ZAG, 200))
-                    })
+                    Account(
+                        new Position(XIC, 100),
+                        new Position(ZAG, 200))
                 },
                 new List<Allocation>
                 {
@@ -155,13 +143,10 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Multi_Proportional_Allocations()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XAW, 100))
-                    })
+                    Account(
+                        new Position(XAW, 100))
                 },
                 new List<Allocation>
                 {
@@ -192,26 +177,20 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Aggregate_Multiple_Portfolios_And_Accounts()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XIC, 100),
-                            new Position(ZAG, 200)),
-                        Account(
-                            new Position(XIC, 100),
-                            new Position(ZAG, 200))
-                    }),
-                    new Portfolio(2, new List<Account>
-                    {
-                        Account(
-                            new Position(XIC, 100),
-                            new Position(ZAG, 200)),
-                        Account(
-                            new Position(XIC, 100),
-                            new Position(ZAG, 200))
-                    })
+                    Account(
+                        new Position(XIC, 100),
+                        new Position(ZAG, 200)),
+                    Account(
+                        new Position(XIC, 100),
+                        new Position(ZAG, 200)),
+                    Account(
+                        new Position(XIC, 100),
+                        new Position(ZAG, 200)),
+                    Account(
+                        new Position(XIC, 100),
+                        new Position(ZAG, 200))
                 },
                 new List<Allocation>
                 {
@@ -238,15 +217,12 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Combine_Same_Asset_Classes()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XUS, 300),
-                            new Position(XUU, 200),
-                            new Position(XAW, 100))
-                    })
+                    Account(
+                        new Position(XUS, 300),
+                        new Position(XUU, 200),
+                        new Position(XAW, 100))
                 },
                 new List<Allocation>
                 {
@@ -281,25 +257,19 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Convert_Currencies_Categorizes_Unknown_And_Aggregates()
         {
             var report = new Report(
-                new List<Portfolio>
+                new List<Account>
                 {
-                    new Portfolio(1, new List<Account>
-                    {
-                        Account(
-                            new Position(XUS, 300),
-                            new Position(XUU, 200),
-                            new Position(XAW, 100),
-                            new Position(XIC, 400),
-                            new Position(ZAG, 500),
-                            new Position(ZDB, 600)),
-                        Account(
-                            new Position(VOO, 700))
-                    }),
-                    new Portfolio(2, new List<Account>
-                    {
-                        Account(
-                            new Position(VTI, 800))
-                    })
+                    Account(
+                        new Position(XUS, 300),
+                        new Position(XUU, 200),
+                        new Position(XAW, 100),
+                        new Position(XIC, 400),
+                        new Position(ZAG, 500),
+                        new Position(ZDB, 600)),
+                    Account(
+                        new Position(VOO, 700)),
+                    Account(
+                        new Position(VTI, 800))
                 },
                 new List<Allocation>
                 {

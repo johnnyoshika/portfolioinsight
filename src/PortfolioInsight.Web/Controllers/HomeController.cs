@@ -29,7 +29,7 @@ namespace PortfolioInsight.Web.Controllers
             IQuestradeSettings questradeSettings,
             ITokenizer tokenizer,
             IConnectionReader connectionReader,
-            IPortfolioReader portfolioReader,
+            IAccountReader accountReader,
             IPortfolioSynchronizer portfolioSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             ICurrencyReader currencyReader,
@@ -44,7 +44,7 @@ namespace PortfolioInsight.Web.Controllers
             QuestradeSettings = questradeSettings;
             Tokenizer = tokenizer;
             ConnectionReader = connectionReader;
-            PortfolioReader = portfolioReader;
+            AccountReader = accountReader;
             PortfolioSynchronizer = portfolioSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             CurrencyReader = currencyReader;
@@ -60,7 +60,7 @@ namespace PortfolioInsight.Web.Controllers
         IQuestradeSettings QuestradeSettings { get; }
         ITokenizer Tokenizer { get; }
         IConnectionReader ConnectionReader { get; }
-        IPortfolioReader PortfolioReader { get; }
+        IAccountReader AccountReader { get; }
         IPortfolioSynchronizer PortfolioSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
@@ -71,16 +71,16 @@ namespace PortfolioInsight.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
-            var portfolios = new List<Portfolio>();
+            var accounts = new List<Account>();
             foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
-                portfolios.Add(await PortfolioReader.ReadByConnectionIdAsync(connection.Id));
+                accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));
 
             var currencies = await CurrencyReader.ReadAllAsync();
             return View(new DashboardViewModel
             {
                 User = user,
                 Report = new Report(
-                    portfolios,
+                    accounts,
                     await AllocationReader.ReadByUserIdAsync(user.Id),
                     await AssetClassReader.ReadCashByUserIdAsync(user.Id),
                     currencies,
