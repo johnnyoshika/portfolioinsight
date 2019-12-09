@@ -181,6 +181,7 @@ namespace PortfolioInsight
                     .IsRequired();
 
                 entity.Property(a => a.Name)
+                    .HasMaxLength(50)
                     .IsRequired();
 
                 entity.HasIndex(a => new { a.Number, a.ConnectionId })
