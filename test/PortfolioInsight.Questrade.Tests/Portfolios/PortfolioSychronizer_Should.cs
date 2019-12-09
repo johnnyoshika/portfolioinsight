@@ -15,7 +15,7 @@ using static System.IO.Path;
 
 namespace PortfolioInsight.Questrade.Tests.Portfolios
 {
-    public class PortfolioSychronization_Should
+    public class PortfolioSychronizer_Should
     {
         public string KeysDirectory {
             get
@@ -44,7 +44,12 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                     new Symbol(1, "XIC", "TSX Composite ETF", new Currency("CAD", (Rate)0.75m, DateTime.UtcNow.Date), new ListingExchange("TSX")));
 
             var symbolWriter = new Mock<ISymbolWriter>();
+
             var currencyReader = new Mock<ICurrencyReader>();
+            currencyReader.Setup(_ => _.ReadByCodeAsync("CAD"))
+                .ReturnsAsync(new Currency("CAD", Rate.Full, DateTime.Now));
+            currencyReader.Setup(_ => _.ReadByCodeAsync("USD"))
+                .ReturnsAsync(new Currency("USD", (Rate)0.75m, DateTime.Now));
 
             Portfolio portfolio = null;
             var portfolioWriter = new Mock<IPortfolioWriter>();
