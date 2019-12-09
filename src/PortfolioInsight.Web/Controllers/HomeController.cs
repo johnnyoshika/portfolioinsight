@@ -68,7 +68,8 @@ namespace PortfolioInsight.Web.Controllers
         IAssetClassReader AssetClassReader { get; }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        [HttpGet("portfolios/{id:int}")]
+        public async Task<IActionResult> Portfolio(int id)
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             var accounts = new List<Account>();
@@ -76,13 +77,13 @@ namespace PortfolioInsight.Web.Controllers
                 accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));
 
             var currencies = await CurrencyReader.ReadAllAsync();
-            return View(new DashboardViewModel
+            return View(new PortfolioViewModel
             {
                 User = user,
                 Report = new Report(
                     accounts,
-                    await AllocationReader.ReadByPortfolioIdAsync(1 /* TODO: fix */),
-                    await AssetClassReader.ReadCashByPortfolioIdAsync(1 /* TODO: fix */),
+                    await AllocationReader.ReadByPortfolioIdAsync(id),
+                    await AssetClassReader.ReadCashByPortfolioIdAsync(id),
                     currencies,
                     currencies.First(c => c.Code == "CAD")
                 )
@@ -162,7 +163,7 @@ namespace PortfolioInsight.Web.Controllers
         }
     }
 
-    public class DashboardViewModel
+    public class PortfolioViewModel
     {
         public User User { get; set; }
         public Report Report { get; set; }
