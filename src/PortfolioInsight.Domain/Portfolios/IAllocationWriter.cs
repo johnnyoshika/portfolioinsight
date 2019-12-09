@@ -7,6 +7,6 @@ namespace PortfolioInsight.Portfolios
 {
     public interface IAllocationWriter
     {
-        Task WriteAsync(int userId, Allocation allocation);
+        Task WriteAsync(int portfolioId, Allocation allocation);
     }
 }

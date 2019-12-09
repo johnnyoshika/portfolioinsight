@@ -17,7 +17,7 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
-        public async Task<List<Allocation>> ReadByUserIdAsync(int userId)
+        public async Task<List<Allocation>> ReadByPortfolioIdAsync(int portfolioId)
         {
             using (var context = Context())
                 return await context
@@ -26,7 +26,7 @@ namespace PortfolioInsight.Portfolios
                         .ThenInclude(s => s.Currency)
                     .Include(a => a.Proportions)
                         .ThenInclude(p => p.AssetClass)
-                    .Where(a => a.UserId == userId)
+                    .Where(a => a.PortfolioId == portfolioId)
                     .Select(a => a.ToModel())
                     .ToListAsync();
         }

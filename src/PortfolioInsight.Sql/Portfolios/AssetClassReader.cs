@@ -24,20 +24,20 @@ namespace PortfolioInsight.Portfolios
         public async Task<AssetClass> ReadByIdAsync(int id) =>
             await ReadByAsync(c => c.Id == id);
 
-        public async Task<AssetClass> ReadByNameAsync(int userId, string name) =>
-            await ReadByAsync(c => c.UserId == userId && c.Name == name);
+        public async Task<AssetClass> ReadByNameAsync(int portfolioId, string name) =>
+            await ReadByAsync(c => c.PortfolioId == portfolioId && c.Name == name);
 
-        public async Task<AssetClass> ReadCashByUserIdAsync(int userId)
+        public async Task<AssetClass> ReadCashByPortfolioIdAsync(int portfolioId)
         {
             using (var context = Context())
             {
-                var assetClass = await ReadByAsync(c => c.UserId == userId && c.Name == Balance.Cash);
+                var assetClass = await ReadByAsync(c => c.PortfolioId == portfolioId && c.Name == Balance.Cash);
                 
                 if (assetClass == null)
                 {
                     var eAssetClass = new AssetClassEntity
                     {
-                        UserId = userId,
+                        PortfolioId = portfolioId,
                         Name = Balance.Cash
                     };
                     context.AssetClasses.Add(eAssetClass);

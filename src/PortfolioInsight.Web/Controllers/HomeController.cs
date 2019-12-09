@@ -81,8 +81,8 @@ namespace PortfolioInsight.Web.Controllers
                 User = user,
                 Report = new Report(
                     accounts,
-                    await AllocationReader.ReadByUserIdAsync(user.Id),
-                    await AssetClassReader.ReadCashByUserIdAsync(user.Id),
+                    await AllocationReader.ReadByPortfolioIdAsync(1 /* TODO: fix */),
+                    await AssetClassReader.ReadCashByPortfolioIdAsync(1 /* TODO: fix */),
                     currencies,
                     currencies.First(c => c.Code == "CAD")
                 )
