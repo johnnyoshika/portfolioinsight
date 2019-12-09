@@ -1,0 +1,268 @@
+﻿@using PortfolioInsight.Financial;
+@model PortfolioInsight.Web.Controllers.PortfolioViewModel
+
+<div class="my-5 mx-auto" style="max-width:500px;">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-center">@Model.User.FirstName @Model.User.LastName</h5>
+            <p class="card-text text-center">
+                <a href="/account/logout">Log out</a>
+            </p>
+            <div class="row">
+                <div class="col-sm mb-2">
+                    <a href="/questrade/request" class="btn btn-primary btn-block">Authorize Questrade</a>
+                </div>
+                <div class="col-sm mb-2" data-outlet="sync"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm">
+        <div class="card mb-4">
+            <div class="card-header">
+                Assets
+            </div>
+            <div class="card-body" data-element="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Asset Class</th>
+                            <th scope="col">Actual (%)</th>
+                            <th scope="col">Target (%)</th>
+                            <th scope="col">Actual ($)</th>
+                            <th scope="col">Target ($)</th>
+                            <th scope="col"><span class="text-success">Buy</span> or <span class="text-danger">Sell</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var asset in Model.Report.Assets)
+                        {
+                            <tr>
+                                <td>@asset.AssetClass.Name</td>
+                                <td>@asset.Proportion.RoundedTo(1)</td>
+                                <td>@asset.AssetClass.Target?.RoundedTo(1)</td>
+                                <td>@asset.Value</td>
+                                <td>@asset.Target</td>
+                                <td>
+                                    @if (asset.Variance.HasValue)
+                                    {
+                                        @if (asset.Variance.Value > Amount.Zero)
+                                        {
+                                            <span class="text-success">@asset.Variance.Value</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">@asset.Variance.Value</span>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th>@(((Rate)Model.Report.Assets.Sum(a => a.Proportion)).RoundedTo(0))</th>
+                            <th>@(((Rate)Model.Report.Assets.Sum(a => a.AssetClass.Target)).RoundedTo(0))</th>
+                            <th>@Model.Report.Total</th>
+                            <th>@((Amount)Model.Report.Assets.Sum(a => a.Target))</th>
+                            <th>@((Amount)Model.Report.Assets.Sum(a => a.Variance))</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        <div class="card mb-4" data-section="accounts">
+            <div class="card-header">
+                Accounts
+            </div>
+            <div class="card-body">
+                @foreach (var account in Model.Report.Accounts)
+                {
+                    <div data-section="account">
+                        <div class="mb-1">
+                            <a href="#" data-action="toggle">
+                                <i class="fas fa-chevron-down fa-sm" data-section="chevron"></i> @account.Name
+                            </a>
+                        </div>
+                        <div data-element="positions">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Symbol</th>
+                                        <th scope="col">Value</th>
+                                        <th scope="col">Currency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var position in account.Positions)
+                                    {
+                                        <tr>
+                                            <td>@position.Symbol.Name</td>
+                                            <td>@position.Value</td>
+                                            <td>@position.Currency.Code</td>
+                                        </tr>
+                                    }
+                                    @foreach (var balance in account.Balances.Where(b => b.Value != 0))
+                                    {
+                                        <tr>
+                                            <td>@balance.Type</td>
+                                            <td>@balance.Value</td>
+                                            <td>@balance.Currency.Code</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>@account.TotalIn(Model.Report.Output)</th>
+                                        <th>@Model.Report.Output.Code</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="card mb-4">
+            <div class="card-header">
+                Currencies
+            </div>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Rate</th>
+                            <th scope="col">As Of</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var currency in Model.Report.Currencies)
+                        {
+                            <tr>
+                                <td>@currency.Code</td>
+                                <td>@currency.Rate.Value</td>
+                                <td>@currency.AsOf.ToString("MMM d, yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                Allocations
+            </div>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Symbol</th>
+                            <th scope="col">Asset Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var allocation in Model.Report.Allocations)
+                        {
+                            <tr>
+                                <td>@allocation.Symbol.Name</td>
+                                <td>
+                                    @if (allocation.Proportions.Count == 1)
+                                    {
+                                        @allocation.Proportions.First().AssetClass.Name
+                                    }
+                                    else if (allocation.Proportions.Count > 1)
+                                    {
+                                        foreach (var proportion in allocation.Proportions)
+                                        {
+                                            <div><small>@proportion.AssetClass.Name @proportion.Rate</small></div>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="sync" type="text/html">
+    <button class="btn btn-primary btn-block" data-action="sync">
+        Sync
+    </button>
+</script>
+
+<script id="syncing" type="text/html">
+    <button class="btn btn-primary btn-block" data-section="syncing" disabled>
+        <span class="spinner-border spinner-border-sm"></span>
+        Syncing...
+    </button>
+</script>
+
+@section Scripts {
+    <script>
+        (function () {
+
+            var renderSync = function () {
+                $('[data-outlet="sync"]').html($('#sync').html());
+            };
+
+            var renderSyncing = function () {
+                $('[data-outlet="sync"]').html($('#syncing').html());
+            };
+
+            renderSync();
+
+            $('[data-outlet="sync"]').on('click', '[data-action="sync"]', function () {
+                renderSyncing();
+                $.ajax({
+                    url: '/sync',
+                    type: 'PUT',
+                    success: function (response, textStatus, jqXHR) {
+                        toastr.success('Sync successful!');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.message)
+                            toastr.error(jqXHR.responseJSON.message);
+                        else
+                            toastr.error('Unexpected error!');
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        renderSync();
+                    }
+                });
+            });
+
+            $('[data-section="accounts"]').on('click', '[data-action="toggle"]', function (e) {
+                e.preventDefault();
+                $(this)
+                    .find('[data-section="chevron"]')
+                    .each(function () {
+                        if ($(this).hasClass('fa-chevron-down'))
+                            $(this)
+                                .removeClass('fa-chevron-down')
+                                .addClass('fa-chevron-up');
+                        else
+                            $(this)
+                                .removeClass('fa-chevron-up')
+                                .addClass('fa-chevron-down');
+                    })
+                    .closest('[data-section="account"]')
+                    .find('[data-element="positions"]')
+                    .slideToggle()
+            });
+        }());
+    </script>
+}

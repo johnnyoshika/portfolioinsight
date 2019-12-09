@@ -17,21 +17,21 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
-        public async Task WriteAsync(int userId, Allocation allocation)
+        public async Task WriteAsync(int portfolioId, Allocation allocation)
         {
             using (var context = Context())
             {
                 var eAllocation = await context
                     .Allocations
                     .Include(a => a.Proportions)
-                    .Where(a => a.UserId == userId && a.SymbolId == allocation.Symbol.Id)
+                    .Where(a => a.PortfolioId == portfolioId && a.SymbolId == allocation.Symbol.Id)
                     .FirstOrDefaultAsync();
 
                 if (eAllocation == null)
                 {
                     eAllocation = new AllocationEntity
                     {
-                        UserId = userId,
+                        PortfolioId = portfolioId,
                         SymbolId = allocation.Symbol.Id,
                         Proportions = new List<AllocationProportionEntity>()
                     };

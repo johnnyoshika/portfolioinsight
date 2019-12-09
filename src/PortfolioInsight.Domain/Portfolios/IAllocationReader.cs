@@ -7,6 +7,6 @@ namespace PortfolioInsight.Portfolios
 {
     public interface IAllocationReader
     {
-        Task<List<Allocation>> ReadByUserIdAsync(int userId);
+        Task<List<Allocation>> ReadByPortfolioIdAsync(int portfolioId);
     }
 }

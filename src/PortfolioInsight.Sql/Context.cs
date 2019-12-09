@@ -20,6 +20,7 @@ namespace PortfolioInsight
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<BalanceEntity> Balances { get; set; }
         public DbSet<PositionEntity> Positions { get; set; }
+        public DbSet<PortfolioEntity> Portfolios { get; set; }
         public DbSet<AssetClassEntity> AssetClasses { get; set; }
         public DbSet<AllocationEntity> Allocations { get; set; }
         public DbSet<AllocationProportionEntity> AllocationProportions { get; set; }
@@ -232,6 +233,19 @@ namespace PortfolioInsight
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<PortfolioEntity>(entity =>
+            {
+                entity.ToTable("Portfolios");
+
+                entity.Property(p => p.Name)
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.HasOne(c => c.User)
+                    .WithMany(u => u.Portfolios)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             modelBuilder.Entity<AssetClassEntity>(entity =>
             {
                 entity.ToTable("AssetClasses");
@@ -243,11 +257,12 @@ namespace PortfolioInsight
                 entity.Property(c => c.Target)
                     .HasColumnType("decimal(4, 3)");
 
-                entity.HasIndex(c => new { c.Name, c.UserId })
+                entity.HasIndex(c => new { c.Name, c.PortfolioId })
                     .IsUnique();
 
-                entity.HasOne(c => c.User)
-                    .WithMany(u => u.AssetClasses)
+                // Required to prevent cycles or multiple cascade paths.
+                entity.HasOne(c => c.Portfolio)
+                    .WithMany(p => p.AssetClasses)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
@@ -255,12 +270,8 @@ namespace PortfolioInsight
             {
                 entity.ToTable("Allocations");
 
-                entity.HasIndex(a => new { a.UserId, a.SymbolId })
+                entity.HasIndex(a => new { a.PortfolioId, a.SymbolId })
                     .IsUnique();
-
-                entity.HasOne(c => c.User)
-                    .WithMany(u => u.Allocations)
-                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(c => c.Symbol)
                     .WithMany()
@@ -273,10 +284,6 @@ namespace PortfolioInsight
 
                 entity.HasIndex(p => new { p.AllocationId, p.AssetClassId })
                     .IsUnique();
-
-                entity.HasOne(p => p.AssetClass)
-                    .WithMany()
-                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
@@ -345,8 +352,7 @@ namespace PortfolioInsight
         public int LoginCount { get; set; }
 
         public List<ConnectionEntity> Connections { get; set; }
-        public List<AssetClassEntity> AssetClasses { get; set; }
-        public List<AllocationEntity> Allocations { get; set; }
+        public List<PortfolioEntity> Portfolios { get; set; }
     }
 
     public partial class ConnectionEntity
@@ -405,22 +411,34 @@ namespace PortfolioInsight
         public AccountEntity Account { get; set; }
     }
 
+    public partial class PortfolioEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public int UserId { get; set; }
+        public UserEntity User { get; set; }
+
+        public List<AssetClassEntity> AssetClasses { get; set; }
+        public List<AllocationEntity> Allocations { get; set; }
+    }
+
     public partial class AssetClassEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal? Target { get; set; }
 
-        public int UserId { get; set; }
-        public UserEntity User { get; set; }
+        public int PortfolioId { get; set; }
+        public PortfolioEntity Portfolio { get; set; }
     }
 
     public partial class AllocationEntity
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
-        public UserEntity User { get; set; }
+        public int PortfolioId { get; set; }
+        public PortfolioEntity Portfolio { get; set; }
 
         public int SymbolId { get; set; }
         public SymbolEntity Symbol { get; set; }

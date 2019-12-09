@@ -33,6 +33,7 @@ namespace PortfolioInsight.Web.Controllers
             IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             ICurrencyReader currencyReader,
+            IPortfolioReader portfolioReader,
             IAllocationReader allocationReader,
             IAssetClassReader assetClassReader)
         {
@@ -48,6 +49,7 @@ namespace PortfolioInsight.Web.Controllers
             ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             CurrencyReader = currencyReader;
+            PortfolioReader = portfolioReader;
             AllocationReader = allocationReader;
             AssetClassReader = assetClassReader;
         }
@@ -64,6 +66,7 @@ namespace PortfolioInsight.Web.Controllers
         IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
+        IPortfolioReader PortfolioReader { get; }
         IAllocationReader AllocationReader { get; }
         IAssetClassReader AssetClassReader { get; }
 
@@ -71,18 +74,26 @@ namespace PortfolioInsight.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+            return View(await PortfolioReader.ReadByUserIdAsync(user.Id));
+        }
+             
+        [Authorize]
+        [HttpGet("portfolios/{id:int}")]
+        public async Task<IActionResult> Portfolio(int id)
+        {
+            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             var accounts = new List<Account>();
             foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
                 accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));
 
             var currencies = await CurrencyReader.ReadAllAsync();
-            return View(new DashboardViewModel
+            return View(new PortfolioViewModel
             {
                 User = user,
                 Report = new Report(
                     accounts,
-                    await AllocationReader.ReadByUserIdAsync(user.Id),
-                    await AssetClassReader.ReadCashByUserIdAsync(user.Id),
+                    await AllocationReader.ReadByPortfolioIdAsync(id),
+                    await AssetClassReader.ReadCashByPortfolioIdAsync(id),
                     currencies,
                     currencies.First(c => c.Code == "CAD")
                 )
@@ -162,7 +173,7 @@ namespace PortfolioInsight.Web.Controllers
         }
     }
 
-    public class DashboardViewModel
+    public class PortfolioViewModel
     {
         public User User { get; set; }
         public Report Report { get; set; }

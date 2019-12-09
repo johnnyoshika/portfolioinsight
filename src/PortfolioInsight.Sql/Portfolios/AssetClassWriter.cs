@@ -18,20 +18,20 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
-        public async Task<AssetClass> WriteAsync(int userId, string name, Rate? target)
+        public async Task<AssetClass> WriteAsync(int portfolioId, string name, Rate? target)
         {
             using (var context = Context())
             {
                 var eAssetClass = await context
                     .AssetClasses
-                    .Where(c => c.UserId == userId && c.Name == name)
+                    .Where(c => c.PortfolioId == portfolioId && c.Name == name)
                     .FirstOrDefaultAsync();
 
                 if (eAssetClass == null)
                 {
                     eAssetClass = new AssetClassEntity
                     {
-                        UserId = userId,
+                        PortfolioId = portfolioId,
                         Name = name
                     };
 
