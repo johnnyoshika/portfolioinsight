@@ -9,5 +9,7 @@ namespace PortfolioInsight.Portfolios
     {
         Task<Portfolio> ReadByIdAsync(int id);
         Task<List<Portfolio>> ReadByUserIdAsync(int userId);
+
+        Task<bool> UserOwnsPortfolio(int portfolioId, int userId);
     }
 }

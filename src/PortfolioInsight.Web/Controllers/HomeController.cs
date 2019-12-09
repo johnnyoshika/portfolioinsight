@@ -73,6 +73,9 @@ namespace PortfolioInsight.Web.Controllers
         public async Task<IActionResult> Portfolio(int id)
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
+            if (!await PortfolioReader.UserOwnsPortfolio(id, user.Id))
+                throw new UnauthorizedAccessException();
+
             var accounts = new List<Account>();
             foreach (var connection in await ConnectionReader.ReadByUserIdAsync(user.Id))
                 accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));

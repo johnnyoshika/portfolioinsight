@@ -36,5 +36,14 @@ namespace PortfolioInsight.Portfolios
                     .Select(p => p.ToModel())
                     .ToListAsync();
         }
+
+        public async Task<bool> UserOwnsPortfolio(int portfolioId, int userId)
+        {
+            using (var context = Context())
+                return await context
+                    .Portfolios
+                    .Where(p => p.Id == portfolioId && p.UserId == userId)
+                    .AnyAsync();
+        }
     }
 }
