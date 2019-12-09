@@ -15,7 +15,7 @@ using static System.IO.Path;
 
 namespace PortfolioInsight.Questrade.Tests.Portfolios
 {
-    public class PortfolioSychronizer_Should
+    public class ConnectionSychronizer_Should
     {
         public string KeysDirectory {
             get
@@ -62,7 +62,7 @@ namespace PortfolioInsight.Questrade.Tests.Portfolios
                 })
                 .Returns(Task.CompletedTask);
 
-            var synchronizer = new PortfolioSynchronizer(
+            var synchronizer = new ConnectionSynchronizer(
                 accountReader.Object,
                 accountWriter.Object,
                 symbolReader.Object,

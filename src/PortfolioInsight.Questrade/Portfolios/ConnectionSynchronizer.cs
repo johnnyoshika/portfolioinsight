@@ -11,9 +11,9 @@ using PortfolioInsight.Http;
 namespace PortfolioInsight.Portfolios
 {
     [Service]
-    public class PortfolioSynchronizer : IPortfolioSynchronizer
+    public class ConnectionSynchronizer : IConnectionSynchronizer
     {
-        public PortfolioSynchronizer(
+        public ConnectionSynchronizer(
             IAccountReader accountReader,
             IAccountWriter accountWriter,
             ISymbolReader symbolReader,

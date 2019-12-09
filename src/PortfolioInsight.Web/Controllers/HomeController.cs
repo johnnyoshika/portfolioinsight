@@ -30,7 +30,7 @@ namespace PortfolioInsight.Web.Controllers
             ITokenizer tokenizer,
             IConnectionReader connectionReader,
             IAccountReader accountReader,
-            IPortfolioSynchronizer portfolioSynchronizer,
+            IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             ICurrencyReader currencyReader,
             IAllocationReader allocationReader,
@@ -45,7 +45,7 @@ namespace PortfolioInsight.Web.Controllers
             Tokenizer = tokenizer;
             ConnectionReader = connectionReader;
             AccountReader = accountReader;
-            PortfolioSynchronizer = portfolioSynchronizer;
+            ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             CurrencyReader = currencyReader;
             AllocationReader = allocationReader;
@@ -61,7 +61,7 @@ namespace PortfolioInsight.Web.Controllers
         ITokenizer Tokenizer { get; }
         IConnectionReader ConnectionReader { get; }
         IAccountReader AccountReader { get; }
-        IPortfolioSynchronizer PortfolioSynchronizer { get; }
+        IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         ICurrencyReader CurrencyReader { get; }
         IAllocationReader AllocationReader { get; }
@@ -146,7 +146,7 @@ namespace PortfolioInsight.Web.Controllers
             {
                 var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
                 foreach (var connection in await ConnectionReader.ReadByUserAsync(user.Id))
-                    await PortfolioSynchronizer.SyncAsync(connection);
+                    await ConnectionSynchronizer.SyncAsync(connection);
 
                 await CurrencySynchronizer.SyncAsync();
 

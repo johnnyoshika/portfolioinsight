@@ -6,7 +6,7 @@ using PortfolioInsight.Connections;
 
 namespace PortfolioInsight.Portfolios
 {
-    public interface IPortfolioSynchronizer
+    public interface IConnectionSynchronizer
     {
         Task SyncAsync(Connection connection);
     }
