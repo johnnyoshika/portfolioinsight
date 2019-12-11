@@ -41,9 +41,10 @@
 # Questrade Authorization (w/o administrator mode)
 * The above Questrade Authorization option has the downside of having to run Visual Studio as an administrator. To avoid this, use this workaround.
 * Delete `<binding protocol="https" bindingInformation="*:44348:app.portfolioinsight.local" />` binding entry in applicationhost.config if it was added
-* Modify [ApplicationUrl's](https://github.com/johnnyoshika/portfolioinsight/blob/master/src/PortfolioInsight.Web/Http/ApplicationUrl.cs) AbsoluteHost() to return the host URL entered as a callback URL in App Hub (e.g. `https://app.portfolioinsight.local:44348/questrade/response`)
+* Modify [ApplicationUrl's](https://github.com/johnnyoshika/portfolioinsight/blob/master/src/PortfolioInsight.Web/Http/ApplicationUrl.cs) AbsoluteHost() to return the host URL entered as a callback URL in App Hub (e.g. if the callback URL is `https://app.portfolioinsight.local:44348/questrade/response`, then AbsoluteHost() should return `https://app.portfolioinsight.local:44348`)
 * After authorization and after user is redirected back to `https://app.portfolioinsight.local:44348/questrade/response`, change the host URL to our localhost URL so that the URL looks like this: `https://localhost:44348/questrade/response?code={code}`. Load that page
 * OAuth flow will continue as expected
+* Revert changes to `ApplicationUrl.AbsoluteHost()`
 
 # PortfolioInsight.Questrade.Tests
 * In order to run tests in `PortfolioInsight.Questrade.Tests`, you must first create a file in `PortfolioInsight.Questrade.Tests/keys` directory with filename `token.txt` with the content being a manually generate a refresh token from [https://login.questrade.com/APIAccess/UserApps.aspx](https://login.questrade.com/APIAccess/UserApps.aspx).
