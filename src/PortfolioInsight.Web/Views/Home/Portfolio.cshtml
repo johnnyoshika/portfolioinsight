@@ -69,14 +69,14 @@
             <div class="card-body">
                 @foreach (var account in Model.Report.Accounts)
                 {
-                    <div data-section="account">
+                    <div data-section="account" @if (account.Exclude) { <text>data-account-exclude</text> }>
                         <div class="mb-1">
                             <a href="#" data-action="toggle">
                                 <i class="fas fa-chevron-down fa-sm" data-section="chevron"></i> @account.Name
                             </a>
                         </div>
                         <div data-element="positions">
-                            <table class="table table-sm">
+                            <table class="table table-sm  @if (account.Exclude) { <text>text-muted</text> }">
                                 <thead>
                                     <tr>
                                         <th scope="col">Symbol</th>
@@ -87,7 +87,7 @@
                                 <tbody>
                                     @foreach (var r in account.Positions)
                                     {
-                                        <tr>
+                                        <tr @if (r.Exclude) { <text>class="text-muted"</text> }>
                                             <td>@r.Position.Symbol.Name</td>
                                             <td>@r.Position.Value</td>
                                             <td>@r.Position.Currency.Code</td>
@@ -95,7 +95,7 @@
                                     }
                                     @foreach (var r in account.Balances.Where(r => r.Balance.Value != 0))
                                     {
-                                        <tr>
+                                        <tr @if (r.Exclude) { <text>class="text-muted"</text> }>
                                             <td>@r.Balance.Type</td>
                                             <td>@r.Balance.Value</td>
                                             <td>@r.Balance.Currency.Code</td>
@@ -216,9 +216,8 @@
                 });
             });
 
-            $('[data-section="accounts"]').on('click', '[data-action="toggle"]', function (e) {
-                e.preventDefault();
-                $(this)
+            var toggleAccount = function (element, animate) {
+                var $positions = $(element)
                     .find('[data-section="chevron"]')
                     .each(function () {
                         if ($(this).hasClass('fa-chevron-down'))
@@ -231,8 +230,21 @@
                                 .addClass('fa-chevron-down');
                     })
                     .closest('[data-section="account"]')
-                    .find('[data-element="positions"]')
-                    .slideToggle()
+                    .find('[data-element="positions"]');
+
+                if (animate)
+                    $positions.slideToggle();
+                else
+                    $positions.toggle();
+            };
+
+            $('[data-section="accounts"]').on('click', '[data-action="toggle"]', function (e) {
+                e.preventDefault();
+                toggleAccount(this, true);
+            });
+
+            $('[data-account-exclude]').each(function () {
+                toggleAccount(this);
             });
         }());
     </script>
