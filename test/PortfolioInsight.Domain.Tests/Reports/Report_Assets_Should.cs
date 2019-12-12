@@ -25,41 +25,53 @@ namespace PortfolioInsight.Domain.Tests.Reports
         static readonly Symbol XUS = new Symbol(4, "XUS", "", CAD, TSX);
 
         [Fact]
-        public void List_All_Assets()
+        public void List_All_Included_Assets()
         {
             var report = new Report(
                 new List<AccountReport>
                 {
                     Account(
-                        new List<Balance>
+                        new List<BalanceReport>
                         {
-                            new Balance(Balance.Cash, 100, CAD),
-                            new Balance(Balance.Cash, 200, USD)
+                            new BalanceReport(false, new Balance(Balance.Cash, 100, CAD)),
+                            new BalanceReport(false, new Balance(Balance.Cash, 200, USD))
                         },
-                        new List<Position>
+                        new List<PositionReport>
                         {
-                            new Position(XIC, 300),
-                            new Position(XUS, 400)
+                            new PositionReport(false, new Position(XIC, 300)),
+                            new PositionReport(false, new Position(XUS, 400))
                         }),
                     Account(
-                        new List<Balance>
+                        new List<BalanceReport>
                         {
-                            new Balance(Balance.Cash, 500, CAD),
-                            new Balance(Balance.Cash, 600, USD)
+                            new BalanceReport(false, new Balance(Balance.Cash, 500, CAD)),
+                            new BalanceReport(false, new Balance(Balance.Cash, 600, USD))
                         },
-                        new List<Position>
+                        new List<PositionReport>
                         {
-                            new Position(XUS, 700)
+                            new PositionReport(false, new Position(XUS, 700))
                         }),
                     Account(
-                        new List<Balance>
+                        new List<BalanceReport>
                         {
-                            new Balance(Balance.Cash, 800, CAD)
+                            new BalanceReport(false, new Balance(Balance.Cash, 800, CAD)),
+                            new BalanceReport(true, new Balance(Balance.Cash, 800, CAD))
                         },
-                        new List<Position>
+                        new List<PositionReport>
                         {
-                            new Position(XIC, 900)
-                        })
+                            new PositionReport(false, new Position(XIC, 900)),
+                            new PositionReport(true, new Position(XIC, 900))
+                        }),
+                    Account(
+                        new List<BalanceReport>
+                        {
+                            new BalanceReport(false, new Balance(Balance.Cash, 800, CAD))
+                        },
+                        new List<PositionReport>
+                        {
+                            new PositionReport(false, new Position(XIC, 900))
+                        },
+                        true)
                 },
                 new List<Allocation>
                 {
@@ -100,8 +112,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 ), report.Assets.ElementAt(2).Proportion);
         }
 
-        AccountReport Account(IEnumerable<Balance> balances, IEnumerable<Position> positions) =>
-            new AccountReport(false, new Random().Next(1, 1000), "", "", balances.Select(b => new BalanceReport(false, b)), positions.Select(p => new PositionReport(false, p)));
+        AccountReport Account(IEnumerable<BalanceReport> balances, IEnumerable<PositionReport> positions, bool exclude = false) =>
+            new AccountReport(exclude, new Random().Next(1, 1000), "", "", balances, positions);
 
         Allocation Allocation(Symbol symbol, params AllocationProportion[] proportions) =>
             new Allocation(symbol, proportions);
