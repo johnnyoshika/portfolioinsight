@@ -36,7 +36,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_USD_Currency()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(VOO, 100))
@@ -61,7 +61,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_CAD_Currency()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XIC, 100))
@@ -86,7 +86,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Convert_USD_To_CAD()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XUS, 100),
@@ -114,7 +114,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Report_Unclassified_Symbol_As_AssetClass_Unknown()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XIC, 100),
@@ -143,7 +143,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Multi_Proportional_Allocations()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XAW, 100))
@@ -177,7 +177,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Aggregate_Multiple_Portfolios_And_Accounts()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XIC, 100),
@@ -217,7 +217,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Combine_Same_Asset_Classes()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XUS, 300),
@@ -257,7 +257,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Convert_Currencies_Categorizes_Unknown_And_Aggregates()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Position(XUS, 300),
@@ -312,8 +312,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
             Assert.Equal((Rate)(12.5m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(4).Proportion);
         }
 
-        Account Account(params Position[] positions) =>
-            new Account(new Random().Next(1, 1000), "", "", new List<Balance>(), positions);
+        AccountReport Account(params Position[] positions) =>
+            new AccountReport(false, new Random().Next(1, 1000), "", "", new List<BalanceReport>(), positions.Select(p => new PositionReport(false, p)));
 
         Allocation Allocation(Symbol symbol, params AllocationProportion[] proportions) =>
             new Allocation(symbol, proportions);

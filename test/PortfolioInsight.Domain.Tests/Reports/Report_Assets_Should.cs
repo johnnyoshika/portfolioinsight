@@ -28,7 +28,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void List_All_Assets()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new List<Balance>
@@ -100,8 +100,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 ), report.Assets.ElementAt(2).Proportion);
         }
 
-        Account Account(IEnumerable<Balance> balances, IEnumerable<Position> positions) =>
-            new Account(new Random().Next(1, 1000), "", "", balances, positions);
+        AccountReport Account(IEnumerable<Balance> balances, IEnumerable<Position> positions) =>
+            new AccountReport(false, new Random().Next(1, 1000), "", "", balances.Select(b => new BalanceReport(false, b)), positions.Select(p => new PositionReport(false, p)));
 
         Allocation Allocation(Symbol symbol, params AllocationProportion[] proportions) =>
             new Allocation(symbol, proportions);
