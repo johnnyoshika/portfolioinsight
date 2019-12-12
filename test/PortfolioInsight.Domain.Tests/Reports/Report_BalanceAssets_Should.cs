@@ -20,7 +20,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_USD_Currency()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Balance(Balance.Cash, 100, USD))
@@ -41,7 +41,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Calculate_Assets_In_CAD_Currency()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Balance(Balance.Cash, 100, USD))
@@ -62,7 +62,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Convert_USD_To_CAD()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Balance(Balance.Cash, 100, USD))
@@ -83,7 +83,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Be_Empty_If_No_Cash_Balance()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Balance("Unknown", 100, CAD))
@@ -102,7 +102,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
         public void Combine_All_Cash_Balances_And_Currencies()
         {
             var report = new Report(
-                new List<Account>
+                new List<AccountReport>
                 {
                     Account(
                         new Balance(Balance.Cash, 100, CAD),
@@ -134,7 +134,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 ), report.BalanceAssets.First().Proportion);
         }
 
-        Account Account(params Balance[] balances) =>
-            new Account(new Random().Next(1, 1000), "", "", balances, new List<Position>());
+        AccountReport Account(params Balance[] balances) =>
+            new AccountReport(false, new Random().Next(1, 1000), "", "", balances.Select(b => new BalanceReport(false, b)), new List<PositionReport>());
     }
 }

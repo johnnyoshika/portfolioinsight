@@ -21,6 +21,8 @@ namespace PortfolioInsight
         public DbSet<BalanceEntity> Balances { get; set; }
         public DbSet<PositionEntity> Positions { get; set; }
         public DbSet<PortfolioEntity> Portfolios { get; set; }
+        public DbSet<ExcludeAccountEntity> ExcludeAccounts { get; set; }
+        public DbSet<ExcludeSymbolEntity> ExcludeSymbols { get; set; }
         public DbSet<AssetClassEntity> AssetClasses { get; set; }
         public DbSet<AllocationEntity> Allocations { get; set; }
         public DbSet<AllocationProportionEntity> AllocationProportions { get; set; }
@@ -246,6 +248,20 @@ namespace PortfolioInsight
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<ExcludeAccountEntity>(entity =>
+            {
+                entity.ToTable("ExcludeAccounts");
+
+                entity.HasKey(ea => new { ea.PortfolioId, ea.AccountId });
+            });
+
+            modelBuilder.Entity<ExcludeSymbolEntity>(entity =>
+            {
+                entity.ToTable("ExcludeSymbols");
+
+                entity.HasKey(es => new { es.PortfolioId, es.AccountId, es.SymbolId });
+            });
+
             modelBuilder.Entity<AssetClassEntity>(entity =>
             {
                 entity.ToTable("AssetClasses");
@@ -421,6 +437,27 @@ namespace PortfolioInsight
 
         public List<AssetClassEntity> AssetClasses { get; set; }
         public List<AllocationEntity> Allocations { get; set; }
+    }
+
+    public partial class ExcludeAccountEntity
+    {
+        public int PortfolioId { get; set; }
+        public PortfolioEntity Portfolio { get; set; }
+
+        public int AccountId { get; set; }
+        public AccountEntity Account { get; set; }
+    }
+
+    public partial class ExcludeSymbolEntity
+    {
+        public int PortfolioId { get; set; }
+        public PortfolioEntity Portfolio { get; set; }
+
+        public int AccountId { get; set; }
+        public AccountEntity Account { get; set; }
+
+        public int SymbolId { get; set; }
+        public SymbolEntity Symbol { get; set; }
     }
 
     public partial class AssetClassEntity

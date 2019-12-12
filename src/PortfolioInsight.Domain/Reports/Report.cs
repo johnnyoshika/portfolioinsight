@@ -9,40 +9,48 @@ namespace PortfolioInsight.Reports
 {
     public class Report
     {
-        public Report(IReadOnlyList<Account> accounts, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<Currency> currencies,  Currency output)
+        public Report(IReadOnlyList<AccountReport> accounts, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<Currency> currencies,  Currency output)
         {
-            Accounts = accounts.OrderBy(a => a.Name).ToList();
+            Accounts = accounts;
             Allocations = allocations;
             Cash = cash;
             Currencies = currencies;
             Output = output;
         }
 
-        public IReadOnlyList<Account> Accounts { get; }
+        public IReadOnlyList<AccountReport> Accounts { get; }
         public IReadOnlyList<Allocation> Allocations { get; }
         public AssetClass Cash { get; }
         public IReadOnlyList<Currency> Currencies { get; }
         public Currency Output { get; }
 
-        public IReadOnlyList<Position> Positions =>
-            Accounts.SelectMany(a => a.Positions).OrderByDescending(p => p.ValueIn(Output)).ToList();
+        public IReadOnlyList<PositionReport> Positions =>
+            Accounts
+                .Where(a => !a.Exclude)
+                .SelectMany(a => a.Positions)
+                .Where(r => !r.Exclude)
+                .OrderByDescending(r => r.Position.ValueIn(Output)).ToList();
 
-        public IReadOnlyList<Balance> Balances =>
-            Accounts.SelectMany(a => a.Balances).ToList();
+        public IReadOnlyList<BalanceReport> Balances =>
+            Accounts.Where(a => !a.Exclude)
+                .SelectMany(a => a.Balances)
+                .Where(r => !r.Exclude)
+                .OrderBy(r => r.Balance.Currency.Code)
+                .ToList();
 
         public Amount PositionTotal =>
-            Positions.Sum(p => p.ValueIn(Output));
+            Positions.Sum(r => r.Position.ValueIn(Output));
 
         public Amount BalanceTotal =>
-            Balances.Sum(b => b.ValueIn(Output));
+            Balances.Sum(r => r.Balance.ValueIn(Output));
 
         public Amount Total =>
             PositionTotal + BalanceTotal;
 
         public IReadOnlyList<Asset> PositionAssets =>
             Positions
-                .GroupBy(p => p.Symbol)
-                .Select(g => new { Symbol = g.Key, Value = g.Sum(p => p.ValueIn(Output)) })
+                .GroupBy(r => r.Position.Symbol)
+                .Select(g => new { Symbol = g.Key, Value = g.Sum(r => r.Position.ValueIn(Output)) })
                 .SelectMany(sv =>
                     (
                         Allocations.FirstOrDefault(a => a.Symbol == sv.Symbol)?.Proportions
@@ -61,8 +69,8 @@ namespace PortfolioInsight.Reports
 
         public IReadOnlyList<Asset> BalanceAssets =>
             Balances
-                .Where(b => b.Type == Balance.Cash)
-                .Select(b => new { Value = b.ValueIn(Output) })
+                .Where(r => r.Balance.Type == Balance.Cash)
+                .Select(r => new { Value = r.Balance.ValueIn(Output) })
                 .GroupBy(b => true)
                 .Select(g => new { AssetClass = Cash, Value = g.Sum(v => v.Value) })
                 .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / BalanceTotal.Value)))
