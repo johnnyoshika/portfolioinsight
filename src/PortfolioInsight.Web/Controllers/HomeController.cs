@@ -27,10 +27,8 @@ namespace PortfolioInsight.Web.Controllers
             IAccountReader accountReader,
             IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
-            ICurrencyReader currencyReader,
             IPortfolioReader portfolioReader,
-            IAllocationReader allocationReader,
-            IAssetClassReader assetClassReader)
+            IReporter reporter)
         {
             AuthenticationClient = authenticationClient;
             QuestradeSettings = questradeSettings;
@@ -39,10 +37,8 @@ namespace PortfolioInsight.Web.Controllers
             AccountReader = accountReader;
             ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
-            CurrencyReader = currencyReader;
             PortfolioReader = portfolioReader;
-            AllocationReader = allocationReader;
-            AssetClassReader = assetClassReader;
+            Reporter = reporter;
         }
 
         IAuthenticationClient AuthenticationClient { get; }
@@ -52,10 +48,8 @@ namespace PortfolioInsight.Web.Controllers
         IAccountReader AccountReader { get; }
         IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
-        ICurrencyReader CurrencyReader { get; }
         IPortfolioReader PortfolioReader { get; }
-        IAllocationReader AllocationReader { get; }
-        IAssetClassReader AssetClassReader { get; }
+        IReporter Reporter { get; }
 
         [Authorize]
         public async Task<IActionResult> Index()
@@ -76,22 +70,11 @@ namespace PortfolioInsight.Web.Controllers
             if (!await PortfolioReader.UserOwnsPortfolio(id, user.Id))
                 throw new UnauthorizedAccessException();
 
-            var accounts = new List<Account>();
-            foreach (var connection in await ConnectionReader.ReadByUserIdAsync(user.Id))
-                accounts.AddRange(await AccountReader.ReadByConnectionIdAsync(connection.Id));
-
-            var currencies = await CurrencyReader.ReadAllAsync();
             return View(new PortfolioViewModel
             {
                 User = user,
                 Portfolio = await PortfolioReader.ReadByIdAsync(id),
-                Report = new Report(
-                    accounts,
-                    await AllocationReader.ReadByPortfolioIdAsync(id),
-                    await AssetClassReader.ReadCashByPortfolioIdAsync(id),
-                    currencies,
-                    currencies.First(c => c.Code == "CAD")
-                )
+                Report = await Reporter.GenerateAsync(user.Id, id)
             });
         }
 

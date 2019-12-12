@@ -85,20 +85,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var position in account.Positions)
+                                    @foreach (var r in account.Positions)
                                     {
                                         <tr>
-                                            <td>@position.Symbol.Name</td>
-                                            <td>@position.Value</td>
-                                            <td>@position.Currency.Code</td>
+                                            <td>@r.Position.Symbol.Name</td>
+                                            <td>@r.Position.Value</td>
+                                            <td>@r.Position.Currency.Code</td>
                                         </tr>
                                     }
-                                    @foreach (var balance in account.Balances.Where(b => b.Value != 0))
+                                    @foreach (var r in account.Balances.Where(r => r.Balance.Value != 0))
                                     {
                                         <tr>
-                                            <td>@balance.Type</td>
-                                            <td>@balance.Value</td>
-                                            <td>@balance.Currency.Code</td>
+                                            <td>@r.Balance.Type</td>
+                                            <td>@r.Balance.Value</td>
+                                            <td>@r.Balance.Currency.Code</td>
                                         </tr>
                                     }
                                 </tbody>
