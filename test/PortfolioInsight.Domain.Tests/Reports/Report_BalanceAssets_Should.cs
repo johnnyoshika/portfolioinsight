@@ -23,7 +23,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Balance(Balance.Cash, 100, USD))
+                        new BalanceReport(false, new Balance(Balance.Cash, 100, USD)))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -44,7 +44,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Balance(Balance.Cash, 100, USD))
+                        new BalanceReport(false, new Balance(Balance.Cash, 100, USD)))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -65,7 +65,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Balance(Balance.Cash, 100, USD))
+                        new BalanceReport(false, new Balance(Balance.Cash, 100, USD)))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -86,7 +86,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Balance("Unknown", 100, CAD))
+                        new BalanceReport(false, new Balance("Unknown", 100, CAD)))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -97,7 +97,6 @@ namespace PortfolioInsight.Domain.Tests.Reports
             Assert.Empty(report.BalanceAssets);
         }
 
-
         [Fact]
         public void Combine_All_Cash_Balances_And_Currencies()
         {
@@ -105,15 +104,15 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Balance(Balance.Cash, 100, CAD),
-                        new Balance(Balance.Cash, 200, CAD),
-                        new Balance(Balance.Cash, 300, USD),
-                        new Balance(Balance.Cash, 400, USD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 100, CAD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 200, CAD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 300, USD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 400, USD))),
                     Account(
-                        new Balance("Unknown", 500, CAD),
-                        new Balance(Balance.Cash, 600, CAD),
-                        new Balance(Balance.Cash, 700, USD),
-                        new Balance(Balance.Cash, 800, USD))
+                        new BalanceReport(false, new Balance("Unknown", 500, CAD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 600, CAD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 700, USD)),
+                        new BalanceReport(false, new Balance(Balance.Cash, 800, USD)))
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
@@ -134,7 +133,28 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 ), report.BalanceAssets.First().Proportion);
         }
 
-        AccountReport Account(params Balance[] balances) =>
-            new AccountReport(false, new Random().Next(1, 1000), "", "", balances.Select(b => new BalanceReport(false, b)), new List<PositionReport>());
+        [Fact]
+        public void Exclude_Excluded_Assets()
+        {
+            var report = new Report(
+                new List<AccountReport>
+                {
+                    Account(
+                        new BalanceReport(false, new Balance(Balance.Cash, 50, CAD)),
+                        new BalanceReport(true, new Balance(Balance.Cash, 100, CAD)))
+                },
+                new List<Allocation>(),
+                new AssetClass(0, Balance.Cash, null),
+                new List<Currency>(),
+                CAD
+            );
+
+            Assert.Equal(1, report.BalanceAssets.Count);
+            Assert.Equal(Balance.Cash, report.BalanceAssets.First().AssetClass.Name);
+            Assert.Equal(50, report.BalanceAssets.First().Value);
+        }
+
+        AccountReport Account(params BalanceReport[] balances) =>
+            new AccountReport(false, new Random().Next(1, 1000), "", "", balances, new List<PositionReport>());
     }
 }

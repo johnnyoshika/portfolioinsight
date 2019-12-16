@@ -39,7 +39,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(VOO, 100))
+                        new PositionReport(false, new Position(VOO, 100)))
                 },
                 new List<Allocation>
                 {
@@ -64,7 +64,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XIC, 100))
+                        new PositionReport(false, new Position(XIC, 100)))
                 },
                 new List<Allocation>
                 {
@@ -89,8 +89,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XUS, 100),
-                        new Position(VOO, 200))
+                        new PositionReport(false, new Position(XUS, 100)),
+                        new PositionReport(false, new Position(VOO, 200)))
                 },
                 new List<Allocation>
                 {
@@ -117,8 +117,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XIC, 100),
-                        new Position(ZAG, 200))
+                        new PositionReport(false, new Position(XIC, 100)),
+                        new PositionReport(false, new Position(ZAG, 200)))
                 },
                 new List<Allocation>
                 {
@@ -146,7 +146,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XAW, 100))
+                        new PositionReport(false, new Position(XAW, 100)))
                 },
                 new List<Allocation>
                 {
@@ -180,17 +180,17 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XIC, 100),
-                        new Position(ZAG, 200)),
+                        new PositionReport(false, new Position(XIC, 100)),
+                        new PositionReport(false, new Position(ZAG, 200))),
                     Account(
-                        new Position(XIC, 100),
-                        new Position(ZAG, 200)),
+                        new PositionReport(false, new Position(XIC, 100)),
+                        new PositionReport(false, new Position(ZAG, 200))),
                     Account(
-                        new Position(XIC, 100),
-                        new Position(ZAG, 200)),
+                        new PositionReport(false, new Position(XIC, 100)),
+                        new PositionReport(false, new Position(ZAG, 200))),
                     Account(
-                        new Position(XIC, 100),
-                        new Position(ZAG, 200))
+                        new PositionReport(false, new Position(XIC, 100)),
+                        new PositionReport(false, new Position(ZAG, 200)))
                 },
                 new List<Allocation>
                 {
@@ -220,9 +220,9 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XUS, 300),
-                        new Position(XUU, 200),
-                        new Position(XAW, 100))
+                        new PositionReport(false, new Position(XUS, 300)),
+                        new PositionReport(false, new Position(XUU, 200)),
+                        new PositionReport(false, new Position(XAW, 100)))
                 },
                 new List<Allocation>
                 {
@@ -260,16 +260,16 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 new List<AccountReport>
                 {
                     Account(
-                        new Position(XUS, 300),
-                        new Position(XUU, 200),
-                        new Position(XAW, 100),
-                        new Position(XIC, 400),
-                        new Position(ZAG, 500),
-                        new Position(ZDB, 600)),
+                        new PositionReport(false, new Position(XUS, 300)),
+                        new PositionReport(false, new Position(XUU, 200)),
+                        new PositionReport(false, new Position(XAW, 100)),
+                        new PositionReport(false, new Position(XIC, 400)),
+                        new PositionReport(false, new Position(ZAG, 500)),
+                        new PositionReport(false, new Position(ZDB, 600))),
                     Account(
-                        new Position(VOO, 700)),
+                        new PositionReport(false, new Position(VOO, 700))),
                     Account(
-                        new Position(VTI, 800))
+                        new PositionReport(false, new Position(VTI, 800)))
                 },
                 new List<Allocation>
                 {
@@ -312,8 +312,34 @@ namespace PortfolioInsight.Domain.Tests.Reports
             Assert.Equal((Rate)(12.5m / (300m + 200 + 100 + 400 + 500 + 600 + (700 + 800) / CadConversion)), report.PositionAssets.ElementAt(4).Proportion);
         }
 
-        AccountReport Account(params Position[] positions) =>
-            new AccountReport(false, new Random().Next(1, 1000), "", "", new List<BalanceReport>(), positions.Select(p => new PositionReport(false, p)));
+        [Fact]
+        public void Exclude_Excluded_Assets()
+        {
+            var report = new Report(
+                new List<AccountReport>
+                {
+                    Account(
+                        new PositionReport(false, new Position(XIC, 100)),
+                        new PositionReport(true, new Position(ZAG, 200)))
+                },
+                new List<Allocation>
+                {
+                    Allocation(
+                        XIC, new AssetClass(1, "CA", null))
+                },
+                Cash,
+                new List<Currency>(),
+                CAD
+            );
+
+            Assert.Equal(1, report.PositionAssets.Count);
+            Assert.Equal("CA", report.PositionAssets.ElementAt(0).AssetClass.Name);
+            Assert.Equal(100, report.PositionAssets.ElementAt(0).Value);
+            Assert.Equal(Rate.Full, report.PositionAssets.ElementAt(0).Proportion);
+        }
+
+        AccountReport Account(params PositionReport[] positions) =>
+            new AccountReport(false, new Random().Next(1, 1000), "", "", new List<BalanceReport>(), positions);
 
         Allocation Allocation(Symbol symbol, params AllocationProportion[] proportions) =>
             new Allocation(symbol, proportions);
