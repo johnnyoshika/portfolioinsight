@@ -185,37 +185,6 @@
 @section Scripts {
     <script>
         (function () {
-
-            var renderSync = function () {
-                $('[data-outlet="sync"]').html($('#sync').html());
-            };
-
-            var renderSyncing = function () {
-                $('[data-outlet="sync"]').html($('#syncing').html());
-            };
-
-            renderSync();
-
-            $('[data-outlet="sync"]').on('click', '[data-action="sync"]', function () {
-                renderSyncing();
-                $.ajax({
-                    url: '/sync',
-                    type: 'PUT',
-                    success: function (response, textStatus, jqXHR) {
-                        toastr.success('Sync successful!');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        if (jqXHR.responseJSON && jqXHR.responseJSON.message)
-                            toastr.error(jqXHR.responseJSON.message);
-                        else
-                            toastr.error('Unexpected error!');
-                    },
-                    complete: function (jqXHR, textStatus) {
-                        renderSync();
-                    }
-                });
-            });
-
             var toggleAccount = function (element, animate) {
                 var $positions = $(element)
                     .find('[data-section="chevron"]')
