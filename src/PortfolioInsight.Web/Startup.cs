@@ -63,6 +63,8 @@ namespace PortfolioInsight.Web
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
 
+            // From Dmitry: Explicitly disposing Autofac container is only needed if we start / stop web service without killing the process.
+            // Practically speaking, we'll most likely kill the whole process, so disposing Autofac explicitly as we do below is not necessary.
             applicationLifetime.ApplicationStopped.Register(() => app.ApplicationServices.GetAutofacRoot().Dispose());
         }
     }
