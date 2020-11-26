@@ -51,6 +51,7 @@
 
 # EF Migration
 * After making changes to entities:
+  * Set the startup project to `PortfolioInsight.Sql`
   * Open the Package Manager Console and:
     * Set the default project to `src\PortfolioInsight.Sql`
     * Run: `add-migration <migration name>`
