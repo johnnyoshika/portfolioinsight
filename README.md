@@ -46,6 +46,13 @@
 * OAuth flow will continue as expected
 * Revert changes to `ApplicationUrl.AbsoluteHost()`
 
+# Questrade Authorization (last resort)
+Sometimes Questrade's authorization API stops working. See email I sent to `apisupport@questrade.com` titled `Is Questrade's API authorization working?`. In such a case:
+* Go to Questrade's App Hub
+* Manually generate a new token
+* Manually save the generated refresh token in the `Connections` database table
+  * Hint: See `Accounts` table understand which `Connections`' record needs to be updated
+
 # PortfolioInsight.Questrade.Tests
 * In order to run tests in `PortfolioInsight.Questrade.Tests`, you must first create a file in `PortfolioInsight.Questrade.Tests/keys` directory with filename `token.txt` with the content being a manually generate a refresh token from [https://login.questrade.com/APIAccess/UserApps.aspx](https://login.questrade.com/APIAccess/UserApps.aspx).
 
