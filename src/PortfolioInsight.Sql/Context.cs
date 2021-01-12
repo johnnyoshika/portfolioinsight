@@ -99,7 +99,7 @@ namespace PortfolioInsight
                     .HasForeignKey(s => s.ListingExchangeCode)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasIndex(s => new { s.Name, s.ListingExchangeCode})
+                entity.HasIndex(s => s.Name)
                     .IsUnique();
             });
 
