@@ -17,35 +17,35 @@ namespace PortfolioInsight.Portfolios
 
         Func<Context> Context { get; }
 
-        public async Task<Symbol> WriteAsync(string name, string description, string listingExchangeCode, string currencyCode, int brokerageId, string referenceId)
+        public async Task<Symbol> WriteAsync(NewSymbol newSymbol)
         {
             using (var context = Context())
             {
                 var eSymbol = await context
                     .Symbols
                     .Include(s => s.Currency)
-                    .Where(s => s.Name == name && s.ListingExchangeCode == listingExchangeCode)
+                    .Where(s => s.Name == newSymbol.Name && s.ListingExchangeCode == newSymbol.ListingExchangeCode)
                     .FirstOrDefaultAsync();
 
                 if (eSymbol == null)
                 {
                     eSymbol = new SymbolEntity
                     {
-                        Name = name,
-                        Description = description,
-                        ListingExchangeCode = listingExchangeCode,
-                        CurrencyCode = currencyCode,
-                        Currency = await context.Currencies.FirstAsync(c => c.Code == currencyCode),
+                        Name = newSymbol.Name,
+                        Description = newSymbol.Description,
+                        ListingExchangeCode = newSymbol.ListingExchangeCode,
+                        CurrencyCode = newSymbol.CurrencyCode,
+                        Currency = await context.Currencies.FirstAsync(c => c.Code == newSymbol.CurrencyCode),
                         BrokerageSymbols = new List<BrokerageSymbolEntity>()
                     };
                     context.Symbols.Add(eSymbol);
                 }
 
-                if (!eSymbol.BrokerageSymbols.Any(bs => bs.BrokerageId == brokerageId))
+                if (!eSymbol.BrokerageSymbols.Any(bs => bs.BrokerageId == newSymbol.BrokerageId))
                     eSymbol.BrokerageSymbols.Add(new BrokerageSymbolEntity
                     {
-                        BrokerageId = brokerageId,
-                        ReferenceId = referenceId
+                        BrokerageId = newSymbol.BrokerageId,
+                        ReferenceId = newSymbol.ReferenceId
                     });
 
                 await context.SaveChangesAsync();

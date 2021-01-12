@@ -90,13 +90,7 @@ namespace PortfolioInsight.Portfolios
                 return symbol;
 
             var questradeSymbol = await SymbolApi.FindSymbolAsync(questradeSymbolId, accessToken);
-            return await SymbolWriter.WriteAsync(
-                questradeSymbol.Symbol,
-                questradeSymbol.Description,
-                questradeSymbol.ListingExchange?.ToString(),
-                questradeSymbol.Currency,
-                Brokerage.Questrade.Id,
-                questradeSymbol.SymbolId.ToString());
+            return await SymbolWriter.WriteAsync(questradeSymbol.ToNewSymbol(Brokerage.Questrade.Id));
         }
     }
 }

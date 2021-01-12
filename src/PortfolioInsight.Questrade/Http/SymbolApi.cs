@@ -75,5 +75,14 @@ namespace PortfolioInsight.Http
         public string IndustrySector { get; set; }
         public string IndustryGroup { get; set; }
         public string IndustrySubGroup { get; set; }
+
+        public Portfolios.NewSymbol ToNewSymbol(int brokerageId) =>
+            new Portfolios.NewSymbol(
+                Symbol,
+                Description,
+                ListingExchange?.ToString(),
+                Currency,
+                brokerageId,
+                SymbolId.ToString());
     }
 }
