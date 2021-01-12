@@ -58,9 +58,8 @@ Sometimes Questrade's authorization API stops working. See email I sent to `apis
 
 # EF Migration
 * After making changes to entities:
-  * Set the startup project to `PortfolioInsight.Sql`
   * Open the Package Manager Console and:
     * Set the default project to `src\PortfolioInsight.Sql`
-    * Run: `add-migration <migration name>`
-    * Run: `update-database`
-* `ContextFactory` is used to create DbContext with connection string injection when running these commands in Package Manager Console
+    * Run: `add-migration <migration name> -StartupProject PortfolioInsight.Sql`
+    * Run: `update-database -StartupProject PortfolioInsight.Sql`
+* `ContextFactory` is used to create DbContext with connection string injection when running these commands in Package Manager Console. Alternatively, we could have set the `ConnectionString` environment variable in Package Manager Console prior to running the commands above: `$env:ConnectionString='Server=.;Database=PortfolioInsight;...'`
