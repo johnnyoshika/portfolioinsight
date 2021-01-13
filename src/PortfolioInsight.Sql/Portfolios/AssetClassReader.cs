@@ -12,14 +12,12 @@ namespace PortfolioInsight.Portfolios
     [Service]
     public class AssetClassReader : IAssetClassReader
     {
-        public AssetClassReader(Func<Context> context, ICurrencyReader currencyReader)
+        public AssetClassReader(Func<Context> context)
         {
             Context = context;
-            CurrencyReader = currencyReader;
         }
 
         Func<Context> Context { get; }
-        ICurrencyReader CurrencyReader { get; }
 
         public async Task<AssetClass> ReadByIdAsync(int id) =>
             await ReadByAsync(c => c.Id == id);
@@ -48,6 +46,12 @@ namespace PortfolioInsight.Portfolios
             }
         }
 
+        public async Task<List<AssetClass>> ReadEquityByPortfolioIdAsync(int portfolioId)
+        {
+            using (var context = Context())
+                return await ReadManyByAsync(c => c.PortfolioId == portfolioId && c.Name != Balance.Cash);
+        }
+
         async Task<AssetClass> ReadByAsync(Expression<Func<AssetClassEntity, bool>> filter)
         {
             using (var context = Context())
@@ -56,6 +60,16 @@ namespace PortfolioInsight.Portfolios
                     .Where(filter)
                     .Select(c => c.ToModel())
                     .FirstOrDefaultAsync();
+        }
+
+        async Task<List<AssetClass>> ReadManyByAsync(Expression<Func<AssetClassEntity, bool>> filter)
+        {
+            using (var context = Context())
+                return await context
+                    .AssetClasses
+                    .Where(filter)
+                    .Select(c => c.ToModel())
+                    .ToListAsync();
         }
     }
 }

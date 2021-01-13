@@ -10,5 +10,6 @@ namespace PortfolioInsight.Portfolios
         Task<AssetClass> ReadByIdAsync(int id);
         Task<AssetClass> ReadByNameAsync(int portfolioId, string name);
         Task<AssetClass> ReadCashByPortfolioIdAsync(int portfolioId);
+        Task<List<AssetClass>> ReadEquityByPortfolioIdAsync(int portfolioId);
     }
 }
