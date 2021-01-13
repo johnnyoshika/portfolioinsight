@@ -63,7 +63,7 @@ namespace PortfolioInsight.Reports
                     .Select(proportion => new { proportion.AssetClass, Value = sv.Value * proportion.Rate }))
                 .GroupBy(av => av.AssetClass)
                 .Select(g => new { AssetClass = g.Key, Value = g.Sum(av => av.Value) })
-                .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / PositionTotal.Value)))
+                .Select(av => new Asset(av.AssetClass, av.Value, PositionTotal.Value))
                 .OrderByDescending(a => a.Value)
                 .ToList();
 
@@ -73,14 +73,14 @@ namespace PortfolioInsight.Reports
                 .Select(r => new { Value = r.Balance.ValueIn(Output) })
                 .GroupBy(b => true)
                 .Select(g => new { AssetClass = Cash, Value = g.Sum(v => v.Value) })
-                .Select(av => new Asset(av.AssetClass, av.Value, (Rate)(av.Value / BalanceTotal.Value)))
+                .Select(av => new Asset(av.AssetClass, av.Value, BalanceTotal.Value))
                 .OrderByDescending(a => a.Value)
                 .ToList();
 
         public IReadOnlyList<Asset> Assets =>
             PositionAssets
                 .Concat(BalanceAssets)
-                .Select(a => new Asset(a.AssetClass, a.Value, (Rate)(a.Value.Value / Total.Value)))
+                .Select(a => new Asset(a.AssetClass, a.Value, Total.Value))
                 .ToList();
     }
 }
