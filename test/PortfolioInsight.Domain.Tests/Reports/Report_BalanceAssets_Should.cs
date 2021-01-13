@@ -27,6 +27,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
+                new List<AssetClass>(),
                 new List<Currency>(),
                 USD
             );
@@ -48,6 +49,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -69,6 +71,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -90,6 +93,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -116,6 +120,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -145,6 +150,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                 },
                 new List<Allocation>(),
                 new AssetClass(0, Balance.Cash, null),
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );

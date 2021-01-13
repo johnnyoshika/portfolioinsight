@@ -9,11 +9,12 @@ namespace PortfolioInsight.Reports
 {
     public class Report
     {
-        public Report(IReadOnlyList<AccountReport> accounts, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<Currency> currencies,  Currency output)
+        public Report(IReadOnlyList<AccountReport> accounts, IReadOnlyList<Allocation> allocations, AssetClass cash, IReadOnlyList<AssetClass> equityAssetClasses, IReadOnlyList<Currency> currencies, Currency output)
         {
             Accounts = accounts;
             Allocations = allocations;
             Cash = cash;
+            EquityAssetClasses = equityAssetClasses;
             Currencies = currencies;
             Output = output;
         }
@@ -21,6 +22,7 @@ namespace PortfolioInsight.Reports
         public IReadOnlyList<AccountReport> Accounts { get; }
         public IReadOnlyList<Allocation> Allocations { get; }
         public AssetClass Cash { get; }
+        public IReadOnlyList<AssetClass> EquityAssetClasses { get; }
         public IReadOnlyList<Currency> Currencies { get; }
         public Currency Output { get; }
 
@@ -61,6 +63,7 @@ namespace PortfolioInsight.Reports
                         }
                     )
                     .Select(proportion => new { proportion.AssetClass, Value = sv.Value * proportion.Rate }))
+                .Concat(EquityAssetClasses.Select(c => new { AssetClass = c, Value = 0m })) // Include asset classes for which no positions are held
                 .GroupBy(av => av.AssetClass)
                 .Select(g => new { AssetClass = g.Key, Value = g.Sum(av => av.Value) })
                 .Select(av => new Asset(av.AssetClass, av.Value, PositionTotal.Value))
