@@ -39,7 +39,8 @@ namespace PortfolioInsight.Reports
         {
             var connections = ConnectionReader.ReadByUserIdAsync(userId);
             var allocations = AllocationReader.ReadByPortfolioIdAsync(portfolioId);
-            var assetClass = AssetClassReader.ReadCashByPortfolioIdAsync(portfolioId);
+            var cashAssetClass = AssetClassReader.ReadCashByPortfolioIdAsync(portfolioId);
+            var equityAssetClasses = AssetClassReader.ReadEquityByPortfolioIdAsync(portfolioId);
             var currencies = CurrencyReader.ReadAllAsync();
             var exclude = await ExcludeReader.ReadByPortfolioIdAsync(portfolioId);
 
@@ -59,7 +60,8 @@ namespace PortfolioInsight.Reports
             return new Report(
                 accounts.OrderBy(a => a.Name).ToList(),
                 await allocations,
-                await assetClass,
+                await cashAssetClass,
+                await equityAssetClasses,
                 await currencies,
                 (await currencies).First(c => c.Code == "CAD"));
         }

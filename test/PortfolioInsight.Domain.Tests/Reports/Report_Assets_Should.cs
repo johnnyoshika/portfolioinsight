@@ -18,6 +18,8 @@ namespace PortfolioInsight.Domain.Tests.Reports
 
         static readonly AssetClass Cash = new AssetClass(0, Balance.Cash, null);
 
+        static readonly List<AssetClass> AssetClasses = new List<AssetClass>();
+
         static readonly ListingExchange TSX = new ListingExchange("TSX");
         static readonly ListingExchange NYSE = new ListingExchange("NYSE");
 
@@ -81,6 +83,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         XUS, new AssetClass(2, "US", null))
                 },
                 Cash,
+                AssetClasses,
                 new List<Currency>(),
                 CAD
             );

@@ -47,6 +47,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         VOO, new AssetClass(1, "US", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 USD
             );
@@ -72,6 +73,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         XIC, new AssetClass(1, "CA", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -100,6 +102,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         VOO, new AssetClass(1, "US", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -126,6 +129,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         XIC, new AssetClass(1, "CA", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -157,6 +161,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         new AllocationProportion(new AssetClass(3, "EM", null), (Rate)0.125m))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -200,6 +205,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         ZAG, new AssetClass(2, "BOND", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -237,6 +243,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         new AllocationProportion(new AssetClass(3, "EM", null), (Rate)0.125m))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -290,6 +297,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         VTI, new AssetClass(1, "US", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
@@ -328,6 +336,7 @@ namespace PortfolioInsight.Domain.Tests.Reports
                         XIC, new AssetClass(1, "CA", null))
                 },
                 Cash,
+                new List<AssetClass>(),
                 new List<Currency>(),
                 CAD
             );
