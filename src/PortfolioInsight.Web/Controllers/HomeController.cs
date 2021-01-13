@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,12 +26,7 @@ namespace PortfolioInsight.Web.Controllers
             ICurrencySynchronizer currencySynchronizer,
             IPortfolioReader portfolioReader,
             IReportReader reportReader,
-            IReporter reporter,
-            IAllocationReader allocationReader,
-            IAssetClassReader assetClassReader,
-            ISymbolReader symbolReader,
-            IAllocationWriter allocationWriter,
-            IAssetClassWriter assetClassWriter)
+            IReporter reporter)
         {
             AuthenticationClient = authenticationClient;
             QuestradeSettings = questradeSettings;
@@ -44,11 +37,6 @@ namespace PortfolioInsight.Web.Controllers
             PortfolioReader = portfolioReader;
             ReportReader = reportReader;
             Reporter = reporter;
-            AllocationReader = allocationReader;
-            AssetClassReader = assetClassReader;
-            SymbolReader = symbolReader;
-            AllocationWriter = allocationWriter;
-            AssetClassWriter = assetClassWriter;
         }
 
         IAuthenticationClient AuthenticationClient { get; }
@@ -60,11 +48,6 @@ namespace PortfolioInsight.Web.Controllers
         IPortfolioReader PortfolioReader { get; }
         IReportReader ReportReader { get; }
         IReporter Reporter { get; }
-        IAllocationReader AllocationReader { get; }
-        IAssetClassReader AssetClassReader { get; }
-        ISymbolReader SymbolReader { get; }
-        IAllocationWriter AllocationWriter { get; }
-        IAssetClassWriter AssetClassWriter { get; }
 
         [Authorize]
         public async Task<IActionResult> Index()
@@ -144,31 +127,8 @@ namespace PortfolioInsight.Web.Controllers
                 });
             }
         }
-
-        [HttpGet("create-allocations")]
-        public async Task<IActionResult> CreateAllocations()
-        {
-            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
-            var portfolios = await PortfolioReader.ReadByUserIdAsync(user.Id);
-
-            var allocations = new Allocation[]
-            {
-                new Allocation(await SymbolReader.ReadByNameAsync("XEF.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "INTL", (Rate)0.16m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("XEC.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "EM", (Rate)0.065m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("XIC.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "CA", (Rate)0.225m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("XUU.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "US", (Rate)0.25m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("ITOT"  ), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "US", (Rate)0.25m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("ZDB.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "BOND", (Rate)0.30m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("ZAG.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "BOND", (Rate)0.30m), Rate.Full)}),
-                new Allocation(await SymbolReader.ReadByNameAsync("DLR.TO"), new[]{ new AllocationProportion(await AssetClassWriter.WriteAsync(user.Id, "CASH", Rate.Zero), Rate.Full)})
-            };
-
-            foreach (var allocation in allocations)
-                await AllocationWriter.WriteAsync(portfolios.First().Id, allocation);
-
-            return NoContent();
-        }
     }
+
     public class DashboardViewModel
     {
         public User User { get; set; }
