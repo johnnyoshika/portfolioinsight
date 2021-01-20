@@ -37,7 +37,7 @@ namespace PortfolioInsight.Http
         public decimal CurrentPrice { get; set; }
         public decimal? AverageEntryPrice { get; set; } // null means position no longer has value (e.g. sold everything today)
         public decimal ClosedPnL { get; set; }
-        public decimal OpenPnL { get; set; }
+        public decimal? OpenPnL { get; set; } // null means position no longer has value (e.g. sold everything today)
         public decimal? TotalCost { get; set; } // null means position no longer has value (e.g. sold everything today)
         public Boolean IsRealTime { get; set; }
         public bool IsUnderReorg { get; set; }
