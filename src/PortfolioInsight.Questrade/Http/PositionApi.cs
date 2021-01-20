@@ -39,7 +39,7 @@ namespace PortfolioInsight.Http
         public decimal ClosedPnL { get; set; }
         public decimal? OpenPnL { get; set; } // null means position no longer has value (e.g. sold everything today)
         public decimal? TotalCost { get; set; } // null means position no longer has value (e.g. sold everything today)
-        public Boolean IsRealTime { get; set; }
+        public bool IsRealTime { get; set; }
         public bool IsUnderReorg { get; set; }
     }
 }
