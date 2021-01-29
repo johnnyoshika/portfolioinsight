@@ -57,9 +57,7 @@ Sometimes Questrade's authorization API stops working. See email I sent to `apis
 * In order to run tests in `PortfolioInsight.Questrade.Tests`, you must first create a file in `PortfolioInsight.Questrade.Tests/keys` directory with filename `token.txt` with the content being a manually generate a refresh token from [https://login.questrade.com/APIAccess/UserApps.aspx](https://login.questrade.com/APIAccess/UserApps.aspx).
 
 # EF Migration
-* After making changes to entities:
-  * Open the Package Manager Console and:
-    * Set the default project to `src\PortfolioInsight.Sql`
-    * Run: `add-migration <migration name> -StartupProject PortfolioInsight.Sql`
-    * Run: `update-database -StartupProject PortfolioInsight.Sql`
+* After making changes to entities, open the Package Manager Console and:
+  * Add Migration: `add-migration <migration name> -StartupProject PortfolioInsight.Sql -Project PortfolioInsight.Sql`
+  * Update Database: `update-database -StartupProject PortfolioInsight.Sql -Project PortfolioInsight.Sql`
 * `ContextFactory` is used to create DbContext with connection string injection when running these commands in Package Manager Console. Alternatively, we could have set the `ConnectionString` environment variable in Package Manager Console prior to running the commands above: `$env:ConnectionString='Server=.;Database=PortfolioInsight;...'`
