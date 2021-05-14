@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PortfolioInsight.Configuration;
 using PortfolioInsight.Exceptions;
 
 namespace PortfolioInsight.Financial
@@ -13,12 +14,14 @@ namespace PortfolioInsight.Financial
     [Service]
     public class CurrencySynchronizer : ICurrencySynchronizer
     {
-        public CurrencySynchronizer(ICurrencyReader currencyReader, ICurrencyWriter currencyWriter)
+        public CurrencySynchronizer(IExchangeRatesApiSettings settings, ICurrencyReader currencyReader, ICurrencyWriter currencyWriter)
         {
+            Settings = settings;
             CurrencyReader = currencyReader;
             CurrencyWriter = currencyWriter;
         }
 
+        IExchangeRatesApiSettings Settings { get; }
         ICurrencyReader CurrencyReader { get; }
         ICurrencyWriter CurrencyWriter { get; }
 
@@ -26,8 +29,8 @@ namespace PortfolioInsight.Financial
         {
             var latest = await GetLatest();
             foreach (var c in await CurrencyReader.ReadAllAsync())
-                if (latest.Rates.ContainsKey(c.Code))
-                    await CurrencyWriter.WriteAsync(new Currency(c.Code, (Rate)(1 / latest.Rates[c.Code]), latest.Date));
+                if (latest.Rates.ContainsKey(c.Code) && latest.Rates.ContainsKey("USD"))
+                    await CurrencyWriter.WriteAsync(new Currency(c.Code, (Rate)(latest.Rates["USD"] / latest.Rates[c.Code]), latest.Date));
         }
 
         async Task<ExchangeRatesApiLatest> GetLatest()
@@ -36,7 +39,7 @@ namespace PortfolioInsight.Financial
             {
                 try
                 {
-                    var response = await client.GetAsync("https://api.exchangeratesapi.io/latest?base=USD");
+                    var response = await client.GetAsync($"http://api.exchangeratesapi.io/v1/latest?access_key={Settings.AccessKey}&format=1");
                     response.EnsureSuccessStatusCode();
                     return JsonConvert.DeserializeObject<ExchangeRatesApiLatest>(await response.Content.ReadAsStringAsync());
                 }
