@@ -11,6 +11,6 @@ namespace Microsoft.AspNetCore.Http
             request.AbsoluteHost() + path;
 
         public static string AbsoluteHost(this HttpRequest request) =>
-            $"{request.Scheme}://{request.Host}";
+            "https://app.portfolioinsight.local:44348";
     }
 }
