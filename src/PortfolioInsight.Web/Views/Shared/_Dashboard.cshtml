@@ -50,6 +50,9 @@
             renderSync();
 
             $('[data-outlet="sync"]').on('click', '[data-action="sync"]', function () {
+                // Prevent toast from auto-hiding: https://github.com/CodeSeven/toastr#prevent-from-auto-hiding
+                toastr.options.timeOut = 0;
+                toastr.options.extendedTimeOut = 0;
                 renderSyncing();
                 $.ajax({
                     url: '/sync',
