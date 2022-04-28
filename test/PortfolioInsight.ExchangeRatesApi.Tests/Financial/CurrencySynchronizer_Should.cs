@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
+using PortfolioInsight.Configuration;
 using PortfolioInsight.Financial;
 using Xunit;
 
@@ -13,6 +14,8 @@ namespace PortfolioInsight.ExchangeRatesApi.Tests.Financial
         [Fact]
         public async Task Synchronize()
         {
+            var exchangeRatesApiSettings = new Mock<IExchangeRatesApiSettings>();
+
             var currencyReader = new Mock<ICurrencyReader>();
             currencyReader.Setup(_ => _.ReadAllAsync())
                 .ReturnsAsync(new List<Currency>
@@ -23,7 +26,7 @@ namespace PortfolioInsight.ExchangeRatesApi.Tests.Financial
 
             var currencyWriter = new Mock<ICurrencyWriter>();
             
-            var synchronizer = new CurrencySynchronizer(currencyReader.Object, currencyWriter.Object);
+            var synchronizer = new CurrencySynchronizer(exchangeRatesApiSettings.Object, currencyReader.Object, currencyWriter.Object);
             await synchronizer.SyncAsync();
 
             currencyWriter.Verify(_ =>
