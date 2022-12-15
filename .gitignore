@@ -1,5 +1,6 @@
 # config
 appsettings.development.json
+appsettings.Production.json
 
 # Questrade refreh tokens used for tests
 test/PortfolioInsight.Questrade.Tests/keys/*.txt
