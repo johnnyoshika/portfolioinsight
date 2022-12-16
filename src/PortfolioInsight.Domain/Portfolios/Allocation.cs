@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using PortfolioInsight.Financial;
 
 namespace PortfolioInsight.Portfolios
@@ -14,6 +15,8 @@ namespace PortfolioInsight.Portfolios
         {
         }
 
+        // Instruct Newtonsoft.Json's deserializer to use this constructor, otherwise the proper proportions won't be hydrated during deserialization
+        [JsonConstructor]
         public Allocation(Symbol symbol, IEnumerable<AllocationProportion> proportions)
         {
             Symbol = symbol;
