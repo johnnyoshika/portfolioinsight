@@ -28,6 +28,7 @@ namespace PortfolioInsight.Web.Controllers
             IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             IPortfolioReader portfolioReader,
+            IReportReader reportReader,
             IReporter reporter)
         {
             AuthenticationClient = authenticationClient;
@@ -38,6 +39,7 @@ namespace PortfolioInsight.Web.Controllers
             ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             PortfolioReader = portfolioReader;
+            ReportReader = reportReader;
             Reporter = reporter;
         }
 
@@ -49,6 +51,7 @@ namespace PortfolioInsight.Web.Controllers
         IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         IPortfolioReader PortfolioReader { get; }
+        IReportReader ReportReader { get; }
         IReporter Reporter { get; }
 
         [Authorize]
@@ -64,17 +67,22 @@ namespace PortfolioInsight.Web.Controllers
              
         [Authorize]
         [HttpGet("portfolios/{id:int}")]
-        public async Task<IActionResult> Portfolio(int id)
+        public async Task<IActionResult> Portfolio(int id, DateTime? date)
         {
             var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             if (!await PortfolioReader.UserOwnsPortfolio(id, user.Id))
                 throw new UnauthorizedAccessException();
 
+            var report = date == null ? await Reporter.GenerateAsync(user.Id, id) : await ReportReader.ReadSnapshotAsync(id, date.Value);
+
+            if (report == null)
+                return Content("Not found");
+
             return View(new PortfolioViewModel
             {
                 User = user,
                 Portfolio = await PortfolioReader.ReadByIdAsync(id),
-                Report = await Reporter.GenerateAsync(user.Id, id)
+                Report = report
             });
         }
 
