@@ -7,6 +7,7 @@ namespace PortfolioInsight.Users
 {
     public interface IUserReader
     {
+        Task<List<User>> ReadAllAsync();
         Task<User> ReadByIdAsync(int id);
     }
 }
