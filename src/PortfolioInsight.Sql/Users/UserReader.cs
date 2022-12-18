@@ -17,6 +17,15 @@ namespace PortfolioInsight.Users
 
         Func<Context> Context { get; }
 
+        public async Task<List<User>> ReadAllAsync()
+        {
+            using (var context = Context())
+                return await context
+                    .Users
+                    .Select(u => u.ToDto())
+                    .ToListAsync();
+        }
+
         public async Task<User> ReadByIdAsync(int id)
         {
             using (var context = Context())
