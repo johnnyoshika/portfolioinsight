@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -66,6 +67,12 @@ namespace PortfolioInsight.Web
             // From Dmitry: Explicitly disposing Autofac container is only needed if we start / stop web service without killing the process.
             // Practically speaking, we'll most likely kill the whole process, so disposing Autofac explicitly as we do below is not necessary.
             applicationLifetime.ApplicationStopped.Register(() => app.ApplicationServices.GetAutofacRoot().Dispose());
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<Context>();
+                context.Database.Migrate();
+            }
         }
     }
 }
