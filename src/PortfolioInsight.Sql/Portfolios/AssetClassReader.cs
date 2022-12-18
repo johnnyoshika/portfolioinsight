@@ -46,11 +46,8 @@ namespace PortfolioInsight.Portfolios
             }
         }
 
-        public async Task<List<AssetClass>> ReadEquityByPortfolioIdAsync(int portfolioId)
-        {
-            using (var context = Context())
-                return await ReadManyByAsync(c => c.PortfolioId == portfolioId && c.Name != Balance.Cash);
-        }
+        public async Task<List<AssetClass>> ReadEquityByPortfolioIdAsync(int portfolioId) =>
+            await ReadManyByAsync(c => c.PortfolioId == portfolioId && c.Name != Balance.Cash);
 
         async Task<AssetClass> ReadByAsync(Expression<Func<AssetClassEntity, bool>> filter)
         {
