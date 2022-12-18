@@ -26,6 +26,7 @@ namespace PortfolioInsight
         public DbSet<AssetClassEntity> AssetClasses { get; set; }
         public DbSet<AllocationEntity> Allocations { get; set; }
         public DbSet<AllocationProportionEntity> AllocationProportions { get; set; }
+        public DbSet<ReportEntity> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -301,6 +302,16 @@ namespace PortfolioInsight
                 entity.HasIndex(p => new { p.AllocationId, p.AssetClassId })
                     .IsUnique();
             });
+
+            modelBuilder.Entity<ReportEntity>(entity =>
+            {
+                entity.ToTable("Reports");
+
+                entity.HasKey(r => new { r.PortfolioId, r.Date });
+
+                entity.Property(r => r.Json)
+                    .IsRequired();
+            });
         }
     }
 
@@ -494,5 +505,18 @@ namespace PortfolioInsight
         public AssetClassEntity AssetClass { get; set; }
 
         public decimal Rate { get; set; }
+    }
+
+    public partial class ReportEntity
+    {
+        public int PortfolioId { get; set; }
+        public PortfolioEntity Portfolio { get; set; }
+
+        public DateTime Date { get; set; }
+
+
+        public DateTime CreatedAt { get; set; }
+
+        public string Json { get; set; }
     }
 }
