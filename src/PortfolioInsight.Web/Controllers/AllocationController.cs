@@ -2,6 +2,7 @@
 using PortfolioInsight.Connections;
 using PortfolioInsight.Financial;
 using PortfolioInsight.Portfolios;
+using PortfolioInsight.Web.Filters;
 using PortfolioInsight.Web.Http;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,8 @@ namespace PortfolioInsight.Web.Controllers
         IAllocationWriter AllocationWriter { get; }
         IAssetClassWriter AssetClassWriter { get; }
 
-        [HttpGet]
+        [Localhost]
+        [HttpPut]
         public async Task<IActionResult> Index()
         {
             await Portfolio1();
@@ -47,7 +49,6 @@ namespace PortfolioInsight.Web.Controllers
         async Task Portfolio1()
         {
             int portfolioId = 1;
-            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
 
             var allocations = new Allocation[]
             {
@@ -70,7 +71,6 @@ namespace PortfolioInsight.Web.Controllers
         async Task Portfolio5()
         {
             int portfolioId = 5;
-            var user = await AuthenticationClient.AuthenticateAsync(HttpContext.Request);
             var connection = await ConnectionReader.ReadByIdAsync(1); // Using 'connection' b/c VUN.TO, AVUV, and AVDV weren't in my portfolio when I first added these allocations
 
             var allocations = new Allocation[]
