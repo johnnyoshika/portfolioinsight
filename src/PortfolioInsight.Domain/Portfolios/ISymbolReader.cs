@@ -15,9 +15,9 @@ namespace PortfolioInsight.Portfolios
         /// Same as ReadByNameAsync(string name) except a Symbol will be fetched and saved in the database if it doesn't exist.
         /// </summary>
         /// <param name="name">Symbol name</param>
-        /// <param name="connection">Connection to use to fetch symbol if it doesn't exist in the database</param>
+        /// <param name="accessToken">AccessToken to use to fetch symbol if it doesn't exist in the database</param>
         /// <returns></returns>
-        Task<Symbol> ReadByNameAsync(string name, Connection connection);
+        Task<Symbol> ReadByNameAsync(string name, AccessToken accessToken);
         Task<Symbol> ReadByBrokerageReferenceAsync(int brokerageId, string referenceId);
     }
 }

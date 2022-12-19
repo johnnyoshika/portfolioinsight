@@ -9,6 +9,6 @@ namespace PortfolioInsight.Portfolios
 {
     public interface ISymbolFetcher
     {
-        Task<NewSymbol> FetchByNameAsync(string name, Connection connection);
+        Task<NewSymbol> FetchByNameAsync(string name, AccessToken accessToken);
     }
 }

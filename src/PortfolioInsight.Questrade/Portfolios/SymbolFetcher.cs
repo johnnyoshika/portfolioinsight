@@ -12,16 +12,13 @@ namespace PortfolioInsight.Portfolios
     [Service]
     public class SymbolFetcher : ISymbolFetcher
     {
-        public SymbolFetcher(ITokenizer tokenizer)
+        public SymbolFetcher()
         {
-            Tokenizer = tokenizer;
         }
 
-        ITokenizer Tokenizer { get; }
-
-        public async Task<NewSymbol> FetchByNameAsync(string name, Connection connection) =>
+        public async Task<NewSymbol> FetchByNameAsync(string name, AccessToken accessToken) =>
             (await SymbolApi
-                .FindSymbolAsync(name, await Tokenizer.RefreshAsync(connection)))
+                .FindSymbolAsync(name, accessToken))
             ?.ToNewSymbol(Brokerage.Questrade.Id);
     }
 }

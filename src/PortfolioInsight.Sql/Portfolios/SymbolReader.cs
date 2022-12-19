@@ -29,13 +29,13 @@ namespace PortfolioInsight.Portfolios
         public async Task<Symbol> ReadByNameAsync(string name) =>
             await ReadByAsync(s => s.Name == name);
 
-        public async Task<Symbol> ReadByNameAsync(string name, Connection connection)
+        public async Task<Symbol> ReadByNameAsync(string name, AccessToken accessToken)
         {
             var symbol = await ReadByNameAsync(name);
             if (symbol != null)
                 return symbol;
 
-            var newSymbol = await SymbolFetcher.FetchByNameAsync(name, connection);
+            var newSymbol = await SymbolFetcher.FetchByNameAsync(name, accessToken);
             if (newSymbol == null)
                 return null;
 
