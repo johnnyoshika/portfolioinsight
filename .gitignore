@@ -2,6 +2,9 @@
 appsettings.development.json
 appsettings.Production.json
 
+# SQLite database
+**/PortfolioInsight.sqlite*
+
 # Questrade refreh tokens used for tests
 test/PortfolioInsight.Questrade.Tests/keys/*.txt
 
