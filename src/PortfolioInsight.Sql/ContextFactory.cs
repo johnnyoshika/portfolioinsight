@@ -21,7 +21,7 @@ namespace PortfolioInsight
         public Context CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<Context>();
-            optionsBuilder.UseSqlServer("Server=.;Database=PortfolioInsight;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlite("Data Source=PortfolioInsight.db");
 
             return new Context(optionsBuilder.Options);
         }

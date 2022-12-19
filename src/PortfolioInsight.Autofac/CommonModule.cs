@@ -19,7 +19,7 @@ namespace PortfolioInsight
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .Register(_ => new Context(new DbContextOptionsBuilder<Context>().UseSqlServer(ConnectionString).Options))
+                .Register(_ => new Context(new DbContextOptionsBuilder<Context>().UseSqlite(ConnectionString).Options))
                 .AsSelf()
                 .InstancePerDependency();
 
