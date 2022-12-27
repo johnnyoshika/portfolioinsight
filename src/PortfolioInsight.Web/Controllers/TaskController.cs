@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PortfolioInsight.Connections;
+using PortfolioInsight.Financial;
 using PortfolioInsight.Portfolios;
 using PortfolioInsight.Reports;
 using PortfolioInsight.Users;
@@ -13,6 +14,7 @@ namespace PortfolioInsight.Web.Controllers
     public class TaskController : Controller
     {
         public TaskController(
+            ICurrencySynchronizer currencySynchronizer,
             IUserReader userReader,
             IConnectionReader connectionReader,
             IConnectionSynchronizer connectionSynchronizer,
@@ -20,6 +22,7 @@ namespace PortfolioInsight.Web.Controllers
             IReportWriter reportWriter,
             IReporter reporter)
         {
+            CurrencySynchronizer = currencySynchronizer;
             UserReader = userReader;
             ConnectionReader = connectionReader;
             ConnectionSynchronizer = connectionSynchronizer;
@@ -28,6 +31,7 @@ namespace PortfolioInsight.Web.Controllers
             Reporter = reporter;
         }
 
+        ICurrencySynchronizer CurrencySynchronizer { get; }
         IUserReader UserReader { get; }
         IConnectionReader ConnectionReader { get; }
         IConnectionSynchronizer ConnectionSynchronizer { get; }
@@ -42,6 +46,8 @@ namespace PortfolioInsight.Web.Controllers
         {
             try
             {
+                await CurrencySynchronizer.SyncAsync();
+
                 foreach (var user in await UserReader.ReadAllAsync())
                 {
                     foreach (var connection in await ConnectionReader.ReadByUserIdAsync(user.Id))
