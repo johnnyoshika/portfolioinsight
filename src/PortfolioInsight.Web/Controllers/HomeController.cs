@@ -24,7 +24,6 @@ namespace PortfolioInsight.Web.Controllers
             IQuestradeSettings questradeSettings,
             ITokenizer tokenizer,
             IConnectionReader connectionReader,
-            IAccountReader accountReader,
             IConnectionSynchronizer connectionSynchronizer,
             ICurrencySynchronizer currencySynchronizer,
             IPortfolioReader portfolioReader,
@@ -35,7 +34,6 @@ namespace PortfolioInsight.Web.Controllers
             QuestradeSettings = questradeSettings;
             Tokenizer = tokenizer;
             ConnectionReader = connectionReader;
-            AccountReader = accountReader;
             ConnectionSynchronizer = connectionSynchronizer;
             CurrencySynchronizer = currencySynchronizer;
             PortfolioReader = portfolioReader;
@@ -47,7 +45,6 @@ namespace PortfolioInsight.Web.Controllers
         IQuestradeSettings QuestradeSettings { get; }
         ITokenizer Tokenizer { get; }
         IConnectionReader ConnectionReader { get; }
-        IAccountReader AccountReader { get; }
         IConnectionSynchronizer ConnectionSynchronizer { get; }
         ICurrencySynchronizer CurrencySynchronizer { get; }
         IPortfolioReader PortfolioReader { get; }
