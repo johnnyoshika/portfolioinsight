@@ -1,13 +1,22 @@
 # Setup
 
-- Clone this repo
 - Copy `appsettings.json` and name it `appsettings.development.json`
 - Set default connection string in `appsettings.development.json` to `Data Source=PortfolioInsight.sqlite`
-- Create a folder called `portfolioinsight-data` as a sibling to this repo
+- Run:
+
+```
+dotnet restore
+dotnet build
+dotnet run --project src/PortfolioInsight.Web
+```
+
 - Set connection string in [ContextFactory](https://github.com/johnnyoshika/portfolioinsight/blob/main/src/PortfolioInsight.Sql/ContextFactory.cs)
   - This connection string will be used by EF Migration if we update database from Package Manager Console
 - To create database from Package Manager Console (note: this is optional, as automatic migrations will do this on startup):
   - Run:`update-database`
+
+## Development and Production
+
 - Manually create a user in the database, as there's no client for this. Use [PasswordSecurity_Hash_Should](https://github.com/johnnyoshika/portfolioinsight/blob/main/test/PortfolioInsight.Domain.Tests/Security/PasswordSecurity_Hash_Should.cs) to generate a password.
 
 # Questrade Setup
@@ -28,3 +37,7 @@
   - Add Migration: `add-migration <migration name> -StartupProject PortfolioInsight.Sql -Project PortfolioInsight.Sql`
   - Update Database (optional, as automatic migrations is set up): `update-database -StartupProject PortfolioInsight.Sql -Project PortfolioInsight.Sql`
 - `ContextFactory` is used to create DbContext with connection string injection when running these commands in Package Manager Console. Alternatively, we could have set the `ConnectionString` environment variable in Package Manager Console prior to running the commands above: `$env:ConnectionString='{redacted}'`
+
+# Deployment
+
+Refer to [PortfolioInsight on Pi](https://docs.google.com/document/d/1xS6VdkAlF7i67e3akkh3Dl6_vonzcmqAng2yJKYf17Y/edit)
